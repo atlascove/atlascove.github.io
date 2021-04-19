@@ -88,11 +88,48 @@ document.addEventListener('DOMContentLoaded', function (event) {
     );
   }
 });
+var modal = document.getElementById("dataSelector");
+var tagModal = document.getElementById("tagSelector");
+var span = document.getElementsByClassName("close")[0];
+var span2 = document.getElementsByClassName("close2")[0];
+var submit_button= document.getElementById("submit_button");
+
+submit_button.onclick = function() {
+  modal.style.display = "block";
+  getOSMData();
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+span2.onclick = function() {
+  tagModal.style.display = "none";
+}
+
+$('#add').click(function(){
+  tagModal.style.display = "block";
+})
+
+
+$('#send').click(function(){
+  var text = createMetaData();
+  alert('Done!');
+  setTimeout("location.reload(true);", 100);
+})
+
+$("#linktable").on("click", "td", function() {
+    currentTag = $( this ).text();
+    $('td').css('background-color','white');
+    $( this ).css('background-color','green');
+});
 
 function initCameraUI() {
   video = document.getElementById('video');
 
   takePhotoButton = document.getElementById('takePhotoButton');
+  submit_button = document.getElementById('submit_button');
 
   // https://developer.mozilla.org/nl/docs/Web/HTML/Element/button
   // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_button_role
@@ -106,6 +143,7 @@ function initCameraUI() {
     showImage();
     addMarker();
   });
+
 
   // -- fullscreen part
 

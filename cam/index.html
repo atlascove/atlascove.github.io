@@ -1,5 +1,6 @@
 <html>
   <head>
+    <link rel="shortcut icon" type="image/png" href="img/favicon.png"/>
     <meta charset="utf-8" />
     <meta
       name="viewport"
@@ -17,6 +18,7 @@
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
     <script src="https://cdn.maptiler.com/maplibre-gl-js/v1.14.0/maplibre-gl.js"></script>
     <link href="https://cdn.maptiler.com/maplibre-gl-js/v1.14.0/maplibre-gl.css" rel="stylesheet" />
+    <script src='https://unpkg.com/@turf/turf@6.3.0/turf.min.js'></script>
   </head>
   <body>
     <div id="container">
@@ -26,9 +28,31 @@
       </div>
       <div id="map">
         <script src="js/map.js"></script>
+        <button id="submit_button" name="submit" type="button"></button>
       </div>
       <div id="gui_controls">
         <button id="takePhotoButton" name="take Photo" type="button"></button>
+      </div>
+    </div>
+    <div id='dataSelector' class='modal'>
+      <div class='modal-content'>
+        <span class="close">&times;</span>
+        <img src='img/add.svg' width=50 height=50 id='add'/> Add new data
+        <br>
+        <h2>or</h2>
+        <h3>Select linked feature:</h3>
+        <table id='linktable'>
+        </table>
+        <br><br>
+        <img src='img/upload2.svg' width=50 height=50 id='send' /> Submit
+      </div>
+    </div>
+    <div id='tagSelector' class='tagModal'>
+      <div class='modal-content'>
+        <span class="close2">&times;</span>
+        <br><br>
+        <label for="fname">OSM tag:</label>
+        <input type="text" id="tagname" name="tagname"><br><br>
       </div>
     </div>
     <script src="js/adapter.min.js"></script>
