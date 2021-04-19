@@ -107,6 +107,9 @@ table, th, td  {
   white-space: -moz-pre-wrap;
   white-space: -pre-wrap;
 }
+td {
+  padding: 3px;
+}
 #submit_button {
   left: 5%;
   bottom: 15%;

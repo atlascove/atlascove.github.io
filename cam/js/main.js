@@ -113,7 +113,7 @@ $('#add').click(function(){
 })
 
 $('#save').click(function(){
-  txt = $('#tagname').text();
+  txt = $('#tagname').val();
   currentTag = txt;
   tagModal.style.display = "none";
   $('td').css('background-color','white');

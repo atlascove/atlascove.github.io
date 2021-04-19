@@ -1,13 +1,13 @@
 var currentTag;
 
 function openMap(){
- $('#map').css('height', '50%');
+ $('#map').css('height', '40%');
  $('#gui_controls').css('height','0%');
  $('#submit_button').show();
 }
 
 function showImage(){
- $('#vid_container').css('height','50%');
+ $('#vid_container').css('height','60%');
 }
 
 function closeControls(){
