@@ -24,7 +24,16 @@ function createMetaData(){
   var observer = marker1.getLngLat();
   var target = marker2.getLngLat();
   var timestamp = new Date();
+  var epoch = timestamp.getTime() / 1000
   var tag = currentTag;
+  var obj = {
+    "observer": [observer.lng,observer.lat],
+    "target": [target.lng,target.lat],
+    "timestamp": timestamp,
+    "epoch" : epoch,
+    "tag" : tag
+  }
+  console.log(obj);
 }
 
 function getOSMData(){
