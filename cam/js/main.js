@@ -112,6 +112,15 @@ $('#add').click(function(){
   tagModal.style.display = "block";
 })
 
+$('#save').click(function(){
+  txt = $('#tagname').text();
+  currentTag = txt;
+  tagModal.style.display = "none";
+  $('td').css('background-color','white');
+  var row = '<tr><td class="tag" style="background-color:green;">' + txt + '</td></tr>';
+  $('#linktable').prepend(row);
+})
+
 
 $('#send').click(function(){
   var text = createMetaData();
