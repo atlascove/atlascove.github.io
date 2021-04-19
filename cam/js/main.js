@@ -45,6 +45,8 @@ function deviceCount() {
 }
 
 document.addEventListener('DOMContentLoaded', function (event) {
+
+
   // check if mediaDevices is supported
   if (
     navigator.mediaDevices &&
@@ -91,8 +93,6 @@ function initCameraUI() {
   video = document.getElementById('video');
 
   takePhotoButton = document.getElementById('takePhotoButton');
-  toggleFullScreenButton = document.getElementById('toggleFullScreenButton');
-  switchCameraButton = document.getElementById('switchCameraButton');
 
   // https://developer.mozilla.org/nl/docs/Web/HTML/Element/button
   // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_button_role
@@ -100,49 +100,14 @@ function initCameraUI() {
   takePhotoButton.addEventListener('click', function () {
     takeSnapshotUI();
     takeSnapshot();
+    openMap();
+    closeControls();
+    closeVideo();
+    showImage();
+    addMarker();
   });
 
   // -- fullscreen part
-
-  function fullScreenChange() {
-    if (screenfull.isFullscreen) {
-      toggleFullScreenButton.setAttribute('aria-pressed', true);
-    } else {
-      toggleFullScreenButton.setAttribute('aria-pressed', false);
-    }
-  }
-
-  if (screenfull.isEnabled) {
-    screenfull.on('change', fullScreenChange);
-
-    toggleFullScreenButton.style.display = 'block';
-
-    // set init values
-    fullScreenChange();
-
-    toggleFullScreenButton.addEventListener('click', function () {
-      screenfull.toggle(document.getElementById('container')).then(function () {
-        console.log(
-          'Fullscreen mode: ' +
-            (screenfull.isFullscreen ? 'enabled' : 'disabled'),
-        );
-      });
-    });
-  } else {
-    console.log("iOS doesn't support fullscreen (yet)");
-  }
-
-  // -- switch camera part
-  if (amountOfCameras > 1) {
-    switchCameraButton.style.display = 'block';
-
-    switchCameraButton.addEventListener('click', function () {
-      if (currentFacingMode === 'environment') currentFacingMode = 'user';
-      else currentFacingMode = 'environment';
-
-      initCameraStream();
-    });
-  }
 
   // Listen for orientation changes to make sure buttons stay at the side of the
   // physical (and virtual) buttons (opposite of camera) most of the layout change is done by CSS media queries
@@ -210,14 +175,6 @@ function initCameraStream() {
     window.stream = stream; // make stream available to browser console
     video.srcObject = stream;
 
-    if (constraints.video.facingMode) {
-      if (constraints.video.facingMode === 'environment') {
-        switchCameraButton.setAttribute('aria-pressed', true);
-      } else {
-        switchCameraButton.setAttribute('aria-pressed', false);
-      }
-    }
-
     const track = window.stream.getVideoTracks()[0];
     const settings = track.getSettings();
     str = JSON.stringify(settings, null, 4);
@@ -256,7 +213,10 @@ function takeSnapshot() {
 
   // some API's (like Azure Custom Vision) need a blob with image data
   getCanvasBlob(canvas).then(function (blob) {
-    // do something with the image blob
+    var image = new Image();
+    image.src = URL.createObjectURL(blob);
+    image.style = "height: 100%; width:auto; display: block;"
+    $('#vid_container').prepend(image);
   });
 }
 
