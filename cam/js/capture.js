@@ -69,7 +69,7 @@ function getOSMData(){
   });
 }
 
-function upload(img,json){
+function upload2(img,json){
   var hash = Math.random().toString(36).substring(2);
   var url = 'https://atlascove.blob.core.windows.net/images/' + hash + '.png?sp=racwdl&st=2021-04-24T19:54:54Z&se=2022-04-25T03:54:54Z&spr=https&sv=2020-02-10&sr=c&sig=nwILb9g1i%2BOB415atZOAfjTOY8KCmfzOLPg46Ut7aXQ%3D'
   $.ajax({
@@ -97,5 +97,23 @@ function upload(img,json){
          var status = xhr.status;
          console.log(status);
   });
+}
 
+function upload(img,json){
+  var dbx = new Dropbox({ accessToken: 'sl.Avm4dFPH30V5b3_NWlJlSThYW7AXcc7VxYZMUGZj6xwuWFncEClx7SoVZhDCRenh2cNgrsq2eRq_e3jFeqtNN6PgNhn-N83-r33kaTpykL0C7ucGH2TgAn0djPjt6BVCptPxOYk' });
+  var hash = Math.random().toString(36).substring(2);
+  dbx.filesUpload({path: '/' + hash + '.png', contents: img})
+  .then(function(response) {
+    console.log(response);
+  })
+  .catch(function(error) {
+    console.error(error);
+  });
+  dbx.filesUpload({path: '/' + hash + '.geojson', contents: json})
+  .then(function(response) {
+    console.log(response);
+  })
+  .catch(function(error) {
+    console.error(error);
+  });
 }
