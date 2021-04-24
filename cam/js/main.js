@@ -106,7 +106,7 @@ submit_button.onclick = function() {
     setTimeout("location.reload(true);", 100);
     mapactive = 1;
     somethingSelected = 0;
-    upload(currentImage);
+    upload(currentImage,currentJSON);
   }
   if (mapactive == 0 && somethingSelected == 0){
     alert('Select matching data or add new note!');

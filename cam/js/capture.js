@@ -31,6 +31,14 @@ function createMetaData(){
   var timestamp = new Date();
   var epoch = timestamp.getTime() / 1000
   var tag = currentTag;
+  var output_data = { "type": "FeatureCollection", "features": [ { "type": "Feature", "properties": {
+    "target": [target.lng,target.lat],
+    "timestamp": timestamp,
+    "epoch" : epoch,
+    "tag" : tag
+    },
+    "geometry": { "type": "Point", "coordinates": [observer.lng,observer.lat] } } ]
+  }
   var obj = {
     "observer": [observer.lng,observer.lat],
     "target": [target.lng,target.lat],
@@ -38,6 +46,7 @@ function createMetaData(){
     "epoch" : epoch,
     "tag" : tag
   }
+  currentJSON = output_data;
   console.log(obj);
 }
 
@@ -60,14 +69,29 @@ function getOSMData(){
   });
 }
 
-function upload(img){
-  var url = 'https://atlascove.blob.core.windows.net/images?sp=racwdl&st=2021-04-24T19:22:23Z&se=2022-04-25T03:22:23Z&spr=https&sv=2020-02-10&sr=c&sig=yk%2FLsEAVxIV8F9Roqk5KNIMYKJZvJ6W1MNjsgMqryCY%3D'
+function upload(img,json){
+  var hash = Math.random().toString(36).substring(2);
+  var url = 'https://atlascove.blob.core.windows.net/images/' + hash + '.png?sp=racwdl&st=2021-04-24T19:54:54Z&se=2022-04-25T03:54:54Z&spr=https&sv=2020-02-10&sr=c&sig=nwILb9g1i%2BOB415atZOAfjTOY8KCmfzOLPg46Ut7aXQ%3D'
   $.ajax({
-      type: 'POST',
+      type: 'PUT',
       url: url,
       data: img,
       processData: false,
-      contentType: false
+      contentType: false,
+      headers: {"Content-Type": "image/png", "x-ms-blob-type": "BlockBlob" }
+  }).done(function(data, xhr) {
+         console.log(data);
+         var status = xhr.status;
+         console.log(status);
+  });
+  var url2 = 'https://atlascove.blob.core.windows.net/images/' + hash + '.geojson??sp=racwdl&st=2021-04-24T19:54:54Z&se=2022-04-25T03:54:54Z&spr=https&sv=2020-02-10&sr=c&sig=nwILb9g1i%2BOB415atZOAfjTOY8KCmfzOLPg46Ut7aXQ%3D'
+  $.ajax({
+      type: 'PUT',
+      url: url,
+      data: json,
+      processData: false,
+      contentType: false,
+      headers: {"Content-Type": "application/json; charset=UTF-8", "x-ms-blob-type": "BlockBlob" }
   }).done(function(data, xhr) {
          console.log(data);
          var status = xhr.status;
