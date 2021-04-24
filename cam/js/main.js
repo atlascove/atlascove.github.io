@@ -95,8 +95,22 @@ var span2 = document.getElementsByClassName("close2")[0];
 var submit_button= document.getElementById("submit_button");
 
 submit_button.onclick = function() {
-  modal.style.display = "block";
-  getOSMData();
+  if (mapactive == 1){
+    modal.style.display = "block";
+    addLink();
+    getOSMData();
+  }
+  if (mapactive == 0 && somethingSelected == 1){
+    var text = createMetaData();
+    alert('Done!');
+    setTimeout("location.reload(true);", 100);
+    mapactive = 1;
+    somethingSelected = 0;
+    upload(currentImage);
+  }
+  if (mapactive == 0 && somethingSelected == 0){
+    alert('Select matching data or add new note!');
+  }
 }
 
 // When the user clicks on <span> (x), close the modal
@@ -116,22 +130,20 @@ $('#save').click(function(){
   txt = $('#tagname').val();
   currentTag = txt;
   tagModal.style.display = "none";
+  somethingSelected = 1;
   $('td').css('background-color','white');
-  var row = '<tr><td class="tag" style="background-color:green;">' + txt + '</td></tr>';
+  $('td').css('color','black');
+  var row = '<tr><td class="tag" style="background-color:green;color:white;">' + txt + '</td></tr>';
   $('#linktable').prepend(row);
-})
-
-
-$('#send').click(function(){
-  var text = createMetaData();
-  alert('Done!');
-  setTimeout("location.reload(true);", 100);
 })
 
 $("#linktable").on("click", "td", function() {
     currentTag = $( this ).text();
+    somethingSelected = 1;
     $('td').css('background-color','white');
     $( this ).css('background-color','green');
+    $('td').css('color','black');
+    $( this ).css('color','white');
 });
 
 function initCameraUI() {
@@ -264,6 +276,7 @@ function takeSnapshot() {
     image.src = URL.createObjectURL(blob);
     image.style = "height: 100%; width:auto; display: block;"
     $('#vid_container').prepend(image);
+    currentImage = image.src;
   });
 }
 

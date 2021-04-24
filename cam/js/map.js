@@ -28,7 +28,7 @@ var map = new maplibregl.Map({
      container: 'map',
      style: style,
      center: [0, 0],
-     zoom: 22
+     zoom: 20
 });
 
 if (navigator.geolocation) { //check if geolocation is available
@@ -37,7 +37,7 @@ if (navigator.geolocation) { //check if geolocation is available
       console.log(position.coords.latitude);
       map.jumpTo({
         center: [position.coords.longitude,position.coords.latitude],
-        zoom: 21
+        zoom: 20
       });
     });
 }
@@ -61,7 +61,7 @@ function addMarker(){
   }
 }
 
-function addLink(coords){
+function addLinkOLD(coords){
   try {
     marker2.remove()
     console.log('removing second marker');
@@ -74,9 +74,16 @@ function addLink(coords){
   console.log(coords);
 }
 
+function addLink(){
+    var coords = map.getCenter();
+    currentCenter = coords;
+    console.log(coords);
+    mapactive = 0;
+}
+
 map.on('load', function () {
   map.on('click', function (e) {
     coords =e.lngLat;
-    addLink(coords);
   });
+
 })

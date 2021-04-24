@@ -111,10 +111,10 @@ td {
   padding: 3px;
 }
 #submit_button {
-  left: 5%;
+  right: 5%;
   bottom: 15%;
-  width: 40px;
-  height: 40px;
+  width: 64px;
+  height: 64px;
   background-image: url('img/primary-submit.svg');
   border-radius: 50%;
   background-color: rgba(0, 0, 0, 0.5);
@@ -224,4 +224,9 @@ td {
     left: calc(50% - 32px);
     top: calc(82% - 32px);
   }
+}
+.floatTL{
+ position:absolute;
+    top:calc(50% - 32px);
+    left:calc(50% - 32px);
 }

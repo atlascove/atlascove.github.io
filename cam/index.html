@@ -28,6 +28,11 @@
       </div>
       <div id="map">
         <script src="js/map.js"></script>
+        <div class="floatTL">
+            <img src='img/target.png' width=64 height=64 />
+
+          </svg>
+        </div>
         <button id="submit_button" name="submit" type="button"></button>
       </div>
       <div id="gui_controls">
@@ -35,7 +40,7 @@
       </div>
     </div>
     <div id='dataSelector' class='modal'>
-      <div class='modal-content'>
+      <div class='modal-content' style='max-height:50%;overflow:scroll;'>
         <span class="close">&times;</span>
         <img src='img/add.svg' width=50 height=50 id='add'/> Add new data
         <br>
@@ -43,8 +48,6 @@
         <h3>Select linked feature:</h3>
         <table id='linktable'>
         </table>
-        <br><br>
-        <img src='img/upload2.svg' width=50 height=50 id='send' /> Submit
       </div>
     </div>
     <div id='tagSelector' class='tagModal'>

@@ -1,4 +1,9 @@
 var currentTag;
+var currentCenter;
+var mapactive = 1;
+var somethingSelected = 0;
+var currentImage;
+var currentJSON;
 
 function openMap(){
  $('#map').css('height', '40%');
@@ -22,7 +27,7 @@ function closeVideo(){
 
 function createMetaData(){
   var observer = marker1.getLngLat();
-  var target = marker2.getLngLat();
+  var target = currentCenter;
   var timestamp = new Date();
   var epoch = timestamp.getTime() / 1000
   var tag = currentTag;
@@ -38,7 +43,7 @@ function createMetaData(){
 
 function getOSMData(){
   $('#linktable').empty();
-  var coords = marker2.getLngLat();
+  var coords = currentCenter;
   var bbox = turf.bbox(turf.buffer(turf.point([coords.lng,coords.lat]),10, {units: 'meters'}))
   var url = 'https://api.openstreetmap.org/api/0.6/map.json?bbox=' + bbox.toString();
   console.log(url);
@@ -53,4 +58,20 @@ function getOSMData(){
       }
     }
   });
+}
+
+function upload(img){
+  var url = 'https://atlascove.blob.core.windows.net/images?sp=racwdl&st=2021-04-24T19:22:23Z&se=2022-04-25T03:22:23Z&spr=https&sv=2020-02-10&sr=c&sig=yk%2FLsEAVxIV8F9Roqk5KNIMYKJZvJ6W1MNjsgMqryCY%3D'
+  $.ajax({
+      type: 'POST',
+      url: url,
+      data: img,
+      processData: false,
+      contentType: false
+  }).done(function(data, xhr) {
+         console.log(data);
+         var status = xhr.status;
+         console.log(status);
+  });
+
 }
