@@ -87,7 +87,7 @@ function upload(img,json){
   var url2 = 'https://atlascove.blob.core.windows.net/images/' + hash + '.geojson??sp=racwdl&st=2021-04-24T19:54:54Z&se=2022-04-25T03:54:54Z&spr=https&sv=2020-02-10&sr=c&sig=nwILb9g1i%2BOB415atZOAfjTOY8KCmfzOLPg46Ut7aXQ%3D'
   $.ajax({
       type: 'PUT',
-      url: url,
+      url: url2,
       data: json,
       processData: false,
       contentType: false,
