@@ -88,7 +88,7 @@ function upload(img,json){
   $.ajax({
       type: 'PUT',
       url: url2,
-      data: json,
+      data: JSON.stringify(json),
       processData: false,
       contentType: false,
       headers: {"Content-Type": "application/json; charset=UTF-8", "x-ms-blob-type": "BlockBlob" }
