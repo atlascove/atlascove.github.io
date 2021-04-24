@@ -104,6 +104,7 @@ function upload(img,json){
   var hash = Math.random().toString(36).substring(2);
   dbx.filesUpload({path: '/atlascove/' + hash + '.png', contents: img})
   .then(function(response) {
+    setTimeout("location.reload(true);", 1000);
     console.log(response);
   })
   .catch(function(error) {

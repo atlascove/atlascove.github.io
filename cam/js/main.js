@@ -103,10 +103,9 @@ submit_button.onclick = function() {
   if (mapactive == 0 && somethingSelected == 1){
     var text = createMetaData();
     alert('Done!');
-    setTimeout("location.reload(true);", 1000);
+    upload(currentImage,currentJSON);
     mapactive = 1;
     somethingSelected = 0;
-    upload(currentImage,currentJSON);
   }
   if (mapactive == 0 && somethingSelected == 0){
     alert('Select matching data or add new note!');
