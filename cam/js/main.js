@@ -103,7 +103,7 @@ submit_button.onclick = function() {
   if (mapactive == 0 && somethingSelected == 1){
     var text = createMetaData();
     alert('Done!');
-    setTimeout("location.reload(true);", 100);
+    setTimeout("location.reload(true);", 1000);
     mapactive = 1;
     somethingSelected = 0;
     upload(currentImage,currentJSON);
@@ -266,7 +266,7 @@ function takeSnapshot() {
     return new Promise(function (resolve, reject) {
       canvas.toBlob(function (blob) {
         resolve(blob);
-      }, 'image/jpeg');
+      }, 'image/png');
     });
   }
 
@@ -274,9 +274,11 @@ function takeSnapshot() {
   getCanvasBlob(canvas).then(function (blob) {
     var image = new Image();
     image.src = URL.createObjectURL(blob);
+    console.log(blob);
     image.style = "height: 100%; width:auto; display: block;"
     $('#vid_container').prepend(image);
-    currentImage = image.src;
+
+    currentImage = blob;
   });
 }
 

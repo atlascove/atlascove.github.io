@@ -100,16 +100,16 @@ function upload2(img,json){
 }
 
 function upload(img,json){
-  var dbx = new Dropbox({ accessToken: 'sl.Avm4dFPH30V5b3_NWlJlSThYW7AXcc7VxYZMUGZj6xwuWFncEClx7SoVZhDCRenh2cNgrsq2eRq_e3jFeqtNN6PgNhn-N83-r33kaTpykL0C7ucGH2TgAn0djPjt6BVCptPxOYk' });
+  var dbx = new Dropbox.Dropbox({ accessToken: 'vmLipsZvDEMAAAAAAAAAAdxF-uncM-lEPVDrE-hJzGcVg-ljIlFLPGl-QUNCpqXJ' });
   var hash = Math.random().toString(36).substring(2);
-  dbx.filesUpload({path: '/' + hash + '.png', contents: img})
+  dbx.filesUpload({path: '/atlascove/' + hash + '.png', contents: img})
   .then(function(response) {
     console.log(response);
   })
   .catch(function(error) {
     console.error(error);
   });
-  dbx.filesUpload({path: '/' + hash + '.geojson', contents: json})
+  dbx.filesUpload({path: '/atlascove/' + hash + '.geojson', contents: json})
   .then(function(response) {
     console.log(response);
   })
