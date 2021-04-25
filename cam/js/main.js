@@ -111,6 +111,20 @@ submit_button.onclick = function() {
   }
 }
 
+$('#layer_toggle').on('click', function(){
+  console.log('test');
+  if (currentLayer == 1){
+    map.setStyle(satelliteStyle);
+    currentLayer = 0;
+    console.log('switch layer');
+  }
+  else if (currentLayer == 0){
+    map.setStyle('https://api.maptiler.com/maps/streets/style.json?key=LVXocV2Y6nX6vEqq67iz');
+    currentLayer = 1;
+    console.log('Switch to other layer');
+  }
+})
+
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {
   modal.style.display = "none";
@@ -158,6 +172,7 @@ function initCameraUI() {
 
   takePhotoButton = document.getElementById('takePhotoButton');
   submit_button = document.getElementById('submit_button');
+  layer_toggle = document.getElementById('layer_toggle');
 
   // https://developer.mozilla.org/nl/docs/Web/HTML/Element/button
   // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_button_role

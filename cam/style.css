@@ -68,7 +68,7 @@ button {
   background-position: center center;
   background-repeat: no-repeat;
   pointer-events: auto;
-  z-index: 2;
+  z-index: 3000;
 }
 .modal, .tagModal {
   display: none; /* Hidden by default */
@@ -120,7 +120,15 @@ td {
   background-color: rgba(0, 0, 0, 0.5);
   visibility: none;
 }
-
+#layer_toggle {
+  left: 5%;
+  bottom: 15%;
+  width: 64px;
+  height: 64px;
+  background-image: url('img/layer.png');
+  visibility: none;
+  z-index: 3000;
+}
 #takePhotoButton {
   left: calc(50% - 40px);
   top: calc(50% - 40px);

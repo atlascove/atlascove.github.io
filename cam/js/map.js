@@ -1,4 +1,4 @@
-var style = {
+var satelliteStyle = {
     version: 8,
     sources: {
         'raster-tiles': {
@@ -26,7 +26,7 @@ var marker1 = new maplibregl.Marker({ color: 'blue', draggable: false })
 var marker2 = new maplibregl.Marker({ color: 'red', draggable: true }) // ignore this one, not used
 var map = new maplibregl.Map({
      container: 'map',
-     style: style,
+     style: satelliteStyle,
      center: [0, 0],
      zoom: 19
 });
