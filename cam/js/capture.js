@@ -7,7 +7,7 @@ var currentImage;
 var currentJSON;
 var originalCoords;
 var currentOSMID;
-var currentLayer = 0;
+var currentLayer = 1;
 
 function openMap(){
  $('#map').css('height', '40vh');
