@@ -35,8 +35,7 @@ function locate(){
   if (navigator.geolocation) { //check if geolocation is available
     console.log('getting user location...');
     navigator.geolocation.getCurrentPosition(function(position){
-      console.log(position.coords);
-      console.log(position.coords.latitude);
+      // do nothing
     });
   } else {
     alert('USER LOCATION NOT AVAILABLE');

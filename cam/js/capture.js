@@ -34,10 +34,12 @@ function createMetaData(){
   var timestamp = new Date();
   var epoch = timestamp.getTime() / 1000
   var tag = currentTag;
+  var hash = Math.random().toString(36).substring(2);
   var output_data = { "type": "FeatureCollection", "features": [ { "type": "Feature", "properties": {
+    "id": hash,
     "target": [target.lng,target.lat],
     "timestamp": timestamp,
-    "originalPosition": originalCoords,
+    "originalPosition": [originalCoords.lng, originalCoords.lat],
     "epoch" : epoch,
     "tag" : tag,
     "note" : currentNote,
@@ -74,9 +76,35 @@ function getOSMData(){
   });
 }
 
+function updateWorld(obj){
+  var dbx = new Dropbox.Dropbox({ accessToken: 'vmLipsZvDEMAAAAAAAAAAdxF-uncM-lEPVDrE-hJzGcVg-ljIlFLPGl-QUNCpqXJ' });
+  dbx.sharingGetSharedLinkFile({url: 'https://www.dropbox.com/s/noyogwp4zxjidtv/world.geojson'})
+    .then(function(data) {
+      var downloadUrl = URL.createObjectURL(data.fileBlob);
+      $.ajax({
+          type: 'GET',
+          url: downloadUrl
+      }).done(function(data) {
+        jdata = JSON.parse(data);
+        jdata['features'].push(obj)
+        dbx.filesUpload({ path: '/atlascove/world.geojson', contents: JSON.stringify(jdata), mode:'overwrite' })
+        .then(function(response) {
+          console.log(response);
+        })
+        .catch(function(error) {
+          console.error(error);
+        });
+    })
+    .catch(function(error) {
+      console.error(error);
+    });
+    return false;
+  })
+}
+
 function upload2(img,json){
-  var hash = Math.random().toString(36).substring(2);
-  var url = 'https://atlascove.blob.core.windows.net/images/' + hash + '.png?sp=racwdl&st=2021-04-24T19:54:54Z&se=2022-04-25T03:54:54Z&spr=https&sv=2020-02-10&sr=c&sig=nwILb9g1i%2BOB415atZOAfjTOY8KCmfzOLPg46Ut7aXQ%3D'
+  var hash = JSON.parse(json)['features'][0]['id'];
+  var url = 'https://atlascove.blob.core.windows.net/images/' + hash + '.png?sp=racwdl&st=2021-04-24T19:54:54Z&se=2022-04-25T03:54:54Z&spr=https&sv=2020-02-10&sr=c&sig=nwILb9g1i%2BOB415atZOAfjTOY8KCmfzOLPg46Ut7aXQ%3D';
   $.ajax({
       type: 'PUT',
       url: url,
@@ -105,8 +133,10 @@ function upload2(img,json){
 }
 
 function upload(img,json){
+  var hash = JSON.parse(json)['features'][0]['id'];
   var dbx = new Dropbox.Dropbox({ accessToken: 'vmLipsZvDEMAAAAAAAAAAdxF-uncM-lEPVDrE-hJzGcVg-ljIlFLPGl-QUNCpqXJ' });
-  var hash = Math.random().toString(36).substring(2);
+  var f = JSON.parse(json)['features'][0];
+  updateWorld(f);
   $('.modal-content').empty().append('<h2>Uploading...</h2>');
   $('#submit_button').hide();
   dbx.filesUpload({path: '/atlascove/' + hash + '.png', contents: img})
