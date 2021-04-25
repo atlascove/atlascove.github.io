@@ -52,7 +52,8 @@ function addMarker(){
         } catch (err){
           // do nothing
         }
-        marker1 = new maplibregl.Marker({ color: 'blue', draggable: true })
+        marker1 = new maplibregl.Marker({draggable: true 
+                                        iconUrl: 'https://github.com/atlascove/atlascove.github.io/blob/master/cam/img/human.png?raw=true'})
         .setLngLat([position.coords.longitude,position.coords.latitude])
         .addTo(map);
         originalCoords = [position.coords.longitude,position.coords.latitude];
