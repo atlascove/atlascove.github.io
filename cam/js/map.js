@@ -26,7 +26,7 @@ marker1 = new maplibregl.Marker({ color: 'blue', draggable: true })
 var marker2 = new maplibregl.Marker({ color: 'red', draggable: true }) // ignore this one, not used
 var map = new maplibregl.Map({
      container: 'map',
-     style: satelliteStyle,
+     style: 'https://api.maptiler.com/maps/streets/style.json?key=LVXocV2Y6nX6vEqq67iz',
      center: [0, 0],
      zoom: 19
 });
