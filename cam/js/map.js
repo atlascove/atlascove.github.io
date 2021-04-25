@@ -23,23 +23,20 @@ var style = {
 }
 
 var marker1 = new maplibregl.Marker({ color: 'blue', draggable: false })
-var marker2 = new maplibregl.Marker({ color: 'red', draggable: true })
+var marker2 = new maplibregl.Marker({ color: 'red', draggable: true }) // ignore this one, not used
 var map = new maplibregl.Map({
      container: 'map',
      style: style,
      center: [0, 0],
-     zoom: 20
+     zoom: 19
 });
 
 function locate(){
   if (navigator.geolocation) { //check if geolocation is available
+    console.log('getting user location...');
     navigator.geolocation.getCurrentPosition(function(position){
       console.log(position.coords);
       console.log(position.coords.latitude);
-      map.jumpTo({
-        center: [position.coords.longitude,position.coords.latitude],
-        zoom: 20
-      });
     });
   } else {
     alert('USER LOCATION NOT AVAILABLE');
@@ -54,11 +51,12 @@ function addMarker(){
         } catch (err){
           // do nothing
         }
-        marker1 = new maplibregl.Marker({ color: 'blue', draggable: false })
+        marker1 = new maplibregl.Marker({ color: 'blue', draggable: true })
         .setLngLat([position.coords.longitude,position.coords.latitude])
         .addTo(map);
+        originalCoords = [position.coords.longitude,position.coords.latitude];
         map.jumpTo({
-          center: [position.coords.longitude,position.coords.latitude], zoom: 21
+          center: [position.coords.longitude,position.coords.latitude], zoom: 19
         });
       });
   }
@@ -85,6 +83,7 @@ function addLink(){
 }
 
 map.on('load', function () {
+  setInterval(locate, 2000);
   map.on('click', function (e) {
     coords =e.lngLat;
   });

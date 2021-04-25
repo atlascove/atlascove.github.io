@@ -1,9 +1,12 @@
 var currentTag;
 var currentCenter;
+var currentNote;
 var mapactive = 1;
 var somethingSelected = 0;
 var currentImage;
 var currentJSON;
+var originalCoords;
+var currentOSMID;
 
 function openMap(){
  $('#map').css('height', '40%');
@@ -34,8 +37,11 @@ function createMetaData(){
   var output_data = { "type": "FeatureCollection", "features": [ { "type": "Feature", "properties": {
     "target": [target.lng,target.lat],
     "timestamp": timestamp,
+    "originalPosition": originalCoords,
     "epoch" : epoch,
-    "tag" : tag
+    "tag" : tag,
+    "note" : currentNote,
+    "osm_id" : currentOSMID
     },
     "geometry": { "type": "Point", "coordinates": [observer.lng,observer.lat] } } ]
   }
@@ -46,8 +52,7 @@ function createMetaData(){
     "epoch" : epoch,
     "tag" : tag
   }
-  currentJSON = output_data;
-  console.log(obj);
+  currentJSON = JSON.stringify(output_data);
 }
 
 function getOSMData(){
@@ -61,8 +66,8 @@ function getOSMData(){
     for(e=0; e < data['elements'].length; e++){
       var el = data['elements'][e]
       if(el.hasOwnProperty('tags')){
-        console.log(el['tags']);
-        var row = '<tr><td class="tag">' + JSON.stringify(el['tags']) + '</td></tr>';
+        console.log(el);
+        var row = '<tr><td class="tag" id="'+ el['id'] + '">' + JSON.stringify(el['tags']) + '</td></tr>';
         $('#linktable').append(row);
       }
     }

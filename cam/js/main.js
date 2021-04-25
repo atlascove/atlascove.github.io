@@ -126,17 +126,26 @@ $('#add').click(function(){
 
 $('#save').click(function(){
   txt = $('#tagname').val();
-  currentTag = txt;
+  currentTag = 'null';
+  currentNote = txt;
   tagModal.style.display = "none";
   somethingSelected = 1;
+  currentOSMID = '-1';
   $('td').css('background-color','white');
   $('td').css('color','black');
-  var row = '<tr><td class="tag" style="background-color:green;color:white;">' + txt + '</td></tr>';
+  var row = '<tr><td class="tag" id="-1" style="background-color:green;color:white;">' + txt + '</td></tr>';
   $('#linktable').prepend(row);
 })
 
 $("#linktable").on("click", "td", function() {
-    currentTag = $( this ).text();
+    currentOSMID = $( this ).attr('id');
+    if (currentOSMID != '-1'){
+      currentTag = $( this ).text();
+      currentNote = 'none';
+    } else {
+      currentTag = 'none';
+      currentNote = $( this ).text();
+    }
     somethingSelected = 1;
     $('td').css('background-color','white');
     $( this ).css('background-color','green');
