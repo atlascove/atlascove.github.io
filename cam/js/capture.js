@@ -102,9 +102,12 @@ function upload2(img,json){
 function upload(img,json){
   var dbx = new Dropbox.Dropbox({ accessToken: 'vmLipsZvDEMAAAAAAAAAAdxF-uncM-lEPVDrE-hJzGcVg-ljIlFLPGl-QUNCpqXJ' });
   var hash = Math.random().toString(36).substring(2);
+  $('.modal-content').empty().append('<h2>Uploading...</h2>');
+  $('#submit_button').hide();
   dbx.filesUpload({path: '/atlascove/' + hash + '.png', contents: img})
   .then(function(response) {
-    setTimeout("location.reload(true);", 1000);
+    alert('Done!');
+    setTimeout("location.reload(true);", 200);
     console.log(response);
   })
   .catch(function(error) {

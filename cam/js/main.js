@@ -102,7 +102,6 @@ submit_button.onclick = function() {
   }
   if (mapactive == 0 && somethingSelected == 1){
     var text = createMetaData();
-    alert('Done!');
     upload(currentImage,currentJSON);
     mapactive = 1;
     somethingSelected = 0;
@@ -158,6 +157,7 @@ function initCameraUI() {
     takeSnapshotUI();
     takeSnapshot();
     openMap();
+    locate();
     closeControls();
     closeVideo();
     showImage();

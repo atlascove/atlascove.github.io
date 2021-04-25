@@ -31,7 +31,8 @@ var map = new maplibregl.Map({
      zoom: 20
 });
 
-if (navigator.geolocation) { //check if geolocation is available
+function locate(){
+  if (navigator.geolocation) { //check if geolocation is available
     navigator.geolocation.getCurrentPosition(function(position){
       console.log(position.coords);
       console.log(position.coords.latitude);
@@ -40,8 +41,10 @@ if (navigator.geolocation) { //check if geolocation is available
         zoom: 20
       });
     });
+  } else {
+    alert('USER LOCATION NOT AVAILABLE');
+  }
 }
-
 
 function addMarker(){
   if (navigator.geolocation) { //check if geolocation is available
@@ -85,5 +88,6 @@ map.on('load', function () {
   map.on('click', function (e) {
     coords =e.lngLat;
   });
+  // every few seconds relocate users
 
 })
