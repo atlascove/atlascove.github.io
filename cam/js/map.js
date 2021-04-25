@@ -22,7 +22,9 @@ var style = {
     ],
 }
 
-var marker1 = new maplibregl.Marker({ color: 'blue', draggable: false })
+var marker1 = new maplibregl.Marker({
+        iconUrl: 'https://github.com/atlascove/atlascove.github.io/blob/master/cam/img/human.png?raw=true',
+        draggable: false })
 var marker2 = new maplibregl.Marker({ color: 'red', draggable: true }) // ignore this one, not used
 var map = new maplibregl.Map({
      container: 'map',
