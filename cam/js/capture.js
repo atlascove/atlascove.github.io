@@ -13,6 +13,7 @@ function openMap(){
  $('#map').css('height', '40vh');
  $('#gui_controls').css('height','0%');
  $('#submit_button').show();
+ $('#attribution').css('display', 'block');
 }
 
 function showImage(){
@@ -73,6 +74,10 @@ function getOSMData(){
         var row = '<tr><td class="tag" id="'+ el['id'] + '">' + JSON.stringify(el['tags']) + '</td></tr>';
         $('#linktable').append(row);
       }
+    }
+    if (data['elements'].length == 0){
+        var row = '<tr><td>Tap blue to add note: no OSM tags found</td>';
+        $('#linktable').append(row);
     }
   });
 }

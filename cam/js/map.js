@@ -28,7 +28,8 @@ var map = new maplibregl.Map({
      container: 'map',
      style: 'https://api.maptiler.com/maps/streets/style.json?key=LVXocV2Y6nX6vEqq67iz',
      center: [0, 0],
-     zoom: 19
+     zoom: 1,
+     attributionControl: false
 });
 
 function locate(){
@@ -56,8 +57,8 @@ function addMarker(){
         el.className = 'marker';
         el.style.backgroundImage =
         'url(img/human.png)';
-        el.style.width = '32px';
-        el.style.height = '32px';
+        el.style.width = '24px';
+        el.style.height = '24px';
         marker1 = new maplibregl.Marker(el, {draggable: true})
         .setLngLat([position.coords.longitude,position.coords.latitude])
         .addTo(map);
@@ -95,5 +96,6 @@ map.on('load', function () {
     coords =e.lngLat;
   });
   // every few seconds relocate users
-
+  $('.mapboxgl-ctrl-attrib-button.').attr('aria-pressed','true');
+  $('.mapboxgl-compact').addClass('mapboxgl-compact-show');
 })

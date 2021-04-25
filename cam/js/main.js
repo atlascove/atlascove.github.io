@@ -106,7 +106,7 @@ submit_button.onclick = function() {
     mapactive = 1;
     somethingSelected = 0;
   }
-  if (mapactive == 0 && somethingSelected == 0){
+  if (mapactive == 1 && somethingSelected == 0){
     alert('Select matching data or add new note!');
   }
 }
@@ -115,11 +115,13 @@ $('#layer_toggle').on('click', function(){
   console.log('test');
   if (currentLayer == 1){
     map.setStyle(satelliteStyle);
+    $('#attribution').empty().html('<a style="color:white;background-color:black" href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a> Bing © 2021 Microsoft Corporation');
     currentLayer = 0;
     console.log('switch layer');
   }
   else if (currentLayer == 0){
     map.setStyle('https://api.maptiler.com/maps/streets/style.json?key=LVXocV2Y6nX6vEqq67iz');
+    $('#attribution').empty().html('<a style="color:white;background-color:black" href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a> <a style="color:white;background-color:black" href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>');
     currentLayer = 1;
     console.log('Switch to other layer');
   }
@@ -128,6 +130,9 @@ $('#layer_toggle').on('click', function(){
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {
   modal.style.display = "none";
+  $("#linktable").empty();
+  somethingSelected = 0;
+  mapactive = 1;
 }
 
 span2.onclick = function() {
@@ -147,7 +152,7 @@ $('#save').click(function(){
   currentOSMID = '-1';
   $('td').css('background-color','white');
   $('td').css('color','black');
-  var row = '<tr><td class="tag" id="-1" style="background-color:green;color:white;">' + txt + '</td></tr>';
+  var row = '<tr><td class="tag" id="-1" style="background-color:#a2e8c4;color:white;">' + txt + '</td></tr>';
   $('#linktable').prepend(row);
 })
 
@@ -162,7 +167,7 @@ $("#linktable").on("click", "td", function() {
     }
     somethingSelected = 1;
     $('td').css('background-color','white');
-    $( this ).css('background-color','green');
+    $( this ).css('background-color','#a2e8c4');
     $('td').css('color','black');
     $( this ).css('color','white');
 });

@@ -28,6 +28,12 @@
         <div id="video_overlay"></div>
       </div>
       <div id="map">
+        <div id="attribution" class="mapboxgl-ctrl mapboxgl-ctrl-attrib mapboxgl-ctrl-bottom-left" style="position: absolute; left: 0; bottom: 0;display: none;color:white;background-color:black">
+          <a href="https://www.maptiler.com/copyright/" style="color:white;background-color:black" target="_blank">© MapTiler</a> <a href="https://www.openstreetmap.org/copyright" style="color:white;background-color:black" target="_blank">© OpenStreetMap contributors</a>
+        </div>
+        <div id='logo' style='position: absolute; right:0;bottom:0;background-color:#e3fc3f;color: #fcb73f; padding:6px;font: small-caps bold 14px Monaco, monospace;'>
+          <center>    A T L A S  C O V E    </center>
+        </div>
         <button id="layer_toggle" name="layer_toggle" type="button"></button>
         <script src="js/map.js"></script>
         <div class="floatTL">
@@ -43,10 +49,9 @@
     </div>
     <div id='dataSelector' class='modal'>
       <div class='modal-content' style='max-height:50%;overflow:scroll;'>
-        <span class="close">&times;</span>
-        <img src='img/add.svg' width=50 height=50 id='add'/> Add new data
+        <span class="close"><img src='img/close.png' width=50 height=50 /></span>
+        <img src='img/add.png' width=44 height=44 id='add'/>
         <br>
-        <h2>or</h2>
         <h3>Select linked feature:</h3>
         <table id='linktable'>
         </table>
