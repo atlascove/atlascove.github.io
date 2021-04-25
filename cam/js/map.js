@@ -22,9 +22,7 @@ var style = {
     ],
 }
 
-var marker1 = new maplibregl.Marker({
-        iconUrl: 'https://github.com/atlascove/atlascove.github.io/blob/master/cam/img/human.png?raw=true',
-        draggable: false })
+marker1 = new maplibregl.Marker({ color: 'blue', draggable: true })
 var marker2 = new maplibregl.Marker({ color: 'red', draggable: true }) // ignore this one, not used
 var map = new maplibregl.Map({
      container: 'map',
@@ -52,8 +50,7 @@ function addMarker(){
         } catch (err){
           // do nothing
         }
-        marker1 = new maplibregl.Marker({draggable: true 
-                                        iconUrl: 'https://github.com/atlascove/atlascove.github.io/blob/master/cam/img/human.png?raw=true'})
+        marker1 = new maplibregl.Marker({ color: 'blue', draggable: true })
         .setLngLat([position.coords.longitude,position.coords.latitude])
         .addTo(map);
         originalCoords = [position.coords.longitude,position.coords.latitude];
