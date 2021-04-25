@@ -42,6 +42,8 @@ function locate(){
   }
 }
 
+
+
 function addMarker(){
   if (navigator.geolocation) { //check if geolocation is available
       navigator.geolocation.getCurrentPosition(function(position){
@@ -50,7 +52,13 @@ function addMarker(){
         } catch (err){
           // do nothing
         }
-        marker1 = new maplibregl.Marker({ color: 'blue', draggable: true })
+        var el = document.createElement('div');
+        el.className = 'marker';
+        el.style.backgroundImage =
+        'url(img/human.png)';
+        el.style.width = '32px';
+        el.style.height = '32px';
+        marker1 = new maplibregl.Marker(el)
         .setLngLat([position.coords.longitude,position.coords.latitude])
         .addTo(map);
         originalCoords = [position.coords.longitude,position.coords.latitude];
