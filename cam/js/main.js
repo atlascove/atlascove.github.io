@@ -106,7 +106,7 @@ submit_button.onclick = function() {
     mapactive = 1;
     somethingSelected = 0;
   }
-  if (mapactive == 1 && somethingSelected == 0){
+  if (mapactive == 0 && somethingSelected == 0){
     alert('Select matching data or add new note!');
   }
 }
