@@ -58,7 +58,7 @@ function addMarker(){
         'url(img/human.png)';
         el.style.width = '32px';
         el.style.height = '32px';
-        marker1 = new maplibregl.Marker(el)
+        marker1 = new maplibregl.Marker(el, {draggable: true})
         .setLngLat([position.coords.longitude,position.coords.latitude])
         .addTo(map);
         originalCoords = [position.coords.longitude,position.coords.latitude];
