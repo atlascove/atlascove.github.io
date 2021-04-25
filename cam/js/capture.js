@@ -10,7 +10,7 @@ var currentOSMID;
 var currentLayer = 0;
 
 function openMap(){
- $('#map').css('height', '40%');
+ $('#map').css('height', '40vh');
  $('#gui_controls').css('height','0%');
  $('#submit_button').show();
 }
