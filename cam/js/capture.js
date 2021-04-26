@@ -142,7 +142,7 @@ function upload(img,json){
   var hash = JSON.parse(json)['features'][0]['id'];
   var dbx = new Dropbox.Dropbox({ accessToken: 'vmLipsZvDEMAAAAAAAAAAdxF-uncM-lEPVDrE-hJzGcVg-ljIlFLPGl-QUNCpqXJ' });
   var f = JSON.parse(json)['features'][0];
-  // updateWorld(f);
+  /* updateWorld(f);*/
   $('.modal-content').empty().append('<h2>Uploading...</h2>');
   $('#submit_button').hide();
   dbx.filesUpload({path: '/atlascove/' + hash + '.png', contents: img})
