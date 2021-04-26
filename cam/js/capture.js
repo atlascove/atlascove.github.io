@@ -84,7 +84,7 @@ function getOSMData(){
 
 function updateWorld(obj){
   var dbx = new Dropbox.Dropbox({ accessToken: 'vmLipsZvDEMAAAAAAAAAAdxF-uncM-lEPVDrE-hJzGcVg-ljIlFLPGl-QUNCpqXJ' });
-  dbx.sharingGetSharedLinkFile({url: 'https://www.dropbox.com/s/noyogwp4zxjidtv/world.geojson'})
+  dbx.sharingGetSharedLinkFile({url: 'https://www.dropbox.com/s/35s2yx3qnmcy8ks/world.geojson?dl=0'})
     .then(function(data) {
       var downloadUrl = URL.createObjectURL(data.fileBlob);
       $.ajax({
@@ -109,7 +109,7 @@ function updateWorld(obj){
 }
 
 function upload2(img,json){
-  var hash = JSON.parse(json)['features'][0]['id'];
+  var hash = JSON.parse(json)['features'][0]['properties']['id'];
   var url = 'https://atlascove.blob.core.windows.net/images/' + hash + '.png?sp=racwdl&st=2021-04-24T19:54:54Z&se=2022-04-25T03:54:54Z&spr=https&sv=2020-02-10&sr=c&sig=nwILb9g1i%2BOB415atZOAfjTOY8KCmfzOLPg46Ut7aXQ%3D';
   $.ajax({
       type: 'PUT',
@@ -139,10 +139,10 @@ function upload2(img,json){
 }
 
 function upload(img,json){
-  var hash = JSON.parse(json)['features'][0]['id'];
+  var hash = JSON.parse(json)['features'][0]['properties']['id'];
   var dbx = new Dropbox.Dropbox({ accessToken: 'vmLipsZvDEMAAAAAAAAAAdxF-uncM-lEPVDrE-hJzGcVg-ljIlFLPGl-QUNCpqXJ' });
   var f = JSON.parse(json)['features'][0];
-  /* updateWorld(f);*/
+  updateWorld(f);
   $('.modal-content').empty().append('<h2>Uploading...</h2>');
   $('#submit_button').hide();
   dbx.filesUpload({path: '/atlascove/' + hash + '.png', contents: img})
