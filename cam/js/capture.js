@@ -8,6 +8,7 @@ var currentJSON;
 var originalCoords;
 var currentOSMID;
 var currentLayer = 1;
+var currentData = {};
 
 function openMap(){
  $('#map').css('height', '40vh');
@@ -59,10 +60,54 @@ function createMetaData(){
   currentJSON = JSON.stringify(output_data);
 }
 
+function getOSMGeom(osmid,type){
+  var url = 'https://overpass-api.de/api/interpreter?data=[out:json];' + type + '(' + osmid + ');convert item ::=::,::geom=geom(),_osm_type=type();out geom;';
+  $.getJSON(url, function (data) {
+    console.log(data);
+    try {
+      map.removeLayer('selected');
+      map.removeSource('selected');
+    } catch(err) {
+      // do nothing
+    }
+    map.addSource('selected', {
+      'type': 'geojson',
+      'data': {
+        'type': 'Feature',
+        'geometry': data['elements'][0]['geometry']
+      }
+    });
+    if(type == 'way'){
+      map.addLayer({
+        'id': 'selected',
+        'type': 'line',
+        'source': 'selected',
+        'paint': {
+          'line-color': 'red',
+          'line-width': 3
+        }
+      });
+    }
+    if(type == 'node'){
+      map.addLayer({
+        'id': 'selected',
+        'type': 'circle',
+        'source': 'selected',
+        'paint': {
+          'circle-color': 'red'
+        }
+      });
+    }
+  })
+}
+
+
+
 function getOSMData(){
   $('#linktable').empty();
+  currentData = {};
   var coords = currentCenter;
-  var bbox = turf.bbox(turf.buffer(turf.point([coords.lng,coords.lat]),10, {units: 'meters'}))
+  var bbox = turf.bbox(turf.buffer(turf.point([coords.lng,coords.lat]),15, {units: 'meters'}))
   var url = 'https://api.openstreetmap.org/api/0.6/map.json?bbox=' + bbox.toString();
   console.log(url);
   $.getJSON(url, function (data) {
@@ -70,6 +115,7 @@ function getOSMData(){
     for(e=0; e < data['elements'].length; e++){
       var el = data['elements'][e]
       if(el.hasOwnProperty('tags')){
+        currentData[el['id']] = el;
         console.log(el);
         var row = '<tr><td class="tag" id="'+ el['id'] + '">' + JSON.stringify(el['tags']) + '</td></tr>';
         $('#linktable').append(row);

@@ -160,6 +160,10 @@ $("#linktable").on("click", "td", function() {
     currentOSMID = $( this ).attr('id');
     if (currentOSMID != '-1'){
       currentTag = $( this ).text();
+      var id = $( this ).attr('id');
+      console.log('selecting...');
+      console.log(currentData[id]);
+      getOSMGeom(id,currentData[id]['type']);
       currentNote = 'none';
     } else {
       currentTag = 'none';
