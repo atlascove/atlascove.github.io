@@ -96,6 +96,6 @@ map.on('load', function () {
     coords =e.lngLat;
   });
   // every few seconds relocate users
-  $('.mapboxgl-ctrl-attrib-button.').attr('aria-pressed','true');
+  //$('.mapboxgl-ctrl-attrib-button.').attr('aria-pressed','true');
   $('.mapboxgl-compact').addClass('mapboxgl-compact-show');
 })
