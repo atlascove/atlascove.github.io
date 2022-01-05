@@ -28,7 +28,7 @@ var map = new maplibregl.Map({
      container: 'map',
      style: 'https://api.maptiler.com/maps/streets/style.json?key=LVXocV2Y6nX6vEqq67iz',
      center: [0, 0],
-     zoom: 1,
+     zoom: 12,
      attributionControl: false
 });
 
@@ -64,7 +64,7 @@ function addMarker(){
         .addTo(map);
         originalCoords = [position.coords.longitude,position.coords.latitude];
         map.jumpTo({
-          center: [position.coords.longitude,position.coords.latitude], zoom: 19
+          center: [position.coords.longitude,position.coords.latitude], zoom: 16
         });
       });
   }
@@ -97,5 +97,5 @@ map.on('load', function () {
   });
   // every few seconds relocate users
   //$('.mapboxgl-ctrl-attrib-button.').attr('aria-pressed','true');
-  $('.mapboxgl-compact').addClass('mapboxgl-compact-show');
+  //$('.mapboxgl-compact').addClass('mapboxgl-compact-show');
 })
