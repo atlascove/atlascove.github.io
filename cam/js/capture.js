@@ -43,17 +43,17 @@ function createMetaData(){
       "properties": {
         "id": hash,
         "relation": "views",
-        "object" : currentOSMID
+        "object" : currentOSMID.toString(),
         "username" : "default_user",
         "tags_primary" : tag,
         "tags_secondary": tag,
         "timestamp": timestamp,
-        "camera_params" [
+        "camera_params": {
           "make": "Google",
           "model": "Pixel 5a",
           "focal_length": 25,
           "horizonal_angle" : 72
-        ]
+        }
       },
       "geometry": {
         "type": "Point",
