@@ -201,8 +201,8 @@ function upload2(img,json){
 }
 
 function upload(img,json){
-  print(JSON.stringify(json))
-  print(json)
+  console.log(JSON.stringify(json))
+  console.log(json)
   var hash = json['properties']['id'];
   var dbx = new Dropbox.Dropbox({ accessToken: 'vmLipsZvDEMAAAAAAAAAAdxF-uncM-lEPVDrE-hJzGcVg-ljIlFLPGl-QUNCpqXJ' });
   var f = json;
