@@ -201,6 +201,8 @@ function upload2(img,json){
 }
 
 function upload(img,json){
+  print(JSON.stringify(json))
+  print(json)
   var hash = json['properties']['id'];
   var dbx = new Dropbox.Dropbox({ accessToken: 'vmLipsZvDEMAAAAAAAAAAdxF-uncM-lEPVDrE-hJzGcVg-ljIlFLPGl-QUNCpqXJ' });
   var f = json;
@@ -216,7 +218,7 @@ function upload(img,json){
   .catch(function(error) {
     console.error(error);
   });
-  dbx.filesUpload({path: '/atlascove/' + hash + '.json', contents: json})
+  dbx.filesUpload({path: '/atlascove/' + hash + '.json', contents: JSON.stringify(json)})
   .then(function(response) {
     console.log(response);
   })
