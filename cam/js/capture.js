@@ -37,19 +37,31 @@ function createMetaData(){
   var timestamp = new Date();
   var epoch = timestamp.getTime() / 1000
   var tag = currentTag;
-  var hash = Math.random().toString(36).substring(2);
-  var output_data = { "type": "FeatureCollection", "features": [ { "type": "Feature", "properties": {
-    "id": hash,
-    "target": [target.lng,target.lat],
-    "timestamp": timestamp,
-    "originalPosition": [originalCoords.lng, originalCoords.lat],
-    "epoch" : epoch,
-    "tag" : tag,
-    "note" : currentNote,
-    "osm_id" : currentOSMID
-    },
-    "geometry": { "type": "Point", "coordinates": [observer.lng,observer.lat] } } ]
-  }
+  var hash = Math.random().toString(16).substring(2);
+  var output_data = {
+    "type": "Feature",
+      "properties": {
+        "id": hash,
+        "relation": "views",
+        "object" : currentOSMID
+        "username" : "default_user",
+        "tags_primary" : tag,
+        "tags_secondary": tag,
+        "timestamp": timestamp,
+        "camera_params" [
+          "make": "Google",
+          "model": "Pixel 5a",
+          "focal_length": 25,
+          "horizonal_angle" : 72
+        ]
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          observer.lng,observer.lat
+        ]
+      }
+    }
   var obj = {
     "observer": [observer.lng,observer.lat],
     "target": [target.lng,target.lat],
