@@ -53,7 +53,11 @@ function createMetaData(){
           "model": "Pixel 5a",
           "focal_length": 25,
           "horizonal_angle" : 72
-        }
+        },
+        "target_coords": [
+          target.lng,
+          target.lat
+        ]
       },
       "geometry": {
         "type": "Point",
