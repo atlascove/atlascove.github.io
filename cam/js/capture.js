@@ -73,7 +73,7 @@ function createMetaData(){
     "epoch" : epoch,
     "tag" : tag
   }
-  currentJSON = JSON.stringify(output_data);
+  currentJSON = output_data;
 }
 
 function getOSMGeom(osmid,type){
@@ -171,7 +171,7 @@ function updateWorld(obj){
 }
 
 function upload2(img,json){
-  var hash = JSON.parse(json)['features'][0]['properties']['id'];
+  var hash = JSON.parse(json)['properties']['id'];
   var url = 'https://atlascove.blob.core.windows.net/images/' + hash + '.png?sp=racwdl&st=2021-04-24T19:54:54Z&se=2022-04-25T03:54:54Z&spr=https&sv=2020-02-10&sr=c&sig=nwILb9g1i%2BOB415atZOAfjTOY8KCmfzOLPg46Ut7aXQ%3D';
   $.ajax({
       type: 'PUT',
@@ -201,7 +201,7 @@ function upload2(img,json){
 }
 
 function upload(img,json){
-  var hash = JSON.parse(json)['features'][0]['properties']['id'];
+  var hash = json['properties']['id'];
   var dbx = new Dropbox.Dropbox({ accessToken: 'vmLipsZvDEMAAAAAAAAAAdxF-uncM-lEPVDrE-hJzGcVg-ljIlFLPGl-QUNCpqXJ' });
   var f = JSON.parse(json)['features'][0];
   updateWorld(f);
