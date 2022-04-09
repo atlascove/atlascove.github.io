@@ -1,0 +1,282 @@
+body {
+  margin: 0px;
+  padding: 0px;
+  background: #000;
+}
+#vid_container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+#video {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  bottom: 0;
+  top: 0;
+  z-index: -1;
+  display:inline-block;
+}
+#gui_controls {
+  position: fixed;
+  background-color: #111; /*rgba(255, 0, 0, 0.5);*/
+  z-index: 2;
+  width: 100%;
+  height: 0%;
+  object-fit: cover;
+  bottom: 0;
+}
+#img_container {
+  position: absolute;
+  visibility: hidden;
+  background-color: #111; /*rgba(255, 0, 0, 0.5);*/
+  z-index: 3;
+  top: 0;
+}
+#attribution {
+  z-index: 5000;
+  position: relative;
+  top: 0px;
+  width: 100%;
+  display: none;
+  color:white;
+  background-color:black;
+}
+#logo {
+  z-index: 10;
+  position: relative;
+  right:0;
+  top:0px;
+  background-color:#e3fc3f;
+  color: #fcb73f;
+  padding:0px;
+  font: small-caps bold 14px Monaco, monospace;
+}
+#map {
+  position: relative;
+  border:3px solid black;
+  width: 94vw;
+  border: 0px solid transparent;
+  height: 40vh;
+  border-radius: 50%;
+  top: 58vh;
+  bottom: 0;
+  margin: 3vw;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  background: rgba(16, 119, 224, 0);
+  display:inline-block;
+}
+#video_overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  background-color: #111;
+}
+button {
+  outline: none;
+  position: absolute;
+  color: white;
+  display: block;
+  opacity: 1;
+  background: transparent;
+  border: solid 0px #fff;
+  padding: 0;
+  text-shadow: 0px 0px 0px black;
+  background-position: center center;
+  background-repeat: no-repeat;
+  pointer-events: auto;
+  z-index: 3000;
+}
+.modal, .tagModal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto; /* 15% from the top and centered */
+  padding: 10px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+.close, .close2 {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+table, th, td  {
+  border-collapse: collapse;
+  border: 1px solid black;
+  max-width: 100%;
+  width: 100%;
+  table-layout: fixed;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+}
+td {
+  padding: 3px;
+}
+#submit_button {
+  right: 5%;
+  bottom: 0%;
+  width: 80px;
+  height: 80px;
+  background-image: url('img/check.png');
+  border-radius: 50%;
+  background-color: rgb(0,0,0,0);
+  visibility: none;
+}
+#layer_toggle {
+  left: 5%;
+  bottom: 0%;
+  width: 80px;
+  height: 80px;
+  background-image: url('img/layer.png');
+  visibility: none;
+  z-index: 3000;
+}
+#takePhotoButton {
+  left: calc(50% - 40px);
+  top: calc(50% - 40px);
+  width: 80px;
+  height: 80px;
+  top: 90vh;
+  bottom: 5px;
+  background-image: url('img/cam.png');
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+#view {
+  position: absolute;
+  border-radius: 50%;
+  background-image: conic-gradient(
+      transparent 0deg, transparent 44deg, red 44deg, red 45deg, transparent 45deg, transparent 315deg, red 315deg, red 316deg, transparent 316deg, transparent 360deg
+  );
+  opacity: .5;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 4000;
+}
+#local {
+  left: calc(50% - 10px);
+  top: calc(50% - 10px);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid white;
+  background-color: rgba(244, 66, 86, 0.7);
+  z-index: 3000;
+}
+
+#takePhotoButton:active {
+  background-color: #fff;
+}
+
+#toggleFullScreenButton {
+  display: none; !important
+  width: 0px;
+  height: 0px;
+  border-radius: 0%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#switchCameraButton {
+  display: none; !important
+  width: 0px;
+  height: 0px;
+  border-radius: 0%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+@media screen and (orientation: portrait) {
+  /* portrait-specific styles */
+
+  /* video_container (video) doesn't respect height...
+       so we will fill it in completely in portrait mode
+    */
+
+
+  #vid_container {
+    width: 100%;
+    height: 80%;
+  }
+
+  #gui_controls {
+    width: 100%;
+    height: 20%;
+    left: 0;
+    position: absolute;
+  }
+
+  #switchCameraButton {
+    left: calc(20% - 32px);
+    top: calc(50% - 32px);
+  }
+
+  #toggleFullScreenButton {
+    left: calc(80% - 32px);
+    top: calc(50% - 32px);
+  }
+}
+
+@media screen and (orientation: landscape) {
+  #vid_container {
+    width: 100%;
+    height: 100%;
+  }
+
+  #vid_container.left {
+    left: 0%;
+  }
+
+  /* we default to right */
+  #gui_controls {
+    width: 0%;
+    height: 100%;
+    right: 0;
+    position: absolute;
+  }
+
+  /* for the lefties */
+  #gui_controls.left {
+    left: 0;
+  }
+
+  #switchCameraButton {
+    left: calc(50% - 32px);
+    top: calc(18% - 32px);
+  }
+
+  #toggleFullScreenButton {
+    left: calc(50% - 32px);
+    top: calc(82% - 32px);
+  }
+}
+.floatTL{
+ position:absolute;
+    top:calc(50% - 32px);
+    left:calc(50% - 32px);
+}

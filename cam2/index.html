@@ -1,0 +1,88 @@
+<html>
+  <head>
+    <link rel="shortcut icon" type="image/png" href="img/favicon.png"/>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1"
+    />
+    <meta
+      name="description"
+      content="Build a world"
+    />
+    <meta name="keywords" content="HTML,CSS,JavaScript, WebRTC, Camera" />
+    <meta name="author" content="Kasper Kamperman" />
+    <title>Atlas Cove Cam</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <script src="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.js"></script>
+    <link href="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.css" rel="stylesheet" />
+    <script src='https://unpkg.com/@turf/turf@6.3.0/turf.min.js'></script>
+    <script src='https://unpkg.com/dropbox@5.2.1/dist/Dropbox-sdk.min.js'></script>
+  </head>
+  <body>
+    <div id="container">
+      <div id='logo'>
+        <center>    A T L A S  C O V E v0.03  </center>
+      </div>
+      <div id="vid_container">
+
+        <video id="video" autoplay playsinline>
+
+        </video>
+        <div id="video_overlay"></div>
+
+        <div id="map">
+          <button id="local" name="take Photo" type="button"></button>
+
+          <center>
+            <div id="attribution" class="mapboxgl-ctrl mapboxgl-ctrl-attrib mapboxgl-ctrl-bottom-left">
+              <a href="https://www.maptiler.com/copyright/" style="color:white;background-color:black" target="_blank">© MapTiler</a><br>
+              <a href="https://www.openstreetmap.org/copyright" style="color:white;background-color:black" target="_blank">© OpenStreetMap contributors</a>
+            </div>
+          </center>
+
+          <div width="100vw" height="100vh" id="view">
+          </div>
+
+          <script src="js/map.js"></script>
+
+          <div id="target" class="floatTL">
+              <img src='img/target.png' width=64 height=64 />
+
+            </svg>
+          </div>
+        </div>
+
+      </div>
+      <button id="takePhotoButton" name="take Photo" type="button"></button>
+      <button id="layer_toggle" name="layer_toggle" type="button"></button>
+      <button id="submit_button" name="submit" type="button"></button>
+    </div>
+    <div id='dataSelector' class='modal'>
+      <div class='modal-content' style='max-height:50%;overflow:scroll;'>
+        <span class="close"><img src='img/close.png' width=50 height=50 /></span>
+        <img src='img/add.png' width=44 height=44 id='add'/>
+        <br>
+        <h3>Select linked feature:</h3>
+        <table id='linktable'>
+        </table>
+      </div>
+    </div>
+    <div id='tagSelector' class='tagModal'>
+      <div class='modal-content'>
+        <span class="close2">&times;</span>
+        <br><br>
+        <label for="fname">Add note:</label>
+        <input type="textarea" id="tagname" name="tagname"><br><br>
+        <img src='img/save.png' width=36 height=36 id='save' />
+      </div>
+    </div>
+    <script src="js/adapter.min.js"></script>
+    <script src="js/screenfull.min.js"></script>
+    <script src="js/howler.core.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/capture.js"></script>
+  </body>
+</html>
