@@ -115,7 +115,8 @@ map.on('load', function () {
         console.log("CURRENT HEADING")
         console.log(heading)
         console.log(position)
-        alert(heading);
+        currentHeading = heading;
+        map.setHeading(heading);
       }
     );
   }

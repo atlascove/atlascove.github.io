@@ -15,6 +15,7 @@ var switchCameraButton;
 var amountOfCameras = 0;
 var currentFacingMode = 'environment';
 var centering = 1;
+var currentHeading = 0;
 
 // this function counts the amount of video inputs
 // it replaces DetectRTC that was previously implemented.
