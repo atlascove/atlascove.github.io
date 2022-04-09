@@ -53,7 +53,7 @@ function createMetaData(){
           "model": "Pixel 5a",
           "focal_length": 25,
           "horizonal_angle" : 72,
-          "compass_angle": 135
+          "compass_angle": currentHeading
         },
         "target_coords": [
           target.lng,

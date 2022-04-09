@@ -116,7 +116,7 @@ map.on('load', function () {
         console.log(heading)
         console.log(position)
         currentHeading = heading;
-        map.setHeading(heading);
+        map.setBearing(heading);
       }
     );
   }
