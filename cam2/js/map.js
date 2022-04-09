@@ -33,31 +33,7 @@ var map = new maplibregl.Map({
      attributionControl: false
 });
 
-function map_expand(){
-  $('#map').css('height', '40vh');
-  $('#map').css('top', '60vh');
-}
 
-function center(){
-  if (centering === 1) {
-    navigator.geolocation.getCurrentPosition(function(position){
-      map.jumpTo({
-        center: [position.coords.longitude,position.coords.latitude], zoom: 16
-      });
-    });
-  }
-}
-
-function locate(){
-  if (navigator.geolocation) { //check if geolocation is available
-    console.log('getting user location...');
-    navigator.geolocation.getCurrentPosition(function(position){
-
-    });
-  } else {
-    alert('USER LOCATION NOT AVAILABLE');
-  }
-}
 
 
 
@@ -115,6 +91,46 @@ map.on('load', function () {
   map.on('click', function (e) {
     coords =e.lngLat;
   });
+
+  function map_expand(){
+    $('#map').css('height', '40vh');
+    $('#map').css('top', '60vh');
+  }
+
+  function center(){
+    if (centering === 1) {
+      navigator.geolocation.getCurrentPosition(function(position){
+        map.jumpTo({
+          center: [position.coords.longitude,position.coords.latitude], zoom: 16
+        });
+      });
+    }
+  }
+
+  function checkHeading(){
+    navigator.geolocation.getCurrentPosition(
+      function(position){
+        console.log(position)
+        heading = position.coords.heading;
+        console.log("CURRENT HEADING")
+        console.log(heading)
+        console.log(position)
+        alert(heading);
+      }
+    );
+  }
+
+
+  function locate(){
+    if (navigator.geolocation) { //check if geolocation is available
+      console.log('getting user location...');
+      navigator.geolocation.getCurrentPosition(function(position){
+
+      });
+    } else {
+      alert('USER LOCATION NOT AVAILABLE');
+    }
+  }
   // every few seconds relocate users
   //$('.mapboxgl-ctrl-attrib-button.').attr('aria-pressed','true');
   //$('.mapboxgl-compact').addClass('mapboxgl-compact-show');

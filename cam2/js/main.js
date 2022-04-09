@@ -45,25 +45,8 @@ function deviceCount() {
   });
 }
 
-function checkHeading(){
-  navigator.geolocation.getCurrentPosition(
-    function(position){
-      heading = position.coords.heading
-      console.log("CURRENT HEADING")
-      console.log(heading)
-      console.log(position)
-      alert(heading);
-    }
-  );
-}
-
 document.addEventListener('DOMContentLoaded', function (event) {
   $('#target').hide()
-  if (
-    navigator.geolocation
-  ) {
-    checkHeading()
-  }
 
   // check if mediaDevices is supported
   if (
