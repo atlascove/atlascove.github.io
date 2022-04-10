@@ -23,7 +23,6 @@ function showImage(){
 
 function closeControls(){
   $('#takePhotoButton').hide();
-  $('gui_controls').hide();
 }
 
 function closeVideo(){
@@ -216,7 +215,11 @@ function upload(img,json){
     setTimeout("location.reload(true);", 200);
     centering = 1;
     map.scrollZoom.disable();
+    map.dragPan.disable();
+    $("#view").show();
+    $("#local").show();
     map.setPitch(70);
+    $('#submit_button').hide();
     console.log(response);
   })
   .catch(function(error) {

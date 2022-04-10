@@ -34,7 +34,10 @@ var map = new maplibregl.Map({
 });
 
 
-
+function map_expand(){
+  $('#map').css('height', '40vh');
+  $('#map').css('top', '60vh');
+}
 
 
 function addMarker(){
@@ -83,55 +86,15 @@ function addLink(){
 }
 
 map.on('load', function () {
-  setInterval(locate, 2000);
-  setInterval(center, 100);
-  setInterval(checkHeading, 3000);
   map.scrollZoom.disable();
+  map.dragPan.disable();
   center();
   map.on('click', function (e) {
     coords =e.lngLat;
   });
 
-  function map_expand(){
-    $('#map').css('height', '40vh');
-    $('#map').css('top', '60vh');
-  }
-
-  function center(){
-    if (centering === 1) {
-      navigator.geolocation.getCurrentPosition(function(position){
-        map.jumpTo({
-          center: [position.coords.longitude,position.coords.latitude], zoom: 16
-        });
-      });
-    }
-  }
-
-  function checkHeading(){
-    navigator.geolocation.getCurrentPosition(
-      function(position){
-        console.log(position)
-        heading = position.coords.heading;
-        console.log("CURRENT HEADING")
-        console.log(heading)
-        console.log(position)
-        currentHeading = heading;
-        map.setBearing(heading);
-      }
-    );
-  }
 
 
-  function locate(){
-    if (navigator.geolocation) { //check if geolocation is available
-      console.log('getting user location...');
-      navigator.geolocation.getCurrentPosition(function(position){
-
-      });
-    } else {
-      alert('USER LOCATION NOT AVAILABLE');
-    }
-  }
   // every few seconds relocate users
   //$('.mapboxgl-ctrl-attrib-button.').attr('aria-pressed','true');
   //$('.mapboxgl-compact').addClass('mapboxgl-compact-show');

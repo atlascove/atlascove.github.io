@@ -17,6 +17,41 @@ var currentFacingMode = 'environment';
 var centering = 1;
 var currentHeading = 0;
 
+function locate(){
+  if (navigator.geolocation) { //check if geolocation is available
+    console.log('getting user location...');
+    navigator.geolocation.getCurrentPosition(function(position){
+
+    });
+  } else {
+    alert('USER LOCATION NOT AVAILABLE');
+  }
+}
+
+function center(){
+  if (centering === 1) {
+    navigator.geolocation.getCurrentPosition(function(position){
+      map.jumpTo({
+        center: [position.coords.longitude,position.coords.latitude], zoom: 16
+      });
+    });
+  }
+}
+
+function checkHeading(){
+  navigator.geolocation.getCurrentPosition(
+    function(position){
+      console.log(position)
+      heading = position.coords.heading;
+      console.log("CURRENT HEADING")
+      console.log(heading)
+      console.log(position)
+      currentHeading = heading;
+      map.setBearing(heading);
+    }
+  );
+}
+
 // this function counts the amount of video inputs
 // it replaces DetectRTC that was previously implemented.
 function deviceCount() {
@@ -48,6 +83,11 @@ function deviceCount() {
 
 document.addEventListener('DOMContentLoaded', function (event) {
   $('#target').hide()
+  $('#submit_button').hide();
+
+  setInterval(locate, 2000);
+  setInterval(center, 100);
+  setInterval(checkHeading, 1000);
 
   // check if mediaDevices is supported
   if (
@@ -194,15 +234,19 @@ function initCameraUI() {
     takeSnapshot();
     //openMap();
     locate();
-    $('#target').show()
-    map_expand()
+    $('#target').show();
+    map_expand();
     closeControls();
     closeVideo();
     showImage();
     addMarker();
     centering = 0;
     map.scrollZoom.enable();
+    map.dragPan.enable();
     map.setPitch(30);
+    $("#view").hide();
+    $("#local").hide();
+    $('#submit_button').show();
   });
 
 
