@@ -13,6 +13,7 @@ var takePhotoButton;
 var toggleFullScreenButton;
 var switchCameraButton;
 var amountOfCameras = 0;
+var currentHeading = 0;
 var currentFacingMode = 'environment';
 
 // this function counts the amount of video inputs
@@ -42,6 +43,21 @@ function deviceCount() {
         resolve(0);
       });
   });
+}
+
+function checkHeading(){
+  navigator.geolocation.getCurrentPosition(
+    function(position){
+      console.log(position)
+      heading = position.coords.heading;
+      console.log("CURRENT HEADING")
+      console.log(heading)
+      console.log(position)
+      currentHeading = heading;
+      //map.setBearing(heading);
+      }]
+    }
+  );
 }
 
 document.addEventListener('DOMContentLoaded', function (event) {
@@ -187,6 +203,7 @@ function initCameraUI() {
   // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_button_role
 
   takePhotoButton.addEventListener('click', function () {
+    checkHeading();
     takeSnapshotUI();
     takeSnapshot();
     openMap();
