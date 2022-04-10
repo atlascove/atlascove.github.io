@@ -50,9 +50,11 @@ body {
 }
 #logo {
   z-index: 10;
-  position: relative;
+  position: absolute;
+  width: 100vw;
   right:0;
-  top:0px;
+  bottom:0px;
+  height: 3vh;
   background-color:#e3fc3f;
   color: #fcb73f;
   padding:0px;
