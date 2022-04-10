@@ -56,18 +56,20 @@ body {
 }
 #map {
   position: relative;
-  border:3px solid black;
-  width: 94vw;
-  border: 0px solid transparent;
-  height: 35vh;
+  width: 110vw;
+  border: transparent;
+  align-items: center;
+  height: 110vw;
   border-radius: 50%;
-  top: 60vh;
+  border-top-left-radius: 50%;
+  border-top-right-radius: 50%;
+  top: 75vh;
   bottom: 0;
-  margin: 3vw;
-  left: 0;
+  margin: 0vw;
+  left: -5vw;
   right: 0;
   z-index: 5;
-  background: rgba(16, 119, 224, 0);
+  background: transparent;
   display:inline-block;
   opacity: 0.8;
 }
@@ -108,7 +110,7 @@ button {
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  background-color: rgba(0,0,0,0); /* Black w/ opacity */
 }
 .modal-content {
   background-color: #fefefe;
@@ -158,10 +160,10 @@ td {
   z-index: 3000;
 }
 #takePhotoButton {
-  left: calc(50% - 40px);
-  top: calc(50% - 40px);
-  width: 80px;
-  height: 80px;
+  left: calc(50% - 35px);
+  top: calc(50% - 35px);
+  width: 70px;
+  height: 70px;
   top: 90vh;
   bottom: 5px;
   background-image: url('img/cam.png');
@@ -223,6 +225,8 @@ td {
   #vid_container {
     width: 100%;
     height: 80%;
+    overflow-x: hidden;
+    overflow-y: hidden;
   }
 
   #gui_controls {
@@ -278,6 +282,6 @@ td {
 }
 .floatTL{
  position:absolute;
-    top:calc(50% - 32px);
-    left:calc(50% - 32px);
+    top:calc(55vw - 32px);
+    left:calc(55vw - 32px);
 }

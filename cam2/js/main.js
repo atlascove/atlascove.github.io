@@ -33,7 +33,7 @@ function center(){
   if (centering === 1) {
     navigator.geolocation.getCurrentPosition(function(position){
       map.jumpTo({
-        center: [position.coords.longitude,position.coords.latitude], zoom: 16
+        center: [position.coords.longitude,position.coords.latitude], zoom: 17
       });
     });
   }
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
 
   setInterval(locate, 2000);
   setInterval(center, 100);
-  setInterval(checkHeading, 1000);
+  setInterval(checkHeading, 100);
 
   // check if mediaDevices is supported
   if (
@@ -245,7 +245,6 @@ function initCameraUI() {
     addMarker();
     $('map').css('opacity',1);
     centering = 0;
-    map.scrollZoom.enable();
     map.dragPan.enable();
     map.setPitch(30);
     $("#view").hide();
@@ -365,7 +364,7 @@ function takeSnapshot() {
     var image = new Image();
     image.src = URL.createObjectURL(blob);
     console.log(blob);
-    image.style = "height: auto; width:100%; display: flex;"
+    image.style = "height: 100vh; width:100%; position: relative; overflow: hidden; display: flex;"
     $('#container').prepend(image);
 
     currentImage = blob;

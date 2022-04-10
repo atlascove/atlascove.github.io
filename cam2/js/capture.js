@@ -129,7 +129,7 @@ function getOSMData(){
     console.log(data);
     for(e=0; e < data['elements'].length; e++){
       var el = data['elements'][e]
-      if(el.hasOwnProperty('tags')){
+      if(el.hasOwnProperty('tags') && el['type'] !== 'relation'){
         currentData[el['id']] = el;
         console.log(el);
         var row = '<tr><td class="tag" id="'+ el['id'] + '">' + JSON.stringify(el['tags']) + '</td></tr>';
@@ -215,7 +215,6 @@ function upload(img,json){
     alert('Done!');
     setTimeout("location.reload(true);", 200);
     centering = 1;
-    map.scrollZoom.disable();
     map.dragPan.disable();
     $("#view").show();
     $("#local").show();
