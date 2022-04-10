@@ -346,8 +346,8 @@ function takeSnapshot() {
   var width = video.videoWidth;
   var height = video.videoHeight;
 
-  canvas.width = $(window).width();
-  canvas.height = $(window).height();
+  canvas.width = width;
+  canvas.height = height;
 
   context = canvas.getContext('2d');
   context.drawImage(video, 0, 0, width, height);
@@ -370,8 +370,7 @@ function takeSnapshot() {
     image.src = URL.createObjectURL(blob);
     console.log(blob);
     image.style = "height:" + $(window).height() + "; width:" + $(window).width() + "; position: relative; overflow: hidden; display: flex;"
-    $('#container').append(image);
-    //$('#container').css('background-image', "url(data:image/png;base64," + blob + ")");
+    $('#container').prepend(image);
 
     currentImage = blob;
   });
