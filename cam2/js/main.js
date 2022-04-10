@@ -303,11 +303,14 @@ function initCameraStream() {
   // or cropped at the sides (landscape)
   var size = 1280;
 
+  console.log($(window).height() );
+  console.log($(window).width() );
+
   var constraints = {
     audio: false,
     video: {
-      width: { ideal: window.innerWidth },
-      height: { ideal: window.innerHeight },
+      width: { ideal: $(window).width() },
+      height: { ideal:$(window).height() },
       //width: { min: 1024, ideal: window.innerWidth, max: 1920 },
       //height: { min: 776, ideal: window.innerHeight, max: 1080 },
       facingMode: currentFacingMode,
@@ -327,6 +330,8 @@ function initCameraStream() {
     const settings = track.getSettings();
     str = JSON.stringify(settings, null, 4);
     console.log('settings ' + str);
+    constraints.video.width.ideal = $(window).width();
+    constraints.video.height.ideal = $(window).height();
   }
 
   function handleError(error) {
@@ -364,7 +369,7 @@ function takeSnapshot() {
     var image = new Image();
     image.src = URL.createObjectURL(blob);
     console.log(blob);
-    image.style = "height: 100vh; width:100%; position: relative; overflow: hidden; display: flex;"
+    image.style = "height:" + $(window).height() + "; width:" + $(window).width() + "; position: relative; overflow: hidden; display: flex;"
     $('#container').prepend(image);
 
     currentImage = blob;

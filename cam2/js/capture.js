@@ -33,9 +33,10 @@ function createMetaData(){
   var observer = marker1.getLngLat();
   var target = currentCenter;
   var timestamp = new Date();
-  var epoch = timestamp.getTime() / 1000
+  var epoch = timestamp.getTime()
+  var hash = epoch.toString(16);
   var tag = currentTag;
-  var hash = timestamp.toString(16);
+  console.log(hash)
   var output_data = {
     "type": "Feature",
       "properties": {
