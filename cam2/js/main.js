@@ -243,6 +243,7 @@ function initCameraUI() {
     closeVideo();
     showImage();
     addMarker();
+    $('map').css('opacity',1);
     centering = 0;
     map.scrollZoom.enable();
     map.dragPan.enable();

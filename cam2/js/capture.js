@@ -223,6 +223,7 @@ function upload(img,json){
     map.setPitch(70);
     $('#submit_button').hide();
     console.log(response);
+    $('map').css('opacity','0.8');
   })
   .catch(function(error) {
     console.error(error);
