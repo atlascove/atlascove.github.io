@@ -218,6 +218,7 @@ function upload(img,json){
     map.dragPan.disable();
     $("#view").show();
     $("#local").show();
+    editing = 0;
     map.setPitch(70);
     $('#submit_button').hide();
     console.log(response);

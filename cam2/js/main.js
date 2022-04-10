@@ -16,6 +16,7 @@ var amountOfCameras = 0;
 var currentFacingMode = 'environment';
 var centering = 1;
 var currentHeading = 0;
+var editing = 0;
 
 function locate(){
   if (navigator.geolocation) { //check if geolocation is available
@@ -41,13 +42,15 @@ function center(){
 function checkHeading(){
   navigator.geolocation.getCurrentPosition(
     function(position){
-      console.log(position)
-      heading = position.coords.heading;
-      console.log("CURRENT HEADING")
-      console.log(heading)
-      console.log(position)
-      currentHeading = heading;
-      map.setBearing(heading);
+      if (editing == 0) {
+        console.log(position)
+        heading = position.coords.heading;
+        console.log("CURRENT HEADING")
+        console.log(heading)
+        console.log(position)
+        currentHeading = heading;
+        map.setBearing(heading);
+      }
     }
   );
 }
@@ -247,6 +250,7 @@ function initCameraUI() {
     $("#view").hide();
     $("#local").hide();
     $('#submit_button').show();
+    editing = 1;
   });
 
 
