@@ -11,9 +11,10 @@ var currentLayer = 1;
 var currentData = {};
 
 function openMap(){
- $('#map').css('height', '40vh');
+ //$('#map').css('height', '40vh');
+ $('#attribution').hide()
  $('#gui_controls').css('height','0%');
- $('#attribution').css('display', 'block');
+ //$('#attribution').css('display', 'block');
 }
 
 function showImage(){

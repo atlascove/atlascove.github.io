@@ -29,15 +29,18 @@ var map = new maplibregl.Map({
      style: 'https://api.maptiler.com/maps/streets/style.json?key=LVXocV2Y6nX6vEqq67iz',
      center: [0, 0],
      zoom: 17,
-     pitch: 70,
+     pitch: 30,
      attributionControl: false
 });
 
 
 function map_expand(){
-  //$('#map').css('height', '30vh');
-  $('#map').css('top', '60vh');
+  $('#map').css('height', '50vh');
+  $('#map').css('width', '116vw');
+  $('#map').css('bottom', '-16vh');
+  $('#map').css('left', '-8vw');
   $('#map').css('opacity',1);
+  map.resize();
 
 }
 

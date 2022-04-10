@@ -59,19 +59,17 @@ body {
   background-color:black;
 }
 #map {
-  position: relative;
-  width: 110vw;
+  position: absolute;
+  width: 50vw;
   border: transparent;
   align-items: center;
-  height: 110vw;
+  height: 50vw;
   border-radius: 50%;
   border-top-left-radius: 50%;
   border-top-right-radius: 50%;
-  top: 75vh;
-  bottom: 0;
+  bottom: 10vh;
   margin: 0vw;
-  left: -5vw;
-  right: 0;
+  right: 2vw;
   z-index: 5;
   background: transparent;
   display:inline-block;
@@ -147,8 +145,8 @@ td {
 #submit_button {
   right: 5%;
   bottom: 0%;
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   background-image: url('img/check.png');
   border-radius: 50%;
   background-color: rgb(0,0,0,0);
@@ -157,19 +155,27 @@ td {
 #layer_toggle {
   left: 5%;
   bottom: 0%;
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   background-image: url('img/layer.png');
+  visibility: none;
+  z-index: 3000;
+}
+#view_toggle {
+  left: 5%;
+  bottom: 0%;
+  width: 70px;
+  height: 70px;
+  background-image: url('img/flip.png');
+  background-color: rgb(0,0,0,0);
   visibility: none;
   z-index: 3000;
 }
 #takePhotoButton {
   left: calc(50% - 35px);
-  top: calc(50% - 35px);
   width: 70px;
   height: 70px;
-  top: 90vh;
-  bottom: 5px;
+  bottom: 0px;
   background-image: url('img/cam.png');
   border-radius: 50%;
   background-color: rgba(0, 0, 0, 0.5);
@@ -286,6 +292,6 @@ td {
 }
 .floatTL{
  position:absolute;
-    top:calc(55vw - 32px);
-    left:calc(55vw - 32px);
+    top:calc(50% - 32px);
+    left:calc(50% - 32px);
 }
