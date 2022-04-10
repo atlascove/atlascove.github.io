@@ -54,6 +54,10 @@ function createMetaData(){
           "horizonal_angle" : 72,
           "compass_angle": currentHeading
         },
+        "original_coords": [
+          originalCoords.lng,
+          originalCoords.lat
+        ],
         "target_coords": [
           target.lng,
           target.lat

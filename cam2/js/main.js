@@ -87,7 +87,7 @@ function deviceCount() {
 document.addEventListener('DOMContentLoaded', function (event) {
   $('#target').hide()
   $('#submit_button').hide();
-
+  window.scrollTo(0, document.body.scrollHeight);
   setInterval(locate, 2000);
   setInterval(center, 100);
   setInterval(checkHeading, 100);
