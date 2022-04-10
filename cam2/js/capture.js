@@ -13,7 +13,6 @@ var currentData = {};
 function openMap(){
  $('#map').css('height', '40vh');
  $('#gui_controls').css('height','0%');
- $('#submit_button').show();
  $('#attribution').css('display', 'block');
 }
 

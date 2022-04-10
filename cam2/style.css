@@ -63,9 +63,9 @@ body {
   border:3px solid black;
   width: 94vw;
   border: 0px solid transparent;
-  height: 40vh;
+  height: 35vh;
   border-radius: 50%;
-  top: 58vh;
+  top: 60vh;
   bottom: 0;
   margin: 3vw;
   left: 0;
@@ -73,6 +73,7 @@ body {
   z-index: 5;
   background: rgba(16, 119, 224, 0);
   display:inline-block;
+  opacity: 0.8;
 }
 #video_overlay {
   position: fixed;
