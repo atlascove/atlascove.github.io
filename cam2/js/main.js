@@ -369,7 +369,7 @@ function takeSnapshot() {
     var image = new Image();
     image.src = URL.createObjectURL(blob);
     console.log(blob);
-    image.style = "height:" + $(window).height() + "; width:" + $(window).width() + "; position: relative; overflow: hidden; display: flex;"
+    image.style = "height:" + height + "; width:" + width + "; position: relative; overflow: hidden; display: flex;"
     $('#container').prepend(image);
 
     currentImage = blob;
