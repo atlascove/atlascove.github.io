@@ -48,18 +48,6 @@ body {
   color:white;
   background-color:black;
 }
-#logo {
-  z-index: 10;
-  position: absolute;
-  width: 100vw;
-  right:0;
-  bottom:0px;
-  height: 3vh;
-  background-color:#e3fc3f;
-  color: #fcb73f;
-  padding:0px;
-  font: small-caps bold 14px Monaco, monospace;
-}
 #map {
   position: relative;
   border:3px solid black;

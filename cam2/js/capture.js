@@ -35,7 +35,7 @@ function createMetaData(){
   var timestamp = new Date();
   var epoch = timestamp.getTime() / 1000
   var tag = currentTag;
-  var hash = Math.random().toString(16).substring(2);
+  var hash = timestamp.toString(16);
   var output_data = {
     "type": "Feature",
       "properties": {
@@ -171,7 +171,9 @@ function updateWorld(obj){
 
 function upload2(img,json){
   var hash = JSON.parse(json)['properties']['id'];
-  var url = 'https://atlascove.blob.core.windows.net/images/' + hash + '.png?sp=racwdl&st=2021-04-24T19:54:54Z&se=2022-04-25T03:54:54Z&spr=https&sv=2020-02-10&sr=c&sig=nwILb9g1i%2BOB415atZOAfjTOY8KCmfzOLPg46Ut7aXQ%3D';
+  var current = new Date();
+  var cDate = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
+  var url = 'https://atlascove.blob.core.windows.net/images/image_' + hash + '_' + cDate + '.png?sp=racwdl&st=2021-04-24T19:54:54Z&se=2022-04-25T03:54:54Z&spr=https&sv=2020-02-10&sr=c&sig=nwILb9g1i%2BOB415atZOAfjTOY8KCmfzOLPg46Ut7aXQ%3D';
   $.ajax({
       type: 'PUT',
       url: url,
@@ -184,7 +186,7 @@ function upload2(img,json){
          var status = xhr.status;
          console.log(status);
   });
-  var url2 = 'https://atlascove.blob.core.windows.net/images/' + hash + '.geojson??sp=racwdl&st=2021-04-24T19:54:54Z&se=2022-04-25T03:54:54Z&spr=https&sv=2020-02-10&sr=c&sig=nwILb9g1i%2BOB415atZOAfjTOY8KCmfzOLPg46Ut7aXQ%3D'
+  var url2 = 'https://atlascove.blob.core.windows.net/images/data_' + hash + '_' + cDate + '.json??sp=racwdl&st=2021-04-24T19:54:54Z&se=2022-04-25T03:54:54Z&spr=https&sv=2020-02-10&sr=c&sig=nwILb9g1i%2BOB415atZOAfjTOY8KCmfzOLPg46Ut7aXQ%3D'
   $.ajax({
       type: 'PUT',
       url: url2,
@@ -208,7 +210,7 @@ function upload(img,json){
   //updateWorld(f);
   $('.modal-content').empty().append('<h2>Uploading...</h2>');
   $('#submit_button').hide();
-  dbx.filesUpload({path: '/atlascove/' + hash + '.png', contents: img})
+  dbx.filesUpload({path: '/atlascove/image_'  + hash + '_' + cDate + '.png', contents: img})
   .then(function(response) {
     alert('Done!');
     setTimeout("location.reload(true);", 200);
@@ -225,7 +227,7 @@ function upload(img,json){
   .catch(function(error) {
     console.error(error);
   });
-  dbx.filesUpload({path: '/atlascove/' + hash + '.json', contents: JSON.stringify(json)})
+  dbx.filesUpload({path: '/atlascove/data_'  + hash + '_' + cDate +  '.json', contents: JSON.stringify(json)})
   .then(function(response) {
     console.log(response);
   })
