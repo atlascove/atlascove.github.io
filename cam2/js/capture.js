@@ -205,6 +205,8 @@ function upload(img,json){
   console.log(JSON.stringify(json))
   console.log(json)
   var hash = json['properties']['id'];
+  var current = new Date();
+  var cDate = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
   var dbx = new Dropbox.Dropbox({ accessToken: 'vmLipsZvDEMAAAAAAAAAAdxF-uncM-lEPVDrE-hJzGcVg-ljIlFLPGl-QUNCpqXJ' });
   var f = json;
   //updateWorld(f);
