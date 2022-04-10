@@ -55,8 +55,7 @@ function checkHeading(){
       console.log(position)
       currentHeading = heading;
       //map.setBearing(heading);
-      }]
-    }
+      }
   );
 }
 
