@@ -35,9 +35,9 @@ function createMetaData(){
   var observer = marker1.getLngLat();
   var target = currentCenter;
   var timestamp = new Date();
-  var epoch = timestamp.getTime() / 1000
+  var epoch = timestamp.getTime()
   var tag = currentTag;
-  var hash = Math.random().toString(16).substring(2);
+  var hash = epoch.toString(16);
   var output_data = {
     "type": "Feature",
       "properties": {
@@ -52,8 +52,13 @@ function createMetaData(){
           "make": "Google",
           "model": "Pixel 5a",
           "focal_length": 25,
-          "horizonal_angle" : 72
+          "horizonal_angle" : 72,
+          "compass_angle": currentHeading
         },
+        "original_coords": [
+          originalCoords.lng,
+          originalCoords.lat
+        ],
         "target_coords": [
           target.lng,
           target.lat
@@ -203,13 +208,15 @@ function upload2(img,json){
 function upload(img,json){
   console.log(JSON.stringify(json))
   console.log(json)
+  var current = new Date();
+  var cDate = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
   var hash = json['properties']['id'];
   var dbx = new Dropbox.Dropbox({ accessToken: 'vmLipsZvDEMAAAAAAAAAAdxF-uncM-lEPVDrE-hJzGcVg-ljIlFLPGl-QUNCpqXJ' });
   var f = json;
   //updateWorld(f);
   $('.modal-content').empty().append('<h2>Uploading...</h2>');
   $('#submit_button').hide();
-  dbx.filesUpload({path: '/atlascove/' + hash + '.png', contents: img})
+  dbx.filesUpload({path: '/atlascove/image_' + hash + '_' + cDate + '.png', contents: img})
   .then(function(response) {
     alert('Done!');
     setTimeout("location.reload(true);", 200);
@@ -218,7 +225,7 @@ function upload(img,json){
   .catch(function(error) {
     console.error(error);
   });
-  dbx.filesUpload({path: '/atlascove/' + hash + '.json', contents: JSON.stringify(json)})
+  dbx.filesUpload({path: '/atlascove/data_' + hash + '_' + cDate + '.json', contents: JSON.stringify(json)})
   .then(function(response) {
     console.log(response);
   })
