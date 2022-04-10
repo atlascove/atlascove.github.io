@@ -251,6 +251,7 @@ function initCameraUI() {
     $("#local").hide();
     $('#submit_button').show();
     editing = 1;
+    map.setBearing(0);
   });
 
 
