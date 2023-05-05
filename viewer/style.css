@@ -7,24 +7,28 @@ body {
   display: flex;
   flex-direction: row;
   height: 100%;
+  overflow: hidden;
+  width: 100%;
 }
 #map {
   width: 70%;
-  height: 100%;
+  /* height: 100%; */
   z-index: 3;
+  float: right;
 }
 #viewer {
   width: 30%;
-  height: 100%;
+  /* height: 100%; */
   z-index: 3;
   padding-top: 20px;
   padding-left: 50px;
   padding-right: 20px;
   padding-bottom: 5px;
+  float: left;
 }
 #details {
   width: 100%;
-  height: 100%;
+  /* height: 100%; */
   z-index: 3;
   padding-top:15px;
 }
@@ -57,4 +61,46 @@ body {
 #fotoshi-image {
   transform: rotate(90deg);
   margin-bottom: 30px;
+}
+
+@media only screen and (max-width: 767px)
+{
+    #container {
+      display: block;
+      height: 100%;
+      overflow: hidden;
+      width: 100%;
+    }
+    #map
+    {
+        display: block;
+        float: none; 
+        width: 100%;
+        height: 45%;
+    }
+    #viewer
+    {
+        display: block;
+        float: none; 
+        width: 100%;
+        height: 50%;
+    }
+    #details {
+      display: block;
+      float: none;
+      font-size: 11;
+      float: right;
+    }
+    #fotoshi-image {
+      transform: rotate(90deg);
+      width: 70% !important;
+      float: left;
+      margin-bottom: 10px;
+    }
+    table {
+      display: none;
+      width: 0px;
+      height: 0px;
+    }
+    
 }
