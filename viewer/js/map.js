@@ -64,6 +64,15 @@ map.addControl(
   })
 );
 
+// add geolocator to zoom to user location
+map.addControl(new maplibregl.GeolocateControl({
+  positionOptions: {
+    enableHighAccuracy: true
+  },
+  trackUserLocation: true
+}),'bottom-right');
+
+// define satellite image layer
 var satelliteStyle = {
     version: 8,
     sources: {
