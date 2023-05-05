@@ -137,12 +137,91 @@ function fetchImages() {
           paint: {
             'circle-color': '#EDA3B5',
             'circle-radius': 6,
-            'circle-stroke-color': '#F1FFFE',
+            'circle-stroke-color': '#FDD262',
             'circle-stroke-width': 2,
             'circle-opacity': 0.8
           }
         });
       });
+}
+
+// view cone generator
+
+const RAD2DEG = 180 / Math.PI;
+const DEG2RAD = Math.PI / 180;
+var activeMarkers = []
+
+function makeArc(fov) {
+  const radius = 45;
+  const centerX = 50;
+  const centerY = 50;
+
+  const fovRad = DEG2RAD * fov;
+
+  const arcStart = -Math.PI / 2 - fovRad / 2;
+  const arcEnd = arcStart + fovRad;
+
+  const startX = centerX + radius * Math.cos(arcStart);
+  const startY = centerY + radius * Math.sin(arcStart);
+
+  const endX = centerX + radius * Math.cos(arcEnd);
+  const endY = centerY + radius * Math.sin(arcEnd);
+
+  const center = `M ${centerX} ${centerY}`;
+  const line = `L ${startX} ${startY}`;
+  const arc = `A ${radius} ${radius} 0 0 1 ${endX} ${endY}`;
+
+  return `${center} ${line} ${arc} Z`;
+}
+
+function makeCamera(bearing, fov) {
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+
+  path.setAttribute('d', makeArc(fov));
+  path.setAttribute('fill', '#FDD262');
+  path.setAttribute('fill-opacity', '0.5');
+  path.setAttribute('stroke', '#FDD262');
+  path.setAttribute('stroke-width', '1');
+  path.setAttribute('stroke-linejoin', 'round');
+
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', '0 0 100 100');
+  svg.appendChild(path);
+
+  svg.style.height = '100%';
+  svg.style.width = '100%';
+  svg.style.transform = rotateArc(bearing);
+
+  const container = document.createElement('div');
+  container.style.height = '100px';
+  container.style.width = '100px';
+  container.appendChild(svg);
+
+  return container;
+}
+
+function rotateArc(bearing) {
+  return `rotateZ(${bearing}deg)`;
+}
+
+function setCamera(image) {
+  try {
+    activeMarkers[0].remove();
+    activeMarkers = [];
+  }
+  catch(err) {
+    console.log('no markers on map')
+  }
+  const camera = makeCamera(image['properties']['compass_angle'], 70);
+  const cameraMarker = new maplibregl.Marker({
+    color: '#FDD262',
+    element: camera,
+    rotationAlignment: 'map',
+  });
+  const pos = [image['geometry']['coordinates'][0], image['geometry']['coordinates'][1]];
+  cameraMarker.setLngLat(pos);
+  activeMarkers.push(cameraMarker);
+  activeMarkers[0].addTo(map);
 }
 
 // Clear the div where the image and table will go
@@ -210,6 +289,7 @@ map.on('load', function () {
     // Load the feature's properties into the side div
     clearDetails();
     displayDetails(image);
+    setCamera(image);
   });
   
 
