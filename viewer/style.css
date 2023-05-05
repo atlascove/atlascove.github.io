@@ -1,0 +1,47 @@
+body {
+  margin: 0px;
+  padding: 0px;
+  background: #433447;
+}
+#container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+#map {
+  width: 70%;
+  height: 100%;
+  z-index: 3;
+}
+#viewer {
+  width: 30%;
+  height: 100%;
+  z-index: 3;
+  padding-top: 30px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 30px;
+}
+#details {
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  padding-top: 20px;
+}
+
+#fotoshi-header {
+  font-family: Lexend, sans-serif;
+  font-style: bold;
+  font-size: 72;
+  color: #FDD262;
+  text-align: center;
+}
+#layer_toggle {
+  left: 30px;
+  bottom: 30px;
+  width: 64px;
+  height: 64px;
+  background-image: url('img/layer.png');
+  z-index: 3000;
+  position: absolute;
+}

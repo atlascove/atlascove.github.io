@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <link rel="shortcut icon" type="image/png" href="img/favicon.png"/>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1"
+    />
+    <meta
+      name="description"
+      content="Fotoshi Viewer"
+    />
+    <meta name="keywords" content="HTML,CSS,JavaScript, WebRTC, Camera" />
+    <meta name="author" content="Kasper Kamperman" />
+    <title>Fotoshi Viewer</title>
+
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+
+    <!-- Load jquery for API requests-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    <!-- Load MapLibre -->
+    <script src='https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js'></script>
+    <link href='https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css' rel='stylesheet' />
+    <!-- Load the `maplibre-gl-geocoder` plugin. -->
+    <script src="https://unpkg.com/@maplibre/maplibre-gl-geocoder@1.2.0/dist/maplibre-gl-geocoder.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@maplibre/maplibre-gl-geocoder@1.2.0/dist/maplibre-gl-geocoder.css" type="text/css" />
+    <!-- Load turf plugin -->
+    <script src='https://unpkg.com/@turf/turf@6.3.0/turf.min.js'></script>
+  </head>
+  <body>
+    <div id="container">
+      <div id="viewer">
+        <h1 id="fotoshi-header">fotoshi</h1>
+        <div id="details">
+          
+        </div>
+      </div>
+      <div id="map">
+        <div id="attribution" class="mapboxgl-ctrl mapboxgl-ctrl-attrib mapboxgl-ctrl-bottom-left" style="position: absolute; left: 0; bottom: 0;display: none;color:white;background-color:black">
+          <a href="https://www.maptiler.com/copyright/" style="color:white;background-color:black" target="_blank">© MapTiler</a> <a href="https://www.openstreetmap.org/copyright" style="color:white;background-color:black" target="_blank">© OpenStreetMap contributors</a>
+        </div>
+        <button id="layer_toggle" name="layer_toggle" type="button"></button>
+        <script src="js/map.js"></script>
+      </div>
+    </div>
+  </body>
+</html>
