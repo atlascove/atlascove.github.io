@@ -71,25 +71,30 @@ body {
       overflow: hidden;
       width: 100%;
     }
-    #map
-    {
-        display: block;
-        float: none; 
-        width: 100%;
-        height: 45%;
-    }
     #viewer
     {
         display: block;
         float: none; 
         width: 100%;
-        height: 50%;
+        height: 55%;
+        align-content: center;
     }
     #details {
       display: block;
       float: none;
       font-size: 11;
       float: right;
+    }
+    
+    #map {
+      /* top-left | top-right | bottom-right | bottom-left */
+      /* border-radius: 250px 250px 0px 0px; */
+      height: 40%;
+      display: block;
+      float: none; 
+      bottom: 0px;
+      width: 100%;
+      
     }
     #fotoshi-image {
       transform: rotate(90deg);
