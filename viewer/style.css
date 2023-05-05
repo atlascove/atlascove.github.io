@@ -53,3 +53,8 @@ body {
   z-index: 3000;
   position: absolute;
 }
+
+#fotoshi-image {
+  transform: rotate(90deg);
+  margin-bottom: 30px;
+}

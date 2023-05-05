@@ -160,13 +160,14 @@ function displayDetails(feature) {
   // set its width to 90% of the div width, and append it to the div
   var detailsDiv = document.getElementById('details');
   var img = document.createElement('img');
+  img.setAttribute('id', 'fotoshi-image');
   img.src = imageUrl;
   img.style.width = '90%';
   detailsDiv.appendChild(img);
 
   // Create a table element and a tbody element to hold the rows
   var table = document.createElement('table');
-  table.setAttribute("id", "image-attributes");
+  table.setAttribute('id', 'image-attributes');
   var tbody = document.createElement('tbody');
 
   // Loop through the properties of the feature and create a row for each one
