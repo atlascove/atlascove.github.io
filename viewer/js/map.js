@@ -8,6 +8,11 @@ var map = new maplibregl.Map({
   attributionControl: false
 });
 
+// scroll controls
+map.scrollZoom.enable();
+map.dragPan.enable();
+map.doubleClickZoom.enable();
+
 // sets current layer as being vector map, for satellite toggle layer function
 currentLayer = 1
 
@@ -95,6 +100,42 @@ var largerCircleMarker = {
   }
 };
 
+function fetchImages() {
+      // get the current map bounds
+      var bounds = map.getBounds();
+  
+      // make your API request with the new bounds
+      var url = 'https://ojtbr3cb0k.execute-api.us-east-1.amazonaws.com/images/images?bbox=' + bounds.toArray().join(',');
+      
+      // example fetch call 
+      fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        if(map.getLayer('images')) {
+          map.removeLayer('images');
+        }
+        if(map.getSource('image-data')) {
+          map.removeSource('image-data');
+        }
+        map.addSource('image-data', {
+          type: 'geojson',
+          data: data
+        });
+        map.addLayer({
+          id: 'images',
+          type: 'circle',
+          source: 'image-data',
+          paint: {
+            'circle-color': '#EDA3B5',
+            'circle-radius': 6,
+            'circle-stroke-color': '#F1FFFE',
+            'circle-stroke-width': 2,
+            'circle-opacity': 0.8
+          }
+        });
+      });
+}
+
 // Clear the div where the image and table will go
 function clearDetails() {
   var detailsDiv = document.getElementById('details');
@@ -116,6 +157,7 @@ function displayDetails(feature) {
 
   // Create a table element and a tbody element to hold the rows
   var table = document.createElement('table');
+  table.setAttribute("id", "image-attributes");
   var tbody = document.createElement('tbody');
 
   // Loop through the properties of the feature and create a row for each one
@@ -142,6 +184,9 @@ function displayDetails(feature) {
 // anything outside this function is static, so cannot actively listen for an event
 map.on('load', function () {
 
+  //get initial view of all images in the view port
+  fetchImages();
+
   // get map coordinates on click anywhere
   map.on('click', function (e) {
     coords = e.lngLat;
@@ -159,7 +204,7 @@ map.on('load', function () {
   
 
   // switch satellite and map layer on click
-  $('#layer_toggle').on('click', function(){
+  $('#layer-toggle').on('click', function(){
     console.log('test');
     if (currentLayer == 1){
       map.setStyle(satelliteStyle);
@@ -177,39 +222,6 @@ map.on('load', function () {
 
   // sense when the map moves and request data
 
-  map.on('moveend', function() {
-    // get the current map bounds
-    var bounds = map.getBounds();
-
-    if(map.getLayer('images')) {
-      map.removeLayer('images');
-    }
-    if(map.getSource('images')) {
-      map.removeSource('images');
-    }
-
-    // make your API request with the new bounds
-    var url = 'https://ojtbr3cb0k.execute-api.us-east-1.amazonaws.com/images/images?bbox=' + bounds.toArray().join(',');
-    
-    // example fetch call 
-    fetch(url)
-    .then(response => response.json())
-    .then(data => {
-      map.addSource('image-data', {
-        type: 'geojson',
-        data: data
-      });
-
-      map.addLayer({
-        id: 'images',
-        type: 'circle',
-        source: 'image-data',
-        paint: {
-          'circle-color': '#EDA3B5',
-          'circle-radius': 6
-        }
-      });
-    });
-  });
+  map.on('moveend', fetchImages);
 
 })
