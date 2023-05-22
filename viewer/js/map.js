@@ -14,7 +14,11 @@ map.dragPan.enable();
 map.doubleClickZoom.enable();
 
 // sets current layer as being vector map, for satellite toggle layer function
-currentLayer = 1
+var currentLayer = 1
+
+// sets data visible to be images first, which can change to be spots
+var dataState = "images"
+var currentAPI = 'https://ojtbr3cb0k.execute-api.us-east-1.amazonaws.com/images/images?bbox='
 
 // add a geocoder
 var geocoder_api = {
@@ -109,12 +113,21 @@ var largerCircleMarker = {
   }
 };
 
+function fetchMapData() {
+  if (dataState == 'images') {
+    fetchImages()
+  }
+  if (dataState == 'spots') {
+    fetchSpots()
+  }
+}
+
 function fetchImages() {
       // get the current map bounds
       var bounds = map.getBounds();
   
       // make your API request with the new bounds
-      var url = 'https://ojtbr3cb0k.execute-api.us-east-1.amazonaws.com/images/images?bbox=' + bounds.toArray().join(',');
+      var url = currentAPI + bounds.toArray().join(',');
       
       // example fetch call 
       fetch(url)
@@ -125,6 +138,15 @@ function fetchImages() {
         }
         if(map.getSource('image-data')) {
           map.removeSource('image-data');
+        }
+        if(map.getLayer('spots')) {
+          map.removeLayer('spots');
+        }
+        if(map.getLayer('spot-labels')) {
+          map.removeLayer('spot-labels');
+        }
+        if(map.getSource('spot-data')) {
+          map.removeSource('spot-data');
         }
         map.addSource('image-data', {
           type: 'geojson',
@@ -143,6 +165,72 @@ function fetchImages() {
           }
         });
       });
+}
+
+function fetchSpots() {
+  // get the current map bounds
+  var bounds = map.getBounds();
+
+  // make your API request with the new bounds
+  var url = currentAPI + bounds.toArray().join(',');
+  
+  // example fetch call 
+  fetch(url)
+  .then(response => response.json())
+  .then(data => {
+    if(map.getLayer('images')) {
+      map.removeLayer('images');
+    }
+    if(map.getSource('image-data')) {
+      map.removeSource('image-data');
+    }
+    if(map.getLayer('spots')) {
+      map.removeLayer('spots');
+    }
+    if(map.getLayer('spot-labels')) {
+      map.removeLayer('spot-labels');
+    }
+    if(map.getSource('spot-data')) {
+      map.removeSource('spot-data');
+    }
+    map.addSource('spot-data', {
+      type: 'geojson',
+      data: data
+    });
+    var features = map.querySourceFeatures('spot-data');
+  
+    features.forEach(function(feature) {
+      var imageIds = feature.properties.image_ids;
+      var count = (imageIds) ? imageIds.length : 0;
+      feature.properties.count = count;
+    });
+    map.addLayer({
+      id: 'spots',
+      type: 'circle',
+      source: 'spot-data',
+      paint: {
+        'circle-color': '#BC90FA',
+        'circle-radius': 8,
+        'circle-stroke-color': '#FDD262',
+        'circle-stroke-width': 2,
+        'circle-opacity': 0.8,
+      }
+    });
+    map.addLayer({
+      'id': 'spot-labels',
+      'type': 'symbol',
+      'source': 'spot-data',
+      'layout': {
+        'text-field': ['get', 'count'],
+        'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+        'text-size': 9,
+        'text-offset': [0, 1]
+      },
+      'paint': {
+        'text-color': '#433447'
+      }
+    });
+  });
 }
 
 // view cone generator
@@ -230,8 +318,121 @@ function clearDetails() {
   detailsDiv.innerHTML = '';
 }
 
-// Display details for a clicked feature
-function displayDetails(feature) {
+// Display details for a clicked image feature
+function displayImageDetails(feature) {
+  // Get the image URL from the properties of the feature
+  var imgUrl = feature.properties.image_url;
+
+  const gallery = document.getElementById('gallery');
+  gallery.innerHTML = '';
+
+  // Create an image element and set its source to the image URL,
+  // set its width to 90% of the div width, and append it to the div
+  var detailsDiv = document.getElementById('details');
+  detailsDiv.style.gridTemplateColumns = 'repeat(1, 1fr)';
+  var img = document.createElement('img');
+  img.setAttribute('id', 'fotoshi-image');
+  img.src = imgUrl;
+  var thumbnailWidth = 400;
+  var thumbnailHeight = img.height / img.width * thumbnailWidth;
+  img.style.width = `${thumbnailWidth}px`;
+  img.style.height = `${thumbnailHeight}px`;
+  const container = document.createElement('a');
+  container.href = imgUrl;
+  container.target = '_'
+  container.classList.add('image-row-last');
+  container.style.marginBottom = '15px';
+  container.appendChild(img);
+  detailsDiv.appendChild(container);
+
+  // Create a table element and a tbody element to hold the rows
+  var table = document.createElement('table');
+  table.setAttribute('id', 'image-attributes');
+  table.style.width = '400px';
+  var tbody = document.createElement('tbody');
+
+  // Loop through the properties of the feature and create a row for each one
+  for (var key in feature.properties) {
+    if (key !== 'image_url') {
+      var tr = document.createElement('tr');
+      var th = document.createElement('th');
+      var td = document.createElement('td');
+      th.textContent = key;
+      td.textContent = feature.properties[key];
+      tr.appendChild(th);
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+    }
+  }
+
+  // Append the tbody to the table and the table to the div
+  table.appendChild(tbody);
+  detailsDiv.appendChild(table);
+}
+
+function loadGallery(image_urls, spot) {
+  var detailsDiv = document.getElementById('details');
+  const gallery = document.getElementById('gallery');
+  gallery.innerHTML = '';
+  gallery.style.gridTemplateColumns = 'repeat(3, 1fr)';
+
+  // Create a table element and a tbody element to hold the rows
+  var table = document.createElement('table');
+  table.setAttribute('id', 'image-attributes');
+  table.style.width = '400px';
+  var tbody = document.createElement('tbody');
+
+  // Loop through the properties of the feature and create a row for each one
+  for (var key in spot.properties) {
+    if (key !== 'image_urls' && key !=='image_ids') {
+      var tr = document.createElement('tr');
+      var th = document.createElement('th');
+      var td = document.createElement('td');
+      th.textContent = key;
+      td.textContent = spot.properties[key];
+      tr.appendChild(th);
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+    }
+  }
+
+  // Append the tbody to the table and the table to the div
+  table.appendChild(tbody);
+  detailsDiv.appendChild(table);
+
+  image_urls = JSON.parse(image_urls);
+
+  image_urls.forEach((imgUrl, index) => {
+    const img = document.createElement('img');
+    img.src = imgUrl;
+    img.onload = () => {
+      const container = document.createElement('a');
+      container.href = imgUrl;
+      container.target = '_'
+
+      if (index % 3 === 2) {
+        container.classList.add('image-row-last');
+      }
+
+      if (index === -1) {
+        container.classList.add('image-row-last');
+      }
+
+      const thumbnailWidth =  150;//details.clientWidth * 0.25;
+      const thumbnailHeight = img.height / img.width * thumbnailWidth;
+      img.style.width = `${thumbnailWidth}px`;
+      img.style.height = `${thumbnailHeight}px`;
+      img.style.transform = 'rotate(90deg)';
+      container.appendChild(img);
+      gallery.appendChild(container);
+    }
+  });
+
+
+}
+
+// Display details for a clicked image feature
+function displaySpotDetails(feature) {
   // Get the image URL from the properties of the feature
   var imageUrl = feature.properties.image_url;
 
@@ -239,7 +440,7 @@ function displayDetails(feature) {
   // set its width to 90% of the div width, and append it to the div
   var detailsDiv = document.getElementById('details');
   var img = document.createElement('img');
-  img.setAttribute('id', 'fotoshi-image');
+  img.setAttribute('id', 'spot-image');
   img.src = imageUrl;
   img.style.width = '90%';
   detailsDiv.appendChild(img);
@@ -268,13 +469,12 @@ function displayDetails(feature) {
   detailsDiv.appendChild(table);
 }
 
-
 // inside this on load function, we have active listening functions, which happen when some condition is met
 // anything outside this function is static, so cannot actively listen for an event
 map.on('load', function () {
 
   //get initial view of all images in the view port
-  fetchImages();
+  fetchMapData();
 
   // get map coordinates on click anywhere
   map.on('click', function (e) {
@@ -288,14 +488,45 @@ map.on('load', function () {
     var image = e.features[0];
     // Load the feature's properties into the side div
     clearDetails();
-    displayDetails(image);
+    displayImageDetails(image);
     setCamera(image);
+  });
+
+  // query the spots layer on click
+  map.on('click', 'spots', (e) => {
+    // Get the properties of the clicked circle
+    var spot = e.features[0];
+    var image_urls = spot.properties.image_urls
+    console.log(image_urls)
+    // Load the feature's properties into the side div
+    clearDetails();
+    loadGallery(image_urls, spot);
+    //displaySpotDetails(image);
+  });
+
+  // change from images to spots
+  
+  $('#state-button').on('click', function(){
+    clearDetails();
+    if (dataState == "images"){
+      dataState = "spots"
+      currentAPI = 'https://ojtbr3cb0k.execute-api.us-east-1.amazonaws.com/images/spots?bbox='
+      fetchMapData()
+      console.log('Changing to spots')
+      document.querySelector('#state-button').innerHTML= "Change to Images"
+    }
+    else if (dataState == "spots"){
+      dataState = "images"
+      currentAPI = 'https://ojtbr3cb0k.execute-api.us-east-1.amazonaws.com/images/images?bbox='
+      fetchMapData()
+      console.log('Changing to images')
+      document.querySelector('#state-button').innerHTML = "Change to Spots"
+    }
   });
   
 
   // switch satellite and map layer on click
   $('#layer-toggle').on('click', function(){
-    console.log('test');
     if (currentLayer == 1){
       map.setStyle(satelliteStyle);
       $('#attribution').empty().html('<a style="color:white;background-color:black" href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a> Bing © 2021 Microsoft Corporation');
@@ -312,6 +543,6 @@ map.on('load', function () {
 
   // sense when the map moves and request data
 
-  map.on('moveend', fetchImages);
+  map.on('moveend', fetchMapData);
 
 })
