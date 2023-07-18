@@ -18,7 +18,7 @@ var currentLayer = 1
 
 // sets data visible to be images first, which can change to be spots
 var dataState = "images"
-var currentAPI = 'https://ojtbr3cb0k.execute-api.us-east-1.amazonaws.com/images/images?bbox='
+var currentAPI = 'https://1drxo73po2.execute-api.eu-central-2.amazonaws.com/default/get_images?bbox='
 
 // add a geocoder
 var geocoder_api = {
@@ -510,7 +510,7 @@ map.on('load', function () {
     clearDetails();
     if (dataState == "images"){
       dataState = "spots"
-      currentAPI = 'https://ojtbr3cb0k.execute-api.us-east-1.amazonaws.com/images/spots?bbox='
+      currentAPI = 'https://q0ls6mrywd.execute-api.eu-central-2.amazonaws.com/default/get_spots?bbox='
       fetchMapData()
       console.log('Changing to spots')
       document.querySelector('#state-button').innerHTML= "Change to Images"
