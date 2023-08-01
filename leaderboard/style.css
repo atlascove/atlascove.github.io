@@ -1,0 +1,14 @@
+body {
+    margin: 0px;
+    padding: 0px;
+    background: #433447;
+    font-family: Lexend, sans-serif;
+    font-size: 16;
+    color: #F1FFFE;
+    text-align: center;
+    align-items: center;
+  }
+table {
+    width: 60%;
+    margin: 0 auto;
+}
