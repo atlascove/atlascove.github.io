@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>API Leaderboard</title>
+  </head>
+  <body>
+    <h1>API Leaderboard</h1>
+    <table id="leaderboard">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Image Count</th>
+          <th>Places Count</th>
+          <th>Active Days</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <script>
+      // Make an HTTP GET request to the API endpoint
+      fetch('https://6ky029ogt2.execute-api.eu-central-2.amazonaws.com/default/get_stats?leaderboard=spots')
+        .then(response => response.json())
+        .then(data => {
+          // Loop through the data objects and add them to the table
+          const leaderboardTable = document.querySelector('#leaderboard tbody');
+          data.forEach(rowData => {
+            const row = document.createElement('tr');
+            // Add the data values to each row
+            Object.values(rowData).forEach(value => {
+              const cell = document.createElement('td');
+              cell.textContent = value;
+              row.appendChild(cell);
+            });
+            leaderboardTable.appendChild(row);
+          });
+        })
+        .catch(error => console.error(error));
+    </script>
+  </body>
+</html>
