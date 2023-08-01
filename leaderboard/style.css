@@ -1,14 +1,33 @@
 body {
     margin: 0px;
     padding: 0px;
-    background: #433447;
+    background: #262227;
     font-family: Lexend, sans-serif;
     font-size: 16;
     color: #F1FFFE;
-    text-align: center;
-    align-items: center;
   }
 table {
     width: 60%;
     margin: 0 auto;
+}
+h1 {
+    margin-left: 50% auto;
+    text-align: center;
+}
+th, h1 {
+    color: #FDD262;
+}
+td, th {
+    text-align: left;
+    padding: 5px;
+}
+tr:nth-child(even) {
+    background-color: hsla(330, 100%, 50%, 0.3);
+}
+#logo {
+    width: 10%;
+    display: block;
+    height: auto;
+    margin-left: 50% auto;
+    margin-top: 15px;
 }
