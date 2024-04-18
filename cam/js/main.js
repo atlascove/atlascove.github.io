@@ -45,6 +45,21 @@ function deviceCount() {
   });
 }
 
+function showImage(){
+  $('#vid_container').css('height','60%');
+}
+
+function closeControls(){
+  $('#takePhotoButton').hide();
+  $('gui_controls').hide();
+}
+
+function closeVideo(){
+  $('#video_overlay').hide();
+  $('#video').hide();
+}
+
+
 function checkHeading(){
   navigator.geolocation.getCurrentPosition(
     function(position){

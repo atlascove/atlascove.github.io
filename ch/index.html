@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <link rel="shortcut icon" type="image/png" href="img/favicon.png"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+      name="description"
+      content="Fotoshi Viewer"
+    />
+    <meta name="keywords" content="HTML,CSS,JavaScript, WebRTC, Camera" />
+    <meta name="author" content="Kasper Kamperman" />
+    <title>Fotoshi Viewer</title>
+
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+
+    <!-- Load jquery for API requests-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
+    <!-- Load MapLibre -->
+    <script src='https://unpkg.com/maplibre-gl@2.3.0/dist/maplibre-gl.js'></script>
+    <link href='https://unpkg.com/maplibre-gl@2.3.0/dist/maplibre-gl.css' rel='stylesheet' />
+    <!-- Load the `maplibre-gl-geocoder` plugin. -->
+    <script src="https://unpkg.com/@maplibre/maplibre-gl-geocoder@1.2.0/dist/maplibre-gl-geocoder.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@maplibre/maplibre-gl-geocoder@1.2.0/dist/maplibre-gl-geocoder.css" type="text/css" />
+    <!-- Load turf plugin -->
+    <script src='https://unpkg.com/@turf/turf@6.3.0/turf.min.js'></script>
+  </head>
+  <body>
+    <div id="container">
+
+      <div id="viewer">
+        <h1 id="fotoshi-header">fotoshi</h1>
+        <h3 id="fotoshi-header-small">click a point to view gallery</h3>
+        <div id="gallery">
+        </div>
+        <div id="details">
+        </div>
+      </div>
+      
+      <div id="map">
+        <script src="js/map.js?v=1"></script>
+      </div>
+
+    </div>
+  </body>
+</html>

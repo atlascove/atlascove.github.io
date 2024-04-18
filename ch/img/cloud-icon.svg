@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:ns1="http://sozi.baierouge.fr"
+    xmlns:cc="http://creativecommons.org/ns#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+    id="svg2"
+    sodipodi:docname="phone call icon.svg"
+    viewBox="0 0 302 302"
+    version="1.1"
+    inkscape:version="0.48.4 r9939"
+  >
+  <sodipodi:namedview
+      id="base"
+      bordercolor="#666666"
+      inkscape:pageshadow="2"
+      inkscape:window-y="450"
+      pagecolor="#ffffff"
+      inkscape:window-height="453"
+      inkscape:window-maximized="0"
+      inkscape:zoom="0.35"
+      inkscape:window-x="63"
+      showgrid="false"
+      borderopacity="1.0"
+      inkscape:current-layer="layer1"
+      inkscape:cx="-412.25442"
+      inkscape:cy="105.21798"
+      inkscape:window-width="1361"
+      inkscape:pageopacity="0.0"
+      inkscape:document-units="px"
+  />
+  <g
+      id="layer1"
+      inkscape:label="Layer 1"
+      inkscape:groupmode="layer"
+      transform="translate(0 -750.36)"
+    >
+    <path
+        id="path2985"
+        sodipodi:rx="194.28572"
+        sodipodi:ry="195.71428"
+        style="fill:#37c837"
+        sodipodi:type="arc"
+        d="m462.86 553.79c0 108.09-86.985 195.71-194.29 195.71s-194.29-87.624-194.29-195.71 86.985-195.71 194.29-195.71 194.29 87.624 194.29 195.71z"
+        transform="matrix(.77206 0 0 .76642 -56.353 476.92)"
+        sodipodi:cy="553.79077"
+        sodipodi:cx="268.57144"
+    />
+    <g
+        id="g3786"
+        transform="matrix(-1 0 0 1 307 -4.2857)"
+      >
+      <rect
+          id="rect2998"
+          style="fill:#ffffff"
+          ry="34.247"
+          height="68.493"
+          width="250"
+          y="921.8"
+          x="26.357"
+      />
+      <path
+          id="path3770"
+          sodipodi:rx="57.857143"
+          sodipodi:ry="54.285713"
+          style="fill:#ffffff"
+          sodipodi:type="arc"
+          d="m167.14 126.29c0 29.981-25.904 54.286-57.857 54.286-31.954 0-57.857-24.305-57.857-54.286-0.001-29.985 25.902-54.29 57.86-54.29 31.954 0 57.857 24.305 57.857 54.286z"
+          transform="matrix(.86420 0 0 .92105 141.2 824.33)"
+          sodipodi:cy="126.28571"
+          sodipodi:cx="109.28571"
+      />
+      <path
+          id="path3772"
+          sodipodi:rx="57.857143"
+          sodipodi:ry="54.285713"
+          style="fill:#ffffff"
+          sodipodi:type="arc"
+          d="m167.14 126.29c0 29.981-25.904 54.286-57.857 54.286-31.954 0-57.857-24.305-57.857-54.286-0.001-29.985 25.902-54.29 57.86-54.29 31.954 0 57.857 24.305 57.857 54.286z"
+          transform="matrix(1.1481 0 0 1.2237 -20.548 732.54)"
+          sodipodi:cy="126.28571"
+          sodipodi:cx="109.28571"
+      />
+      <path
+          id="path3784"
+          sodipodi:rx="57.857143"
+          sodipodi:ry="54.285713"
+          style="fill:#ffffff"
+          sodipodi:type="arc"
+          d="m167.14 126.29c0 29.981-25.904 54.286-57.857 54.286-31.954 0-57.857-24.305-57.857-54.286-0.001-29.985 25.902-54.29 57.86-54.29 31.954 0 57.857 24.305 57.857 54.286z"
+          transform="matrix(.82716 0 0 .88158 98.817 785.75)"
+          sodipodi:cy="126.28571"
+          sodipodi:cx="109.28571"
+      />
+    </g
+    >
+  </g
+  >
+  <metadata
+    >
+    <rdf:RDF
+      >
+      <cc:Work
+        >
+        <dc:format
+          >image/svg+xml</dc:format
+        >
+        <dc:type
+            rdf:resource="http://purl.org/dc/dcmitype/StillImage"
+        />
+        <cc:license
+            rdf:resource="http://creativecommons.org/licenses/publicdomain/"
+        />
+        <dc:publisher
+          >
+          <cc:Agent
+              rdf:about="http://openclipart.org/"
+            >
+            <dc:title
+              >Openclipart</dc:title
+            >
+          </cc:Agent
+          >
+        </dc:publisher
+        >
+      </cc:Work
+      >
+      <cc:License
+          rdf:about="http://creativecommons.org/licenses/publicdomain/"
+        >
+        <cc:permits
+            rdf:resource="http://creativecommons.org/ns#Reproduction"
+        />
+        <cc:permits
+            rdf:resource="http://creativecommons.org/ns#Distribution"
+        />
+        <cc:permits
+            rdf:resource="http://creativecommons.org/ns#DerivativeWorks"
+        />
+      </cc:License
+      >
+    </rdf:RDF
+    >
+  </metadata
+  >
+</svg
+>

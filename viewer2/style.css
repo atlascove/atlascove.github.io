@@ -1,0 +1,144 @@
+body {
+  margin: 0px;
+  padding: 0px;
+  background: #433447;
+}
+#container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  overflow: hidden;
+  width: 100%;
+}
+#map {
+  width: 70%;
+  /* height: 100%; */
+  z-index: 3;
+  float: right;
+}
+#viewer {
+  width: 30%;
+  /* height: 100%; */
+  z-index: 3;
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 5px;
+  float: left;
+}
+#details {
+  width: 90%;
+  z-index: 3;
+  align-content: center;
+  padding-top:10px;
+  height: auto;
+}
+
+#gallery {
+  width: 100%;
+  z-index: 3;
+  align-content: center;
+  padding-top:100px;
+  height: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-row-gap: 60px;
+  max-height: 50%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+
+#gallery::-webkit-scrollbar { 
+  display: none;  /* Safari and Chrome */
+}
+
+#image-attributes {
+  text-align: left;
+  font-family: Lexend, sans-serif;
+  font-size: 16;
+  color: #F1FFFE;
+  position: relative;
+}
+
+#fotoshi-header {
+  font-family: Lexend, sans-serif;
+  font-style: bold;
+  font-size: 64;
+  color: #FDD262;
+  text-align: center;
+}
+#layer-toggle {
+  left: 30px;
+  bottom: 30px;
+  width: 64px;
+  height: 64px;
+  background-image: url('img/layer.png');
+  z-index: 3000;
+  position: absolute;
+}
+
+#fotoshi-image {
+  transform: rotate(90deg);
+}
+
+#state-button {
+  z-index: 1000;
+  position: absolute;
+  vertical-align: top;
+  left: 10px;
+  top: 10px;
+  font-size: 18;
+  background-color:#FDD262;
+  color:#433447;
+  font-family: Lexend, sans-serif;
+  border-radius: 12px;
+}
+
+@media only screen and (max-width: 767px)
+{
+    #container {
+      display: block;
+      height: 100%;
+      overflow: hidden;
+      width: 100%;
+    }
+    #viewer
+    {
+        display: block;
+        float: none; 
+        width: 100%;
+        height: 55%;
+        align-content: center;
+    }
+    #details {
+      display: block;
+      float: none;
+      font-size: 11;
+      float: right;
+    }
+    
+    #map {
+      /* top-left | top-right | bottom-right | bottom-left */
+      /* border-radius: 250px 250px 0px 0px; */
+      height: 40%;
+      display: block;
+      float: none; 
+      bottom: 0px;
+      width: 100%;
+      
+    }
+    #fotoshi-image {
+      transform: rotate(90deg);
+      width: 70% !important;
+      float: left;
+    }
+    table {
+      display: none;
+      width: 0px;
+      height: 0px;
+    }
+    
+    
+}

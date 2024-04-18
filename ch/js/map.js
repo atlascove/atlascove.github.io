@@ -1,10 +1,13 @@
 // initiate the map
 
+var maptiler = 'https://api.maptiler.com/maps/ch-swisstopo-lbm-grey/style.json?key=LVXocV2Y6nX6vEqq67iz'
+var color = '#FF1F4F'
+
 var map = new maplibregl.Map({
   container: 'map',
-  style: 'https://api.maptiler.com/maps/d29b0278-3b07-44ae-bb17-0a7b138f7313/style.json?key=LVXocV2Y6nX6vEqq67iz',
+  style: maptiler,
   center: [8.547603,47.047786],
-  zoom: 16,
+  zoom: 7,
   attributionControl: false
 });
 
@@ -17,8 +20,8 @@ map.doubleClickZoom.enable();
 var currentLayer = 1
 
 // sets data visible to be images first, which can change to be spots
-var dataState = "images"
-var currentAPI = 'https://1drxo73po2.execute-api.eu-central-2.amazonaws.com/default/get_images?bbox='
+var dataState = "spots"
+var currentAPI =  'https://q0ls6mrywd.execute-api.eu-central-2.amazonaws.com/default/get_spots?bbox='
 
 // add a geocoder
 var geocoder_api = {
@@ -113,60 +116,6 @@ var largerCircleMarker = {
   }
 };
 
-function fetchMapData() {
-  if (dataState == 'images') {
-    fetchImages()
-  }
-  if (dataState == 'spots') {
-    fetchSpots()
-  }
-}
-
-function fetchImages() {
-      // get the current map bounds
-      var bounds = map.getBounds();
-  
-      // make your API request with the new bounds
-      var url = currentAPI + bounds.toArray().join(',');
-      
-      // example fetch call 
-      fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        if(map.getLayer('images')) {
-          map.removeLayer('images');
-        }
-        if(map.getSource('image-data')) {
-          map.removeSource('image-data');
-        }
-        if(map.getLayer('spots')) {
-          map.removeLayer('spots');
-        }
-        if(map.getLayer('spot-labels')) {
-          map.removeLayer('spot-labels');
-        }
-        if(map.getSource('spot-data')) {
-          map.removeSource('spot-data');
-        }
-        map.addSource('image-data', {
-          type: 'geojson',
-          data: data
-        });
-        map.addLayer({
-          id: 'images',
-          type: 'circle',
-          source: 'image-data',
-          paint: {
-            'circle-color': '#EDA3B5',
-            'circle-radius': 6,
-            'circle-stroke-color': '#FDD262',
-            'circle-stroke-width': 2,
-            'circle-opacity': 0.8
-          }
-        });
-      });
-}
-
 function fetchSpots() {
   // get the current map bounds
   var bounds = map.getBounds();
@@ -178,12 +127,6 @@ function fetchSpots() {
   fetch(url)
   .then(response => response.json())
   .then(data => {
-    if(map.getLayer('images')) {
-      map.removeLayer('images');
-    }
-    if(map.getSource('image-data')) {
-      map.removeSource('image-data');
-    }
     if(map.getLayer('spots')) {
       map.removeLayer('spots');
     }
@@ -209,8 +152,8 @@ function fetchSpots() {
       type: 'circle',
       source: 'spot-data',
       paint: {
-        'circle-color': '#BC90FA',
-        'circle-radius': 8,
+        'circle-color': color,
+        'circle-radius': 7,
         'circle-stroke-color': '#FDD262',
         'circle-stroke-width': 2,
         'circle-opacity': 0.8,
@@ -232,6 +175,120 @@ function fetchSpots() {
     });
   });
 }
+
+// function fetchSpots() {
+//   const layers = map.getStyle().layers;
+//   // Find the index of the first symbol layer in the map style
+//   let firstSymbolId;
+//   for (let i = 0; i < layers.length; i++) {
+//       if (layers[i].type === 'symbol') {
+//           firstSymbolId = layers[i].id;
+//           break;
+//       }
+//   }
+
+//   // get the current map bounds
+//   var bounds = map.getBounds();
+
+//   // make your API request with the new bounds
+//   var url = currentAPI + bounds.toArray().join(',');
+  
+//   // example fetch call 
+//   fetch(url)
+//   .then(response => response.json())
+//   .then(data => {
+//     if(map.getLayer('images')) {
+//       map.removeLayer('images');
+//     }
+//     if(map.getSource('image-data')) {
+//       map.removeSource('image-data');
+//     }
+//     if(map.getLayer('point-spots')) {
+//       map.removeLayer('point-spots');
+//       map.removeLayer('polygon-spots');
+//       map.removeLayer('line-spots');
+//     }
+//     if(map.getLayer('spot-labels')) {
+//       map.removeLayer('spot-labels');
+//     }
+//     if(map.getSource('spot-data')) {
+//       map.removeSource('spot-data');
+//     }
+//     map.addSource('spot-data', {
+//       type: 'geojson',
+//       data: data
+//     });
+//     var features = map.querySourceFeatures('spot-data');
+  
+//     features.forEach(function(feature) {
+//       var imageIds = feature.properties.image_ids;
+//       var count = (imageIds) ? imageIds.length : 0;
+//       feature.properties.count = count;
+//     });
+//       // Polygon layer
+//   map.addLayer({
+//     id: 'polygon-spots',
+//     type: 'fill',
+//     source: 'spot-data',
+//     filter: ['all',
+//       ['==', ['geometry-type'], 'Polygon'], // Filter polygons only
+//       ['!=', ['get', 'fid'], '-1'] // Filter by "fid" property not equal to "-1"
+//     ],
+//     paint: {
+//       'fill-color': color,
+//       'fill-opacity': 0.5
+//     }
+//   },firstSymbolId);
+//     // Line layer
+//     map.addLayer({
+//       id: 'line-spots',
+//       type: 'line',
+//       source: 'spot-data',
+//       filter: ['all',
+//         ['==', ['geometry-type'], 'LineString'], // Filter lines only
+//         ['!=', ['get', 'fid'], '-1'] // Filter by "fid" property not equal to "-1"
+//       ],
+//       paint: {
+//         'line-color': color,
+//         'line-width': 5,
+//         'line-opacity': 0.75, // 50% transparency
+//       }
+//     },firstSymbolId);
+//    // Point layer
+//   map.addLayer({
+//     id: 'point-spots',
+//     type: 'circle',
+//     source: 'spot-data',
+//     filter: ['all',
+//       ['==', ['geometry-type'], 'Point'], // Filter points only
+//       ['!=', ['get', 'fid'], '-1'] // Filter by "fid" property not equal to "-1"
+//     ],
+//     paint: {
+//       'circle-color': color, // No fill color
+//       'circle-opacity': 0.5,
+//       'circle-radius': 6,
+//       'circle-stroke-color': '#FFF', // Stroke color
+//       'circle-stroke-width': 3,
+//       'circle-stroke-opacity': 0.9 // 50% transparency
+//     }
+//   },firstSymbolId);
+
+//     map.addLayer({
+//       'id': 'spot-labels',
+//       'type': 'symbol',
+//       'source': 'spot-data',
+//       'layout': {
+//         'text-field': ['get', 'count'],
+//         'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+//         'text-size': 9,
+//         'text-offset': [0, 1]
+//       },
+//       'paint': {
+//         'text-color': '#433447'
+//       }
+//     });
+//   });
+// }
 
 // view cone generator
 
@@ -318,58 +375,6 @@ function clearDetails() {
   detailsDiv.innerHTML = '';
 }
 
-// Display details for a clicked image feature
-function displayImageDetails(feature) {
-  // Get the image URL from the properties of the feature
-  var imgUrl = feature.properties.image_url;
-
-  const gallery = document.getElementById('gallery');
-  gallery.innerHTML = '';
-
-  // Create an image element and set its source to the image URL,
-  // set its width to 90% of the div width, and append it to the div
-  var detailsDiv = document.getElementById('details');
-  detailsDiv.style.gridTemplateColumns = 'repeat(1, 1fr)';
-  var img = document.createElement('img');
-  img.setAttribute('id', 'fotoshi-image');
-  img.src = imgUrl;
-  var thumbnailWidth = 400;
-  var thumbnailHeight = img.height / img.width * thumbnailWidth;
-  img.style.width = `${thumbnailWidth}px`;
-  img.style.height = `${thumbnailHeight}px`;
-  const container = document.createElement('a');
-  container.href = imgUrl;
-  container.target = '_'
-  container.classList.add('image-row-last');
-  container.style.marginBottom = '15px';
-  container.appendChild(img);
-  detailsDiv.appendChild(container);
-
-  // Create a table element and a tbody element to hold the rows
-  var table = document.createElement('table');
-  table.setAttribute('id', 'image-attributes');
-  table.style.width = '400px';
-  var tbody = document.createElement('tbody');
-
-  // Loop through the properties of the feature and create a row for each one
-  for (var key in feature.properties) {
-    if (key !== 'image_url') {
-      var tr = document.createElement('tr');
-      var th = document.createElement('th');
-      var td = document.createElement('td');
-      th.textContent = key;
-      td.textContent = feature.properties[key];
-      tr.appendChild(th);
-      tr.appendChild(td);
-      tbody.appendChild(tr);
-    }
-  }
-
-  // Append the tbody to the table and the table to the div
-  table.appendChild(tbody);
-  detailsDiv.appendChild(table);
-}
-
 function loadGallery(image_urls, spot) {
   var detailsDiv = document.getElementById('details');
   const gallery = document.getElementById('gallery');
@@ -450,14 +455,27 @@ function displaySpotDetails(feature) {
   table.setAttribute('id', 'image-attributes');
   var tbody = document.createElement('tbody');
 
+  // keys we want to show
+  var keys = ['tags_secondary', 'pretty_names']
+
   // Loop through the properties of the feature and create a row for each one
-  for (var key in feature.properties) {
-    if (key !== 'image_url') {
+  for (var key in keys) {
+    if (key == 'pretty_names' || key == 'tags_secondary') {
       var tr = document.createElement('tr');
       var th = document.createElement('th');
       var td = document.createElement('td');
-      th.textContent = key;
-      td.textContent = feature.properties[key];
+      if (key == 'pretty_names') {
+        th.textContent = 'Category';
+        td.textContent = feature.properties[key];
+      } 
+      if (key == 'tags_secondary') {
+        th.textContent = 'Name';
+        if ('name' in feature.properties.key) {
+          td.textContent = feature.properties[key]['name'];
+        } else {
+          td.textContent = '(no name)'
+        }
+      }
       tr.appendChild(th);
       tr.appendChild(td);
       tbody.appendChild(tr);
@@ -474,22 +492,15 @@ function displaySpotDetails(feature) {
 map.on('load', function () {
 
   //get initial view of all images in the view port
-  fetchMapData();
+  fetchSpots();
+
+  //map.setZoom();
+  
 
   // get map coordinates on click anywhere
   map.on('click', function (e) {
     coords = e.lngLat;
     console.log(coords)
-  });
-
-  // query the images layer on click
-  map.on('click', 'images', (e) => {
-    // Get the properties of the clicked circle
-    var image = e.features[0];
-    // Load the feature's properties into the side div
-    clearDetails();
-    displayImageDetails(image);
-    setCamera(image);
   });
 
   // query the spots layer on click
@@ -504,26 +515,6 @@ map.on('load', function () {
     //displaySpotDetails(image);
   });
 
-  // change from images to spots
-  
-  $('#state-button').on('click', function(){
-    clearDetails();
-    if (dataState == "images"){
-      dataState = "spots"
-      currentAPI = 'https://q0ls6mrywd.execute-api.eu-central-2.amazonaws.com/default/get_spots?bbox='
-      fetchMapData()
-      console.log('Changing to spots')
-      document.querySelector('#state-button').innerHTML= "Change to Images"
-    }
-    else if (dataState == "spots"){
-      dataState = "images"
-      currentAPI = 'https://ojtbr3cb0k.execute-api.us-east-1.amazonaws.com/images/images?bbox='
-      fetchMapData()
-      console.log('Changing to images')
-      document.querySelector('#state-button').innerHTML = "Change to Spots"
-    }
-  });
-  
 
   // switch satellite and map layer on click
   $('#layer-toggle').on('click', function(){
@@ -534,7 +525,7 @@ map.on('load', function () {
       console.log('switch layer');
     }
     else if (currentLayer == 0){
-      map.setStyle('https://api.maptiler.com/maps/d29b0278-3b07-44ae-bb17-0a7b138f7313/style.json?key=LVXocV2Y6nX6vEqq67iz');
+      map.setStyle(maptiler);
       $('#attribution').empty().html('<a style="color:white;background-color:black" href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a> <a style="color:white;background-color:black" href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>');
       currentLayer = 1;
       console.log('Switch to other layer');
@@ -543,6 +534,6 @@ map.on('load', function () {
 
   // sense when the map moves and request data
 
-  map.on('moveend', fetchMapData);
+  map.on('moveend', fetchSpots);
 
 })

@@ -139,8 +139,10 @@ function fetchImages() {
         if(map.getSource('image-data')) {
           map.removeSource('image-data');
         }
-        if(map.getLayer('spots')) {
-          map.removeLayer('spots');
+        if(map.getLayer('point-spots')) {
+          map.removeLayer('point-spots');
+          map.removeLayer('polygon-spots');
+          map.removeLayer('line-spots');
         }
         if(map.getLayer('spot-labels')) {
           map.removeLayer('spot-labels');
@@ -168,6 +170,16 @@ function fetchImages() {
 }
 
 function fetchSpots() {
+  const layers = map.getStyle().layers;
+  // Find the index of the first symbol layer in the map style
+  let firstSymbolId;
+  for (let i = 0; i < layers.length; i++) {
+      if (layers[i].type === 'symbol') {
+          firstSymbolId = layers[i].id;
+          break;
+      }
+  }
+
   // get the current map bounds
   var bounds = map.getBounds();
 
@@ -184,8 +196,10 @@ function fetchSpots() {
     if(map.getSource('image-data')) {
       map.removeSource('image-data');
     }
-    if(map.getLayer('spots')) {
-      map.removeLayer('spots');
+    if(map.getLayer('point-spots')) {
+      map.removeLayer('point-spots');
+      map.removeLayer('polygon-spots');
+      map.removeLayer('line-spots');
     }
     if(map.getLayer('spot-labels')) {
       map.removeLayer('spot-labels');
@@ -204,18 +218,54 @@ function fetchSpots() {
       var count = (imageIds) ? imageIds.length : 0;
       feature.properties.count = count;
     });
+      // Polygon layer
+  map.addLayer({
+    id: 'polygon-spots',
+    type: 'fill',
+    source: 'spot-data',
+    filter: ['all',
+      ['==', ['geometry-type'], 'Polygon'], // Filter polygons only
+      ['!=', ['get', 'fid'], '-1'] // Filter by "fid" property not equal to "-1"
+    ],
+    paint: {
+      'fill-color': '#F99875',
+      'fill-opacity': 0.5
+    }
+  },firstSymbolId);
+    // Line layer
     map.addLayer({
-      id: 'spots',
-      type: 'circle',
+      id: 'line-spots',
+      type: 'line',
       source: 'spot-data',
+      filter: ['all',
+        ['==', ['geometry-type'], 'LineString'], // Filter lines only
+        ['!=', ['get', 'fid'], '-1'] // Filter by "fid" property not equal to "-1"
+      ],
       paint: {
-        'circle-color': '#BC90FA',
-        'circle-radius': 8,
-        'circle-stroke-color': '#FDD262',
-        'circle-stroke-width': 2,
-        'circle-opacity': 0.8,
+        'line-color': '#F99875',
+        'line-width': 5,
+        'line-opacity': 0.75, // 50% transparency
       }
-    });
+    },firstSymbolId);
+   // Point layer
+  map.addLayer({
+    id: 'point-spots',
+    type: 'circle',
+    source: 'spot-data',
+    filter: ['all',
+      ['==', ['geometry-type'], 'Point'], // Filter points only
+      ['!=', ['get', 'fid'], '-1'] // Filter by "fid" property not equal to "-1"
+    ],
+    paint: {
+      'circle-color': '#F99875', // No fill color
+      'circle-opacity': 0.5,
+      'circle-radius': 6,
+      'circle-stroke-color': '#FFF', // Stroke color
+      'circle-stroke-width': 3,
+      'circle-stroke-opacity': 0.9 // 50% transparency
+    }
+  },firstSymbolId);
+
     map.addLayer({
       'id': 'spot-labels',
       'type': 'symbol',
@@ -510,7 +560,7 @@ map.on('load', function () {
     clearDetails();
     if (dataState == "images"){
       dataState = "spots"
-      currentAPI = 'https://q0ls6mrywd.execute-api.eu-central-2.amazonaws.com/default/get_spots?bbox='
+      currentAPI = 'https://f6qo9rf4w9.execute-api.eu-central-2.amazonaws.com/get_all?bbox='
       fetchMapData()
       console.log('Changing to spots')
       document.querySelector('#state-button').innerHTML= "Change to Images"
