@@ -1,157 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MapLibre GL JS with Click Circle and Layer Selection</title>
-    <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
+    <link
+      href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"
+      rel="stylesheet"
+    />
     <style>
-        body { margin: 0; padding: 0; }
-        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
-        #controls {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 4px;
-            box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
-        }
-        #query-results {
-            position: absolute;
-            top: 60px;
-            left: 10px;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 4px;
-            box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
-            max-width: 300px;
-            font-size: 12px;
-            overflow: auto;
-            max-height: 200px;
-        }
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+      #controls {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 4px;
+        box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+      }
+      #query-results {
+        position: absolute;
+        top: 60px;
+        left: 10px;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 4px;
+        box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+        max-width: 300px;
+        font-size: 12px;
+        overflow: auto;
+        max-height: 200px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="map"></div>
     <div id="controls">
-        <label for="layer-select">Select Layer:</label>
-        <select id="layer-select"></select>
+      <label for="layer-select">Select Layer:</label>
+      <select id="layer-select"></select>
     </div>
     <div id="query-results">Click on the map to see query results here.</div>
 
-    <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+    <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
     <script>
-        // Initialize the map
-        const map = new maplibregl.Map({
-            container: 'map', // container ID
-            style: './style.json', // Load the style from the local directory
-            center: [8.5417, 47.3769], // Starting position [lng, lat] (Zurich example)
-            zoom: 16 // Starting zoom
+      // Initialize the map
+      const map = new maplibregl.Map({
+        container: "map", // container ID
+        style: "./style.json", // Load the style from the local directory
+        center: [8.5417, 47.3769], // Starting position [lng, lat] (Zurich example)
+        zoom: 16, // Starting zoom
+      });
+
+      // Add navigation controls (optional)
+      map.addControl(new maplibregl.NavigationControl());
+
+      // Define radius in degrees (for circle approximation)
+      const radius = 0.001;
+
+      // Populate the dropdown with layer IDs
+      map.on("load", () => {
+        const layerSelect = document.getElementById("layer-select");
+        const layers = map.getStyle().layers;
+
+        // Add all layers to the dropdown
+        layers.forEach((layer) => {
+          const option = document.createElement("option");
+          option.value = layer.id;
+          option.text = layer.id;
+          layerSelect.appendChild(option);
+          // Set 'poi_label' as the default selected option
+          if (layer.id === "poi_label") {
+            option.selected = true;
+          }
         });
 
-        // Add navigation controls (optional)
-        map.addControl(new maplibregl.NavigationControl());
-
-        // Define radius in degrees (for circle approximation)
-        const radius = 0.001;
-
-        // Populate the dropdown with layer IDs
-        map.on('load', () => {
-            const layerSelect = document.getElementById('layer-select');
-            const layers = map.getStyle().layers;
-
-            // Add all layers to the dropdown
-            layers.forEach(layer => {
-                const option = document.createElement('option');
-                option.value = layer.id;
-                option.text = layer.id;
-                layerSelect.appendChild(option);
-            });
-
-            // Add an empty GeoJSON source for the circle
-            map.addSource('click-circle', {
-                'type': 'geojson',
-                'data': {
-                    'type': 'FeatureCollection',
-                    'features': []
-                }
-            });
-
-            // Add a layer to visualize the circle with transparent fill and visible stroke
-            map.addLayer({
-                'id': 'circle-layer',
-                'type': 'fill',
-                'source': 'click-circle',
-                'layout': {},
-                'paint': {
-                    'fill-color': '#088', // Blueish fill
-                    'fill-opacity': 0.3,  // Transparent fill
-                    'fill-outline-color': '#000' // Black outline
-                }
-            });
+        // Add an empty GeoJSON source for the circle
+        map.addSource("click-circle", {
+          type: "geojson",
+          data: {
+            type: "FeatureCollection",
+            features: [],
+          },
         });
 
-        // Function to create a circle polygon (approximating a circle with a polygon)
-        function createGeoJSONCircle(center, radiusInDegrees, points = 64) {
-            const coords = [];
-            const angleStep = (2 * Math.PI) / points;
+        // Add a layer to visualize the circle with transparent fill and visible stroke
+        map.addLayer({
+          id: "circle-layer",
+          type: "fill",
+          source: "click-circle",
+          layout: {},
+          paint: {
+            "fill-color": "#088", // Blueish fill
+            "fill-opacity": 0.3, // Transparent fill
+            "fill-outline-color": "#000", // Black outline
+          },
+        });
+      });
 
-            for (let i = 0; i < points; i++) {
-                const angle = i * angleStep;
-                const dx = Math.cos(angle) * radiusInDegrees;
-                const dy = Math.sin(angle) * radiusInDegrees;
-                coords.push([center[0] + dx, center[1] + dy]);
-            }
-            coords.push(coords[0]); // Close the circle
+      // Function to create a circle polygon (approximating a circle with a polygon)
+      function createGeoJSONCircle(center, radiusInDegrees, points = 64) {
+        const coords = [];
+        const angleStep = (2 * Math.PI) / points;
 
-            return {
-                'type': 'FeatureCollection',
-                'features': [{
-                    'type': 'Feature',
-                    'geometry': {
-                        'type': 'Polygon',
-                        'coordinates': [coords]
-                    }
-                }]
-            };
+        for (let i = 0; i < points; i++) {
+          const angle = i * angleStep;
+          const dx = Math.cos(angle) * radiusInDegrees;
+          const dy = Math.sin(angle) * radiusInDegrees;
+          coords.push([center[0] + dx, center[1] + dy]);
         }
+        coords.push(coords[0]); // Close the circle
 
-        // Function to query rendered features and draw the circle
-        map.on('click', (e) => {
-            // Get click point coordinates
-            const clickCoords = [e.lngLat.lng, e.lngLat.lat];
+        return {
+          type: "FeatureCollection",
+          features: [
+            {
+              type: "Feature",
+              geometry: {
+                type: "Polygon",
+                coordinates: [coords],
+              },
+            },
+          ],
+        };
+      }
 
-            // Define the bounding box for the query (approximate radius around the click point)
-            const bbox = [
-                [e.lngLat.lng - radius, e.lngLat.lat - radius],
-                [e.lngLat.lng + radius, e.lngLat.lat + radius]
-            ];
+      // Function to query rendered features and draw the circle
+      map.on("click", (e) => {
+        // Get click point coordinates
+        const clickCoords = [e.lngLat.lng, e.lngLat.lat];
 
-            // Get the selected layer from the dropdown
-            const selectedLayer = document.getElementById('layer-select').value;
+        console.log({ clickCoords });
 
-            // Query rendered features within the bounding box for the selected layer
-            const features = map.queryRenderedFeatures(bbox, {
-                layers: [selectedLayer] // Query only the selected layer
-            });
+        // Create a bounding box for the query (using the circle radius)
+        const sw = [clickCoords[0] - radius, clickCoords[1] - radius];
+        const ne = [clickCoords[0] + radius, clickCoords[1] + radius];
+        const bbox = [sw, ne];
 
-            // Print the features to the console
-            console.log(features);
+        console.log({ bbox });
 
-            // Update the circle GeoJSON data
-            const circleData = createGeoJSONCircle(clickCoords, radius);
-            map.getSource('click-circle').setData(circleData);
+        // Get the selected layer from the dropdown
+        const selectedLayer = document.getElementById("layer-select").value;
 
-            // Display query results in the div
-            const resultsDiv = document.getElementById('query-results');
-            if (features.length > 0) {
-                const featureDescriptions = features.map(f => JSON.stringify(f.properties, null, 2)).join('<br><br>');
-                resultsDiv.innerHTML = `<strong>Query Results:</strong><br>${featureDescriptions}`;
-            } else {
-                resultsDiv.innerHTML = 'No features found.';
-            }
+        // Query rendered features within the bounding box for the selected layer
+        const features = map.queryRenderedFeatures(bbox, {
+          layers: [selectedLayer],
         });
+
+        // Print the features to the console
+        console.log({ features });
+
+        // Update the circle GeoJSON data
+        const circleData = createGeoJSONCircle(clickCoords, radius);
+        map.getSource("click-circle").setData(circleData);
+
+        // Display query results in the div
+        const resultsDiv = document.getElementById("query-results");
+        if (features.length > 0) {
+          const featureDescriptions = features
+            .map((f) => JSON.stringify(f.properties, null, 2))
+            .join("<br><br>");
+          resultsDiv.innerHTML = `<strong>Query Results:</strong><br>${featureDescriptions}`;
+        } else {
+          resultsDiv.innerHTML = "No features found.";
+        }
+      });
     </script>
-</body>
+  </body>
 </html>
