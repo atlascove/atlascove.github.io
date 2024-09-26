@@ -378,23 +378,38 @@ function clearDetails() {
 function loadGallery(image_urls, spot) {
   var detailsDiv = document.getElementById('details');
   const gallery = document.getElementById('gallery');
-  gallery.innerHTML = '';
-  gallery.style.gridTemplateColumns = 'repeat(3, 1fr)';
+
 
   // Create a table element and a tbody element to hold the rows
   var table = document.createElement('table');
   table.setAttribute('id', 'image-attributes');
-  table.style.width = '400px';
+  table.style.width = '200px';
   var tbody = document.createElement('tbody');
 
+  console.log(spot.properties)
+
+  // keys we want to show
+  var keys = ['tags_secondary', 'pretty_names']
+
   // Loop through the properties of the feature and create a row for each one
-  for (var key in spot.properties) {
-    if (key !== 'image_urls' && key !=='image_ids') {
+  for (const key of keys) {
+    console.log(key)
+    if (key == 'pretty_names' || key == 'tags_secondary') {
       var tr = document.createElement('tr');
       var th = document.createElement('th');
       var td = document.createElement('td');
-      th.textContent = key;
-      td.textContent = spot.properties[key];
+      if (key == 'pretty_names') {
+        th.textContent = 'Category:';
+        td.textContent = spot.properties[key];
+      } 
+      if (key == 'tags_secondary') {
+        th.textContent = 'Name:';
+        if (JSON.parse(spot.properties[key]).hasOwnProperty('name')) {
+          td.textContent = JSON.parse(spot.properties[key])['name'];
+        } else {
+          td.textContent = '(no name)'
+        }
+      }
       tr.appendChild(th);
       tr.appendChild(td);
       tbody.appendChild(tr);
@@ -406,35 +421,59 @@ function loadGallery(image_urls, spot) {
   detailsDiv.appendChild(table);
 
   image_urls = JSON.parse(image_urls);
+  const carousel = document.querySelector(".carousel");
+  carousel.innerHTML = '';
+  const buttons = document.querySelector(".np");
 
-  image_urls.forEach((imgUrl, index) => {
-    const img = document.createElement('img');
-    img.src = imgUrl;
-    img.onload = () => {
-      const container = document.createElement('a');
-      container.href = imgUrl;
-      container.target = '_'
+  if (image_urls.length > 1) {
+    buttons.style.visibility = "visible";
+  } else {
+    buttons.style.visibility= "hidden";
+  }
 
-      if (index % 3 === 2) {
-        container.classList.add('image-row-last');
-      }
-
-      if (index === -1) {
-        container.classList.add('image-row-last');
-      }
-
-      const thumbnailWidth =  150;//details.clientWidth * 0.25;
-      const thumbnailHeight = img.height / img.width * thumbnailWidth;
-      img.style.width = `${thumbnailWidth}px`;
-      img.style.height = `${thumbnailHeight}px`;
-      img.style.transform = 'rotate(90deg)';
-      container.appendChild(img);
-      gallery.appendChild(container);
-    }
+  image_urls.forEach((imageUrl) => {
+    const img = document.createElement("img");
+    img.style.transform = "rotate(90deg)";
+    img.src = imageUrl;
+    carousel.appendChild(img);
   });
+
+  const prevBtn = document.querySelector("#prevBtn");
+  const nextBtn = document.querySelector("#nextBtn");
+
+  let currentIndex = 0;
+
+  function showImage(index) {
+    const imageUrl = image_urls[index];
+    carousel.style.backgroundImage = `url(${imageUrl})`;
+  }
+
+  function prevImage() {
+    currentIndex--;
+    if (currentIndex < 0) {
+      currentIndex = image_urls.length - 1;
+    }
+    showImage(currentIndex);
+  }
+
+  function nextImage() {
+    currentIndex++;
+    if (currentIndex >= image_urls.length) {
+      currentIndex = 0;
+    }
+    showImage(currentIndex);
+  }
+
+  prevBtn.addEventListener("click", prevImage);
+  nextBtn.addEventListener("click", nextImage);
+
+   // Show the initial image
+   showImage(currentIndex);
+
 
 
 }
+
 
 // Display details for a clicked image feature
 function displaySpotDetails(feature) {
