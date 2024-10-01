@@ -2,7 +2,7 @@
 
 var map = new maplibregl.Map({
   container: 'map',
-  style: 'https://api.maptiler.com/maps/d29b0278-3b07-44ae-bb17-0a7b138f7313/style.json?key=LVXocV2Y6nX6vEqq67iz',
+  style: 'https://api.maptiler.com/maps/d90a4ef8-c29f-44da-af0d-094fdb07b84e/style.json?key=LVXocV2Y6nX6vEqq67iz',
   center: [8.547603,47.047786],
   zoom: 16,
   attributionControl: false
@@ -534,7 +534,7 @@ map.on('load', function () {
       console.log('switch layer');
     }
     else if (currentLayer == 0){
-      map.setStyle('https://api.maptiler.com/maps/d29b0278-3b07-44ae-bb17-0a7b138f7313/style.json?key=LVXocV2Y6nX6vEqq67iz');
+      map.setStyle('https://api.maptiler.com/maps/d90a4ef8-c29f-44da-af0d-094fdb07b84e/style.json?key=LVXocV2Y6nX6vEqq67iz');
       $('#attribution').empty().html('<a style="color:white;background-color:black" href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a> <a style="color:white;background-color:black" href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>');
       currentLayer = 1;
       console.log('Switch to other layer');
