@@ -34,9 +34,9 @@ const MISSIONS = {
 };
 const TILE_LAYERS = [
   {
-    id: 'osm-carto', name: 'OSM map', type: 'tms',
-    url: 'https://basemaps.cartocdn.com/light_all/{zoom}/{x}/{y}.png',
-    max_zoom: 19, attribution: { text: 'OSM contributors / CARTO', url: 'https://www.openstreetmap.org/copyright' }
+    id: 'osm-standard', name: 'OSM map', type: 'tms',
+    url: 'https://tile.openstreetmap.org/{zoom}/{x}/{y}.png',
+    max_zoom: 19, attribution: { text: '© OpenStreetMap contributors', url: 'https://www.openstreetmap.org/copyright' }
   },
   {
     id: 'satellite-esri', name: 'Satellite (Esri)', type: 'tms',
