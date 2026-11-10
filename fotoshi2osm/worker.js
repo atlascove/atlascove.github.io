@@ -36,34 +36,6 @@ export default {
     }
     if (path === ROOT + "/health") return json({ service: "Fotoshi2OSM", status: "ok", mode: "read-only preview", writesToOSM: false });
     if (path === ROOT + "/source") return Response.redirect("https://github.com/atlascove/atlascove.github.io/tree/feature/fotoshi2osm-labs/fotoshi2osm", 302);
-    if (path === ROOT + "/api/places") {
-      const input = (u.searchParams.get("bbox") || "").split(",").map(Number);
-      if (input.length !== 4 || !input.every(Number.isFinite)) return json({ error: "bbox must contain four valid coordinates" }, 400);
-      const [west, south, east, north] = input;
-      if (west < -180 || east > 180 || south < -90 || north > 90 || east <= west || north <= south || east - west > 0.23 || north - south > 0.23) {
-        return json({ error: "Please zoom in and choose a valid bounding box smaller than 0.23 degrees per side." }, 400);
-      }
-      const limit = Number(u.searchParams.get("limit") || "60");
-      if (!Number.isInteger(limit) || limit < 1 || limit > 70) return json({ error: "limit must be 1–70" }, 400);
-      const upstream = new URL("https://api.fotoshi.com/v1/places");
-      upstream.searchParams.set("bbox", input.map(x => x.toFixed(6)).join(","));
-      upstream.searchParams.set("limit", String(limit));
-      upstream.searchParams.set("urls", "true");
-      try {
-        const response = await fetch(upstream, {
-          headers: { accept: "application/json" },
-          cf: { cacheTtl: 90, cacheEverything: true }
-        });
-        const body = await response.text();
-        if (body.length > 6_000_000) return json({ error: "Fotoshi returned too much data for this preview" }, 502);
-        const status = response.status;
-        if (!response.ok) return json({ error: "Fotoshi API returned HTTP " + status }, status >= 400 && status < 600 ? status : 502);
-        if (!/json/i.test(response.headers.get("content-type") || "")) return json({ error: "Unexpected Fotoshi response" }, 502);
-        return new Response(body, { status: 200, headers: { ...JSON_HEADERS, "cache-control": "public, max-age=60", "x-robots-tag": "noindex" } });
-      } catch (error) {
-        return json({ error: "Fotoshi API temporarily unavailable" }, 502);
-      }
-    }
     const osmMatch = path.match(/^\/fotoshi2osm\/api\/osm\/([nwr])([1-9][0-9]{0,14})$/);
     if (osmMatch) {
       const type = { n: "node", w: "way", r: "relation" }[osmMatch[1]];
