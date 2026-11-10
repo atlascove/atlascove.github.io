@@ -5,8 +5,8 @@
  * Modified and reimplemented for Fotoshi on 2026-11-10.
  * Licensed under AGPL-3.0-or-later. See LICENSE.txt.
  *
- * BUILD: replace the literal __HTML__ token below with JSON.stringify
- * of index.html, then upload this as a Cloudflare module Worker.
+ * This Worker routes Labs requests to the separately built Pic4Review fork.
+ * It retains bounded OSM lookup and consented review telemetry endpoints.
  */
 const ROOT = "/fotoshi2osm";
 const JSON_HEADERS = { "content-type": "application/json; charset=utf-8", "x-content-type-options": "nosniff", "access-control-allow-origin": "https://labs.fotoshi.com" };
@@ -84,7 +84,6 @@ export default {
         return new Response("Fork preview temporarily unavailable", { status: 502 });
       }
     }
-    if (path === ROOT + "/logo.svg") return new Response(request.method === "HEAD" ? null : LOGO_SVG, { headers: { "content-type": "image/svg+xml; charset=utf-8", "cache-control": "public, max-age=300", "x-content-type-options": "nosniff" } });
     if (path === ROOT + "/health") return json({ service: "Fotoshi2OSM", status: "ok", mode: "read-only preview", writesToOSM: false });
     if (path === ROOT + "/source") return Response.redirect("https://github.com/atlascove/atlascove.github.io/tree/feature/fotoshi2osm-labs/fotoshi2osm", 302);
     const osmMatch = path.match(/^\/fotoshi2osm\/api\/osm\/([nwr])([1-9][0-9]{0,14})$/);
