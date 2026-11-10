@@ -89,7 +89,7 @@ function normalise(row,i){
  var point=coord(p.geometry)||coord(p.geom&&{lon:p.geom.x,lat:p.geom.y})||coord(p.centroid)||coord(p.center)||coord(p.coordinates)||coord(p.location)||coord(p.target_coords)||coord(p.point)|| (Number.isFinite(+p.lon)&&Number.isFinite(+p.lat)?[+p.lon,+p.lat]:null) || (Number.isFinite(+p.longitude)&&Number.isFinite(+p.latitude)?[+p.longitude,+p.latitude]:null);
  if(!point||!point.every(Number.isFinite)||Math.abs(point[0])>180||Math.abs(point[1])>90)return null;
  var images=Array.isArray(p.images)?p.images:(Array.isArray(p.photos)?p.photos:[]);
- var osm=String(p.osm_id||p.osmId||p.osm_ref||p.tags_primary&&p.tags_primary.osm_id||p.external_ids&&p.external_ids.osm||'');
+ var rawOsm=p.osm_id||p.osmId||p.osm_ref||p.tags_primary&&p.tags_primary.osm_id||p.external_ids&&p.external_ids.osm||'';var osm=String(rawOsm||'');if(/^[1-9][0-9]*$/.test(osm)&&/^[nwr]$/.test(String(p.osm_type||'')))osm=String(p.osm_type)+osm;
  var id=String(p.fid||p.id||'row-'+i);
  return {id:id,name:String(p.name||p.title||p.label||p.tags_secondary&&p.tags_secondary.name||p.tags&&p.tags.name||p.category||'Unnamed place'),category:String(p.category||p.category_name||p.preset_name||p.type||'place'),osm:osm,point:point,photos:images,raw:p};
 }
@@ -116,7 +116,7 @@ async function load(){
  $('load').disabled=true;$('load').textContent='Loading…';$('queue').innerHTML='<div class="empty">Looking up Fotoshi photographs in this area…</div>';
  try {
  var q=new URLSearchParams({bbox:[west,south,east,north].map(function(n){return n.toFixed(6)}).join(','),limit:'70'});
- var res=await fetch(ROOT+'/api/places?'+q.toString());var data=await res.json();
+ q.set('urls','true');var res=await fetch('https://api.fotoshi.com/v1/places?'+q.toString(),{headers:{accept:'application/json'}});var data=await res.json();
  if(!res.ok)throw Error(data.error||'Service returned '+res.status);
  var rows=Array.isArray(data)?data:Array.isArray(data.data)?data.data:Array.isArray(data.places)?data.places:Array.isArray(data.items)?data.items:Array.isArray(data.features)?data.features:[];
  state.places=rows.map(normalise).filter(Boolean).slice(0,70);state.selected=null;state.osmTags={};state.reviewed=new Set();showQueue();markers();
@@ -168,7 +168,7 @@ map.on('load',function(){
 // Load the queue independently of style/tile downloads.
 // MapLibre's style load can be delayed by third-party tile requests.
 $('count').textContent='Starting review…';
-setTimeout(function(){load().catch(function(e){$('queue').innerHTML='<div class="empty">Could not initialize the queue: '+esc(e.message)+'</div>'})},300);
+load().catch(function(e){$('queue').innerHTML='<div class="empty">Could not initialize the queue: '+esc(e.message)+'</div>'});
 })();
 </script>
 </body></html>
