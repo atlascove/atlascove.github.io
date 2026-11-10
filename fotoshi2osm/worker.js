@@ -8,8 +8,6 @@
  * BUILD: replace the literal __HTML__ token below with JSON.stringify
  * of index.html, then upload this as a Cloudflare module Worker.
  */
-const HTML = __HTML__;
-const LOGO_SVG = __LOGO_SVG__;
 const ROOT = "/fotoshi2osm";
 const JSON_HEADERS = { "content-type": "application/json; charset=utf-8", "x-content-type-options": "nosniff", "access-control-allow-origin": "https://labs.fotoshi.com" };
 function json(value, status, headers) {
@@ -54,20 +52,37 @@ export default {
       }
     }
     if (request.method !== "GET" && request.method !== "HEAD") return json({ error: "Method not allowed" }, 405);
-    if (path === ROOT) {
-      return new Response(request.method === "HEAD" ? null : HTML, {
-        status: 200,
-        headers: {
-          "content-type": "text/html; charset=utf-8",
-          "cache-control": "no-store",
+    // Pic4Review fork is compiled by the isolated Cloudflare Pages project.
+    // Serve its *actual* upstream-derived build on the Labs prefix, not the
+    // earlier standalone dashboard. API and telemetry routes below remain local.
+    if (path === ROOT || (path.startsWith(ROOT + "/") &&
+        path !== ROOT + "/health" && path !== ROOT + "/source" &&
+        !path.startsWith(ROOT + "/api/"))) {
+      const suffix = path === ROOT ? "/" : path.slice(ROOT.length);
+      const target = "https://fotoshi2osm-pic4review.pages.dev" + suffix + u.search;
+      try {
+        const upstream = await fetch(target, { method: request.method,
+          headers: { accept: request.headers.get("accept") || "*/*" }
+        });
+        if (!upstream.ok) return new Response("Upstream build unavailable", { status: 502 });
+        const type = upstream.headers.get("content-type") || "application/octet-stream";
+        const headers = new Headers({
+          "content-type": type,
+          "cache-control": type.includes("text/html") ? "no-store" : "public, max-age=300",
           "x-content-type-options": "nosniff",
-          "x-frame-options": "DENY",
-          "referrer-policy": "strict-origin-when-cross-origin",
           "x-robots-tag": "noindex, nofollow",
-          "permissions-policy": "camera=(), microphone=(), geolocation=()",
-          "content-security-policy": "default-src 'self'; connect-src 'self' https://api.fotoshi.com https://tiles.fotoshi.com https://cdn.fotoshi.com https://*.fotoshi.com https://*.openfreemap.org https://unpkg.com; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; worker-src 'self' blob:; font-src 'self' data:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
+          "referrer-policy": "strict-origin-when-cross-origin"
+        });
+        if (type.includes("text/html")) {
+          headers.set("content-security-policy",
+            "default-src 'self'; connect-src 'self' https://api.fotoshi.com https://api.openstreetmap.org; img-src 'self' data: https:; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'");
+          const html = (await upstream.text()).replace(/<head>/i, '<head><base href="/fotoshi2osm/">');
+          return new Response(request.method === "HEAD" ? null : html, { status: 200, headers });
         }
-      });
+        return new Response(request.method === "HEAD" ? null : upstream.body, { status: 200, headers });
+      } catch (_) {
+        return new Response("Fork preview temporarily unavailable", { status: 502 });
+      }
     }
     if (path === ROOT + "/logo.svg") return new Response(request.method === "HEAD" ? null : LOGO_SVG, { headers: { "content-type": "image/svg+xml; charset=utf-8", "cache-control": "public, max-age=300", "x-content-type-options": "nosniff" } });
     if (path === ROOT + "/health") return json({ service: "Fotoshi2OSM", status: "ok", mode: "read-only preview", writesToOSM: false });
