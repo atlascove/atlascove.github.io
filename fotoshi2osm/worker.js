@@ -16,10 +16,44 @@ function json(value, status, headers) {
   return new Response(JSON.stringify(value), { status: status || 200, headers: { ...JSON_HEADERS, "cache-control": "no-store", ...(headers || {}) } });
 }
 export default {
-  async fetch(request) {
-    if (request.method !== "GET" && request.method !== "HEAD") return json({ error: "Method not allowed" }, 405);
+  async fetch(request, env) {
     const u = new URL(request.url);
     const path = u.pathname.replace(/\/+$/, "") || "/";
+    if (path === ROOT + "/api/events") {
+      if (request.method !== "POST") return json({ error: "Method not allowed" }, 405);
+      if (request.headers.get("Origin") !== u.origin) return json({ error: "Same-origin only" }, 403);
+      if (!(request.headers.get("content-type") || "").toLowerCase().startsWith("application/json")) return json({ error: "JSON expected" }, 415);
+      if (Number(request.headers.get("content-length") || "0") > 2048) return json({ error: "Too large" }, 413);
+      let data;
+      try {
+        const body = await request.text();
+        if (body.length > 2048) return json({ error: "Too large" }, 413);
+        data = JSON.parse(body);
+      } catch (_) { return json({ error: "Invalid JSON" }, 400); }
+      const actions = new Set(["skip", "reviewed_locally", "open_editor", "candidate_add", "candidate_update"]);
+      const queues = new Set(["all", "unlinked", "fotoshi", "overture", "linked"]);
+      const fid = data && typeof data.fid === "string" ? data.fid : "";
+      const osm = data && typeof data.osm === "string" ? data.osm : null;
+      const origin = data && typeof data.origin === "string" ? data.origin : "unknown";
+      const sid = data && typeof data.session === "string" ? data.session : "";
+      if (!/^[a-zA-Z0-9_-]{1,80}$/.test(fid) ||
+          !actions.has(data?.action) || !queues.has(data?.queue) ||
+          (osm && !/^[nwr][1-9][0-9]{0,14}$/.test(osm)) ||
+          !/^[a-zA-Z0-9_-]{0,64}$/.test(origin) ||
+          !/^[a-zA-Z0-9_-]{1,80}$/.test(sid)) {
+        return json({ error: "Invalid review event" }, 400);
+      }
+      if (!env.REVIEW_DB) return json({ error: "Review telemetry not configured" }, 503);
+      try {
+        await env.REVIEW_DB.prepare(
+          "INSERT INTO review_events (id, fid, osm_ref, action, queue_filter, source_type, source_origin, anonymous_session) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        ).bind(crypto.randomUUID(), fid, osm, data.action, data.queue, osm ? "linked" : "unlinked", origin, sid).run();
+        return json({ recorded: true }, 201);
+      } catch (_) {
+        return json({ error: "Could not record review event" }, 503);
+      }
+    }
+    if (request.method !== "GET" && request.method !== "HEAD") return json({ error: "Method not allowed" }, 405);
     if (path === ROOT) {
       return new Response(request.method === "HEAD" ? null : HTML, {
         status: 200,
@@ -31,7 +65,7 @@ export default {
           "referrer-policy": "strict-origin-when-cross-origin",
           "x-robots-tag": "noindex, nofollow",
           "permissions-policy": "camera=(), microphone=(), geolocation=()",
-          "content-security-policy": "default-src 'self'; connect-src 'self' https://api.fotoshi.com https://tiles.fotoshi.com https://cdn.fotoshi.com https://*.fotoshi.com https://unpkg.com; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; worker-src 'self' blob:; font-src 'self' data:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
+          "content-security-policy": "default-src 'self'; connect-src 'self' https://api.fotoshi.com https://tiles.fotoshi.com https://cdn.fotoshi.com https://*.fotoshi.com https://*.openfreemap.org https://unpkg.com; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; worker-src 'self' blob:; font-src 'self' data:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
         }
       });
     }
