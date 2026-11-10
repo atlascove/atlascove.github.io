@@ -213,7 +213,8 @@ class App extends Component {
   render() {
     const p=this.current, area=AREAS[this.state.area], title=MISSIONS[this.state.mission].title;
     return <MuiThemeProvider theme={createMuiTheme({
-      palette:{primary:{light:'#ff8257',main:'#f24e1e',dark:'#c73f12',contrastText:'#fff'}}
+      palette:{primary:{light:'#ff8257',main:'#f24e1e',dark:'#c73f12',contrastText:'#fff'}},
+      typography:{fontFamily:'"Noto Sans", system-ui, sans-serif'}
     })}>
       <div className="f2o-root">
         <header className="f2o-head">
