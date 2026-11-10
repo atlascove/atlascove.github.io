@@ -12,7 +12,8 @@ Hosted at **https://labs.fotoshi.com/fotoshi2osm**. The Cloudflare Worker is att
 - Choose missions: general verification, names, contacts, accessibility, opening hours.
 - Enter a small set of suggested tags, copy changed values, then open the exact OSM element in the official iD editor. The user must compare/confirm the evidence and use their own OSM login to save.
 - Mark locally reviewed and skip tasks during the current browser session.
-- Bounded, read-only Cloudflare API proxy, without API keys, session cookies or writes.
+- Direct browser access to the public Fotoshi Places endpoint using its supported `labs.fotoshi.com` CORS origin. No private API key is used.
+- A bounded, read-only Cloudflare Worker proxy for exact OSM element tags, with no OSM login credentials or writes.
 
 ## Deliberate limitations
 **No OSM edits are written from this prototype.** iD handles OAuth, validation, conflicts, changesets and actual submission. We do not imply that marking "reviewed" is an OSM edit. Future OAuth2/PKCE and changeset support requires an independently registered OSM application with the correct callback URL, plus transactional conflict/error handling.
