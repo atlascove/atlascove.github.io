@@ -9,7 +9,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=develop webpack-dev-server --progress --inline --colors",
     "build": "npm run build:js",
-    "build:js": "cross-env NODE_ENV=production webpack --progress",
+    "build:js": "cross-env NODE_ENV=production webpack --colors",
     "test": "cross-env NODE_ENV=test mocha-webpack --recursive test/",
     "doc": "npm run doc:js:check && npm run doc:js",
     "doc:js": "documentation build ./src/**/* -f html -o doc/",
