@@ -91,7 +91,7 @@ footer a{text-decoration:underline}.maplibregl-popup-content{border-radius:9px}.
 <script>
 (function(){
 'use strict';
-var ROOT='/fotoshi2osm',state={places:[],selected:null,photo:0,osmTags:{},osmError:'',reviewed:new Set(),map:null,session:(crypto.randomUUID?crypto.randomUUID():String(Date.now()))};
+var ROOT='/fotoshi2osm',state={places:[],selected:null,photo:0,osmTags:{},osmError:'',reviewed:new Set(),candidates:new Map(),map:null,session:(crypto.randomUUID?crypto.randomUUID():String(Date.now()))};
 var $=function(id){return document.getElementById(id)};
 window.addEventListener('error',function(e){$('queue').innerHTML='<div class="empty">JavaScript error: '+esc(e.message)+'</div>'});
 window.addEventListener('unhandledrejection',function(e){$('queue').innerHTML='<div class="empty">Request or map error: '+esc(e.reason&&e.reason.message||e.reason)+'</div>'});
@@ -155,7 +155,7 @@ async function load(){
  q.set('urls','true');var res=await fetch('https://api.fotoshi.com/v1/places?'+q.toString(),{headers:{accept:'application/json'}});var data=await res.json();
  if(!res.ok)throw Error(data.error||'Service returned '+res.status);
  var rows=Array.isArray(data)?data:Array.isArray(data.data)?data.data:Array.isArray(data.places)?data.places:Array.isArray(data.items)?data.items:Array.isArray(data.features)?data.features:[];
- state.places=rows.map(normalise).filter(Boolean).slice(0,70);state.selected=null;state.osmTags={};state.reviewed=new Set();showQueue();markers();
+ state.places=rows.map(normalise).filter(Boolean).slice(0,70);state.selected=null;state.osmTags={};state.reviewed=new Set();state.candidates=new Map();showQueue();markers();
  $('review').innerHTML='<div class="no-selection">Select a place to review. Photos are loaded from Fotoshi. Existing map attributes are checked against OpenStreetMap separately.</div>';
  } catch(err){$('queue').innerHTML='<div class="empty"><strong>Could not load places.</strong><div>'+esc(err.message)+'</div><div>The Fotoshi public API may be temporarily unavailable.</div></div>'}
  finally{$('load').disabled=false;$('load').textContent='Find photos in map view'}
@@ -189,7 +189,8 @@ function render(){
  $('skip').onclick=function(){event('skip',p);selectNext(false)};
  $('done').onclick=function(){event('reviewed_locally',p);state.reviewed.add(p.id);showQueue();selectNext(true)};
  $('edit').onclick=function(){event('open_editor',p)};
- $('candidate').onclick=function(){event(p.osm?'candidate_update':'candidate_add',p);this.textContent='Recorded as a candidate ✓';this.disabled=true};
+ if(state.candidates.has(p.id)){$('candidate').textContent='Candidate noted locally ✓';$('candidate').disabled=true}
+ $('candidate').onclick=function(){var action=p.osm?'candidate_update':'candidate_add';state.candidates.set(p.id,action);event(action,p);this.textContent='Candidate noted locally ✓';this.disabled=true};
 }
 function selectNext(afterDone){var list=visiblePlaces();if(!list.length)return;var i=list.findIndex(function(p){return state.selected&&p.id===state.selected.id});var next=list.slice(i+1).concat(list.slice(0,i+1)).find(function(p){return !state.reviewed.has(p.id)});if(next)select(next.id);else if(afterDone){$('review').innerHTML='<div class="no-selection"><strong>Review queue complete!</strong><p>All loaded places were marked reviewed locally. Actual OSM changes are tracked by your OSM account, not by this preview.</p></div>';state.selected=null;showQueue();markers()}}
 async function select(id){
