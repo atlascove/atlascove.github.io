@@ -1,6 +1,6 @@
 {
-  "name": "pic4review",
-  "version": "0.5.30",
+  "name": "fotoshi2osm-pic4review-fork",
+  "version": "0.1.0",
   "description": "Tool for reviewing geo-dataset using open-licensed pictures around your features.",
   "repository": {
     "type": "git",
@@ -8,8 +8,8 @@
   },
   "scripts": {
     "start": "cross-env NODE_ENV=develop webpack-dev-server --progress --inline --colors",
-    "build": "npm run build:js && npm run zip",
-    "build:js": "cross-env NODE_ENV=production webpack --progress --colors",
+    "build": "npm run build:js",
+    "build:js": "cross-env NODE_ENV=production webpack --progress",
     "test": "cross-env NODE_ENV=test mocha-webpack --recursive test/",
     "doc": "npm run doc:js:check && npm run doc:js",
     "doc:js": "documentation build ./src/**/* -f html -o doc/",
@@ -22,7 +22,8 @@
     "i18n:download": "tx pull -a --minimum-perc=50 && node fix_i18n_files.js",
     "i18n:clean": "find ./src/config/locales -type f -not -name 'en.json' -delete",
     "zip": "cross-zip build/ Pic4Review_latest.zip",
-    "clean": "rm -rf build/"
+    "clean": "rm -rf build/",
+    "dev": "cross-env NODE_ENV=develop webpack-dev-server --progress"
   },
   "devDependencies": {
     "@babel/runtime": "7.0.0-beta.42",
