@@ -9,6 +9,7 @@
  * of index.html, then upload this as a Cloudflare module Worker.
  */
 const HTML = __HTML__;
+const LOGO_SVG = __LOGO_SVG__;
 const ROOT = "/fotoshi2osm";
 const JSON_HEADERS = { "content-type": "application/json; charset=utf-8", "x-content-type-options": "nosniff", "access-control-allow-origin": "https://labs.fotoshi.com" };
 function json(value, status, headers) {
@@ -30,10 +31,11 @@ export default {
           "referrer-policy": "strict-origin-when-cross-origin",
           "x-robots-tag": "noindex, nofollow",
           "permissions-policy": "camera=(), microphone=(), geolocation=()",
-          "content-security-policy": "default-src 'self'; connect-src 'self' https://api.fotoshi.com https://tiles.fotoshi.com https://cdn.fotoshi.com https://*.fotoshi.com; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; font-src 'self' data:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
+          "content-security-policy": "default-src 'self'; connect-src 'self' https://api.fotoshi.com https://tiles.fotoshi.com https://cdn.fotoshi.com https://*.fotoshi.com https://unpkg.com; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; worker-src 'self' blob:; font-src 'self' data:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
         }
       });
     }
+    if (path === ROOT + "/logo.svg") return new Response(request.method === "HEAD" ? null : LOGO_SVG, { headers: { "content-type": "image/svg+xml; charset=utf-8", "cache-control": "public, max-age=300", "x-content-type-options": "nosniff" } });
     if (path === ROOT + "/health") return json({ service: "Fotoshi2OSM", status: "ok", mode: "read-only preview", writesToOSM: false });
     if (path === ROOT + "/source") return Response.redirect("https://github.com/atlascove/atlascove.github.io/tree/feature/fotoshi2osm-labs/fotoshi2osm", 302);
     const osmMatch = path.match(/^\/fotoshi2osm\/api\/osm\/([nwr])([1-9][0-9]{0,14})$/);
