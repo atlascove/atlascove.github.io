@@ -21,9 +21,9 @@ const OSM_BASE = 'https://www.openstreetmap.org';
 const CDN = 'https://cdn.fotoshi.com';
 const REVIEW_EVENTS = '/fotoshi2osm/api/events';
 const AREAS = {
-  goldau: { name: 'Goldau', lat: 47.05, lon: 8.55, delta: 0.06 },
-  lucerne: { name: 'Lucerne', lat: 47.05, lon: 8.306, delta: 0.06 },
-  songdo: { name: 'Songdo', lat: 37.494, lon: 126.724, delta: 0.06 }
+  goldau: { name: 'Goldau', lat: 47.05, lon: 8.55, delta: 0.035 },
+  lucerne: { name: 'Lucerne', lat: 47.05, lon: 8.306, delta: 0.035 },
+  songdo: { name: 'Songdo', lat: 37.494, lon: 126.724, delta: 0.035 }
 };
 const MISSIONS = {
   unlinked: { title: 'Check possible new OSM places', type: 'unlinked' },
@@ -114,7 +114,7 @@ class App extends Component {
     const bbox = [area.lon-d,area.lat-d,area.lon+d,area.lat+d].map(n=>n.toFixed(6)).join(',');
     this.setState({ loading: true, message: '', osmTags: {}, osmError: '', answer:null,selected:0,photo:0 });
     try {
-      const url = FOTOSHI_API + '?bbox=' + encodeURIComponent(bbox) + '&urls=true&limit=100';
+      const url = FOTOSHI_API + '?bbox=' + encodeURIComponent(bbox) + '&urls=true&limit=40';
       const response = await fetch(url);
       if (!response.ok) throw Error('Fotoshi API: HTTP ' + response.status);
       const json = await response.json();
