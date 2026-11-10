@@ -113,7 +113,8 @@ function normalise(row,i){
 }
 function imageOptions(p){
  var urls=p.urls||p.assets||{};
- var candidates=[p.url,p.image_url,p.imageUrl,p.thumbnail_url,p.thumb_url,p.medium_url,p.display_url,urls.image,urls.medium,urls.display,urls.large,urls.thumbnail,urls.thumb,urls.medium&&urls.medium.href,urls.thumbnail&&urls.thumbnail.href,p.assets&&p.assets.thumbnail&&p.assets.thumbnail.href].filter(function(v){return typeof v==='string'&&/^https:\/\//.test(v)});
+ function cdn(v){return typeof v==='string'&&v.startsWith('/')?'https://cdn.fotoshi.com'+v:v}
+ var candidates=[p.url,p.image_url,p.imageUrl,p.thumbnail_url,p.thumb_url,p.medium_url,p.display_url,cdn(urls.image),cdn(urls.medium),cdn(urls.display),cdn(urls.large),cdn(urls.thumbnail),cdn(urls.thumb),urls.medium&&urls.medium.href,urls.thumbnail&&urls.thumbnail.href,p.assets&&p.assets.thumbnail&&p.assets.thumbnail.href].filter(function(v){return typeof v==='string'&&/^https:\/\//.test(v)});
  var id=p.oid||p.photo_id||p.id;
  if(id){var filename=String(p.filename||id+'.jpeg').replace(/^.*\//,'');var stem=filename.replace(/\.[^.]*$/,'');var ext=(filename.match(/\.[^.]*$/)||['.jpeg'])[0];candidates.push('https://cdn.fotoshi.com/images/'+encodeURIComponent(stem)+'-1280'+ext);candidates.push('https://cdn.fotoshi.com/thumbnails/'+encodeURIComponent(filename))}
  return Array.from(new Set(candidates));
@@ -170,12 +171,25 @@ function render(){
  var t=state.osmTags||{},link=p.osm?'<a target="_blank" rel="noopener" href="https://www.openstreetmap.org/'+(idParts(p.osm)?idParts(p.osm).type+'/'+idParts(p.osm).id:'')+'">'+esc(p.osm)+'</a>':'Not matched to an OSM element';
  var status=state.osmError==='loading'?'Retrieving current OSM tags…':state.osmError?state.osmError:p.osm?'Current OSM tags:':'No OSM feature is linked to this Fotoshi place.';
  var tagNames=Object.keys(t).sort();
+ var evidence={};
+ Object.assign(evidence,p.raw.tags_primary&&typeof p.raw.tags_primary==='object'?p.raw.tags_primary:{});
+ Object.assign(evidence,p.raw.tags_secondary&&typeof p.raw.tags_secondary==='object'?p.raw.tags_secondary:{});
+ if(p.raw.name)evidence.name=p.raw.name;
+ if(p.raw.brand)evidence.brand=p.raw.brand;
+ var relevantKeys=new Set(['name','brand','shop','amenity','tourism','leisure','historic','craft','office','healthcare','building','cuisine','website','contact:website','phone','contact:phone','opening_hours','wheelchair','operator']);
+ var differences=(!state.osmError&&p.osm)?Object.entries(evidence).filter(function(pair){var k=pair[0],v=pair[1];return relevantKeys.has(k)&&['string','number'].includes(typeof v)&&String(v).trim()&&String(v)!==String(t[k]||'')}).slice(0,12):[];
+ var diffHtml=differences.length?'<h3>Fotoshi metadata differs from OSM</h3><div class="description">Possible review leads, not verified photo observations. Metadata may have originated in OSM or Overture.</div>'+differences.map(function(pair){var k=pair[0];return '<div class="tag-row"><code>'+esc(k)+'</code><span>OSM: '+esc(t[k]||'[missing]')+'<div><strong>Fotoshi: '+esc(pair[1])+'</strong></div>'+(k==='name'?'<small>Recorded source: '+esc(p.raw.name_source||'unknown')+'</small>':'')+'</span></div>'}).join(''):'';
+ var about='<div class="tiny">Fotoshi ID: '+esc(p.id)+'<div>Origin: '+esc(p.raw.created_source||'unknown')+'</div>'+(p.raw.overture_id?'<div>Overture GERS: '+esc(p.raw.overture_id)+'</div>':'')+'</div>';
+ var capture=photo&&(photo.capture_time||photo.source_capture_time)?'<div class="description">Photo taken: '+esc(String(photo.capture_time||photo.source_capture_time).slice(0,10))+'</div>':'';
+ var caution=!p.osm?'<div class="status"><strong>Possible addition, not a confirmed missing place.</strong>Fotoshi has no linked OSM ID. Check the map for an existing object before creating anything.</div>':'';
+
  var rows=tagNames.length?tagNames.map(function(k){return '<div class="tag-row"><code>'+esc(k)+'</code><span>'+esc(t[k])+'</span></div>'}).join(''):'<div class="description">No OSM tags available for this place.</div>';
- $('review').innerHTML=photoHtml+'<div class="attrib">'+esc(attribution)+'</div><div class="details"><h2>'+esc(p.name)+'</h2><div class="tiny">'+esc(p.category)+' | '+link+'</div><div class="status">Compare the photo to the place and its map tags. Do not assume old photographs still describe the current situation.</div><h3>'+esc(status)+'</h3>'+rows+'<div class="actions"><button class="secondary" id="skip">Skip</button><button class="secondary" id="done">Mark reviewed locally</button><a class="primary wide" id="edit" target="_blank" rel="noopener" href="'+esc(editUrl(p))+'" style="text-decoration:none;text-align:center">Edit in OpenStreetMap iD ↗</a></div><p class="notice">This page does not write to OSM. The final edit, if any, happens in iD under your OSM account. Local review progress disappears when this page is reloaded.</p></div>';
+ $('review').innerHTML=photoHtml+'<div class="attrib">'+esc(attribution)+'</div><div class="details"><h2>'+esc(p.name)+'</h2><div class="tiny">'+esc(p.category)+' | '+link+'</div>'+about+capture+caution+'<div class="status">Photos are evidence, but not proof of today\'s facts. Inspect signs and nearby OSM objects before editing.</div><h3>'+esc(status)+'</h3>'+rows+diffHtml+'<div class="actions"><button class="secondary" id="skip">Not sure / skip</button><button class="secondary" id="done">Reviewed locally</button><button class="secondary wide" id="candidate">'+(p.osm?'Looks like an OSM update':'Potential OSM addition')+'</button><a class="primary wide" id="edit" target="_blank" rel="noopener" href="'+esc(editUrl(p))+'" style="text-decoration:none;text-align:center">Edit in OpenStreetMap iD ↗</a></div><p class="notice">This page does not write to OSM. The final edit, if any, happens in iD under your OSM account. Local review progress disappears when this page is reloaded.</p></div>';
  if(photo){$('prevphoto').onclick=function(){state.photo=(i+photos.length-1)%photos.length;render()};$('nextphoto').onclick=function(){state.photo=(i+1)%photos.length;render()}}
  $('skip').onclick=function(){event('skip',p);selectNext(false)};
  $('done').onclick=function(){event('reviewed_locally',p);state.reviewed.add(p.id);showQueue();selectNext(true)};
  $('edit').onclick=function(){event('open_editor',p)};
+ $('candidate').onclick=function(){event(p.osm?'candidate_update':'candidate_add',p);this.textContent='Recorded as a candidate ✓';this.disabled=true};
 }
 function selectNext(afterDone){var list=visiblePlaces();if(!list.length)return;var i=list.findIndex(function(p){return state.selected&&p.id===state.selected.id});var next=list.slice(i+1).concat(list.slice(0,i+1)).find(function(p){return !state.reviewed.has(p.id)});if(next)select(next.id);else if(afterDone){$('review').innerHTML='<div class="no-selection"><strong>Review queue complete!</strong><p>All loaded places were marked reviewed locally. Actual OSM changes are tracked by your OSM account, not by this preview.</p></div>';state.selected=null;showQueue();markers()}}
 async function select(id){
