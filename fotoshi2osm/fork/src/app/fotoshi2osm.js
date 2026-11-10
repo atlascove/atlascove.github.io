@@ -73,7 +73,7 @@ function adapt(row) {
     date: p.capture_time || p.source_capture_time || p.upload_time || Date.now(),
     author: p.creator_name || p.username || 'Fotoshi contributor',
     provider: 'Fotoshi', direction: Number(p.compass_angle)||0,
-    coordinates: [Number(p.photo_latitude ?? point[1]), Number(p.photo_longitude ?? point[0])],
+    coordinates: [Number(p.photo_latitude != null ? p.photo_latitude : point[1]), Number(p.photo_longitude != null ? p.photo_longitude : point[0])],
     oid: p.oid
   })).filter(p => p.pictureUrl);
   return {
