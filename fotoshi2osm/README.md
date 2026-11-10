@@ -1,44 +1,46 @@
-# Fotoshi2OSM (Labs prototype)
+# Fotoshi2OSM — photo-first OSM review experiment
 
-A photo-driven, human-reviewed OpenStreetMap improvement workflow inspired by [Adrien Pavie's Pic4Review](https://framagit.org/Pic4Carto/Pic4Review). The original Pic4Review frontend and backend are licensed under AGPL-3.0-or-later. This 2026-11-10 experiment reimplements the core *missions → place → photo → inspect tags → edit* flow for the Fotoshi public Places API.
+Live: https://labs.fotoshi.com/fotoshi2osm
 
-Hosted at **https://labs.fotoshi.com/fotoshi2osm**. The Cloudflare Worker is attached only to the \`labs.fotoshi.com/fotoshi2osm*\` route, leaving the existing Labs site and other demos unchanged.
+This is a standalone implementation inspired by the **mission → feature → evidence → edit** workflow of [Pic4Review by Adrien Pavie](https://framagit.org/Pic4Carto/Pic4Review), licensed AGPL-3.0-or-later. It is **not** a fork of the entire historical Pic4Review frontend/backend. Pic4Review has real missions with area, feature selection, data provider, theme, progress and templates; the filter dropdown here is a local view over real Fotoshi place metadata, **not** an actual persistent mission engine.
 
-## Current functionality
-- Pan and zoom a live map (Fotoshi basemap), or jump to Goldau, Lucerne or Songdo.
-- Query publicly photographed Fotoshi places inside a bounded viewport and render a review queue.
-- Inspect Fotoshi photo renditions with individual contributor and image-licence attribution where returned.
-- Retrieve and display existing OSM tags for associated n/w/r identities.
-- Choose missions: general verification, names, contacts, accessibility, opening hours.
-- Enter a small set of suggested tags, copy changed values, then open the exact OSM element in the official iD editor. The user must compare/confirm the evidence and use their own OSM login to save.
-- Mark locally reviewed and skip tasks during the current browser session.
-- Direct browser access to the public Fotoshi Places endpoint using its supported `labs.fotoshi.com` CORS origin. No private API key is used.
-- A bounded, read-only Cloudflare Worker proxy for exact OSM element tags, with no OSM login credentials or writes.
+## Current preview
 
-## Deliberate limitations
-**No OSM edits are written from this prototype.** iD handles OAuth, validation, conflicts, changesets and actual submission. We do not imply that marking "reviewed" is an OSM edit. Future OAuth2/PKCE and changeset support requires an independently registered OSM application with the correct callback URL, plus transactional conflict/error handling.
+- Real Fotoshi photos and photographed places from its public `/v1/places?bbox=...` endpoint, directly from the allowed Labs browser origin; no developer API key in JavaScript.
+- Two switchable **OSM-derived** basemaps: the Fotoshi vector style (`tiles.fotoshi.com`) and [OpenFreeMap Liberty](https://openfreemap.org/quick_start/) (`tiles.openfreemap.org`), which permits commercial use and requires map attribution. The map does **not** use the donation-funded `tile.openstreetmap.org` servers.
+- Separate **data-driven queues**, using the persisted feature `created_source` and external IDs: not linked to OSM; specifically Fotoshi-created and unlinked; specifically Overture-sourced and unlinked; matched to OSM; and all features. If a Fotoshi-created feature later acquired an Overture ID, it **remains Fotoshi-origin**. Missing an `osm_id` is not evidence the place is absent from OSM.
+- Compare a linked element's **live OSM tags** (read-only API) against recorded public Fotoshi metadata `tags_primary`, `tags_secondary`, name and brand. Display differences as **review candidates**, not automatic attribute truth: public metadata can itself derive from OSM/Overture. Show the capture date and source when available. We do not infer opening hours from a photo unless actual attribute evidence is present.
+- Candidate addition/update, reviewed locally, uncertain/skip and open-in-iD actions. No direct changeset writes are possible yet.
+- An **unchecked, opt-in** switch for anonymous telemetry of those decisions. Only selected action, public feature ID, existing OSM reference if any, source-origin code, queue filter and a random **per-page** session ID are written to a dedicated EU-jurisdiction Cloudflare D1 database. No tracking is sent when unchecked. These are review intents, **not** verified OSM additions or completed changesets. Source schema: [schema.sql](schema.sql). Telemetry backend permits only same-origin JSON requests with bounded fields and a strict event allowlist.
 
-The public \`/v1/places\` API is not a full tagging/AI inference API. Imagery is supporting evidence, never an automatic reason to change a tag. Photo age, source, OSM linkage, and licence must be checked manually. Existing images are only displayed using public renditions.
+## Not implemented
 
-This prototype does not manage shared missions or persist review progress. Photo-specific URLs and grouped-place response shape can change; the client defensively accommodates common public formats.
+**OSM OAuth 2.0** is the next prerequisite before editing on-site. The separate `osm.fotoshi.com` iD fork already supports OSM sign-in for edits inside iD, but its upstream/embedded OAuth client ID is not proof that `labs.fotoshi.com` is an approved callback. Register a **separate OSM OAuth2 app**, preferably under a company-controlled OSM account, with `https://labs.fotoshi.com/fotoshi2osm/oauth/callback` (and later production `osm.fotoshi.com/reviewer` if migrated), request `write_api` and use authorization code + PKCE. Authenticate to OSM **independently** of Fotoshi/Cognito. Secure token storage, conflict/version checks, user-confirmed diffs and actual changeset submission must be implemented before enabling writes. Until then, the visible iD link sends users to OpenStreetMap's own editor for authorization and submission.
+
+The existing Place Intelligence endpoint `/internal/place-intelligence` contains evidence-linked model predictions, confidence and claims, but is **private and secret-token protected**. Do not expose the internal token or the raw endpoint to clients. Provide a new deliberately scoped backend projection of only approved, photo-evidenced attributes for relevant review missions before surfacing model hints. Do not treat a photo-derived candidate as confirmed fact.
+
+A real mission engine, category-to-OSM-tag comparison validation, nearby-duplicate detection, OSM OAuth, changeset tracking and completion telemetry are still future work. This prototype is intentionally not yet announced as a capable OSM editor.
 
 ## Build and deploy
-\`worker.js\` contains \`const HTML = __HTML__;\`. Insert a JSON-encoded copy of \`index.html\` in place of this placeholder when building the Worker:
 
-\`\`\`js
-import { readFileSync, writeFileSync } from "node:fs";
+`index.html` is an intentionally small, dependency-light page. `worker.js` uses compile-time placeholders `__HTML__` and `__LOGO_SVG__`, replaced with JSON-encoded copies of `index.html` and the official outlined Sifonn Pro `logo.svg`. Do **not** distribute the Sifonn font binaries. The SVG outlines are supplied by Fotoshi's existing brand repository.
+
+Example build from this directory:
+
+```js
+import {readFileSync,writeFileSync} from "node:fs";
 const html = readFileSync("index.html", "utf8");
+const logo = readFileSync("logo.svg", "utf8");
 const template = readFileSync("worker.js", "utf8");
-writeFileSync("worker-built.js", template.replace("__HTML__;", JSON.stringify(html) + ";"));
-\`\`\`
+writeFileSync("worker-built.js", template
+  .replace("const HTML = __HTML__;", "const HTML = " + JSON.stringify(html) + ";")
+  .replace("const LOGO_SVG = __LOGO_SVG__;", "const LOGO_SVG = " + JSON.stringify(logo) + ";"));
+```
 
-Upload \`worker-built.js\` as an ES module Worker named \`fotoshi2osm-labs\`, then route exactly \`labs.fotoshi.com/fotoshi2osm*\` to it. Do not route \`labs.fotoshi.com/*\` to this Worker.
+Upload the built module Worker as `fotoshi2osm-labs`, with one D1 binding `REVIEW_DB` pointing at the isolated `fotoshi2osm-review-events` database. Apply `schema.sql` to that database. Route **only** `labs.fotoshi.com/fotoshi2osm*` to the Worker, leaving the rest of Labs unchanged. The prototype's CSP allows MapLibre's blob worker plus the two approved map hosts.
 
-The upstream application was not deployed verbatim because the older React 15/Pic4Review backend stack requires substantial maintenance and a separate PostGIS installation. The workflow and licence attribution remain explicit here.
+## Licence and provenance
 
-## Licence and acknowledgements
-Copyright 2026 Fotoshi contributors. This modified/reimplemented experiment is offered under **GNU Affero General Public License v3 or later**. Full text: [LICENSE.txt](./LICENSE.txt). Modified 10 November 2026.
+Copyright 2026 Fotoshi contributors. Offered under GNU **AGPL-3.0-or-later**, full text [LICENSE.txt](LICENSE.txt); modified 10 November 2026. Inspired by Pic4Review, copyright 2017–2020 Adrien Pavie, who credits Christopher Beddow as a contributor. Upstream source: https://framagit.org/Pic4Carto/Pic4Review .
 
-Inspired by Pic4Review, copyright 2017–2020 Adrien Pavie, which identifies Christopher Beddow among its contributors. Upstream source: [Pic4Review](https://framagit.org/Pic4Carto/Pic4Review). Copyright and photo licences remain with the relevant upstream owners.
-
-OpenStreetMap data © OpenStreetMap contributors, ODbL. Fotoshi photos are separately licensed, and individual image attribution must be respected.
+OSM data © OpenStreetMap contributors (ODbL). Individual Fotoshi photographs retain their own licences and attribution. Sources of attributes must be reviewed before copying anything into OSM, particularly where they may originate in third-party datasets.
