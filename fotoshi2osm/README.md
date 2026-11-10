@@ -23,7 +23,7 @@ The live Labs page is **a fork of the original Pic4Review frontend by Adrien Pav
 
 ## Typography and logo
 
-The application uses Noto Sans for ordinary text, the official orange Fotoshi logo mark and an orange **outlines-only Sifonn Pro Fotoshi wordmark**. Yellow `2` and green `OSM` follow without a space. The suffix is currently a fallback geometric bold face, **not yet official Sifonn outlines**. Do not distribute, commit or bundle licensed proprietary Sifonn font files; a vector-outline export for the full mark is the remaining brand polish.
+The application uses **Noto Sans** for ordinary UI text and a standalone official orange Fotoshi logomark beside a **single contiguous, fully outlined Sifonn Pro `fotoshi2OSM` wordmark**. The entire wordmark uses the same licensed Pro typeface: `fotoshi` in Fotoshi orange `#F24E1E`, `2` in yellow `#FECA57`, `OSM` in green `#0E8345`. The favicon is the official orange logomark on a solid white background. The vector artwork was generated from the privately licensed original font; **no font binary is committed, distributed or served**.
 
 ## Source and licences
 
