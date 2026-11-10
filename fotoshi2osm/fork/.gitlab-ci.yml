@@ -1,0 +1,45 @@
+image: node:9-stretch
+
+before_script:
+  - node --version
+  - npm --version
+  - npm install
+  - sed -i s/deb.debian.org/archive.debian.org/g /etc/apt/sources.list
+  - sed -i s/security.debian.org/archive.debian.org/g /etc/apt/sources.list
+  - sed -i s/stretch-updates/stretch/g /etc/apt/sources.list
+  - apt-get update -qq && apt-get install -y -qq ncftp zip sed
+  - sed -i 's#http://localhost:28113#https://pic4review.pavie.info/devapi#' src/app/constants.js
+
+cache:
+  paths:
+    - node_modules/
+
+test:
+  script:
+    - npm run doc:js:check
+    - npm run test
+
+deploy:client:develop:
+  stage: deploy
+  only:
+    - develop
+  script:
+    - npm run build
+    - ncftpput -u $FTP_USER -p $FTP_PASS -R $FTP_HOST $FTP_FOLDER/dev/ ./build/*
+    - ncftpput -u $FTP_USER -p $FTP_PASS -R $FTP_HOST $FTP_FOLDER/builds/ ./Pic4Review_latest.zip
+
+deploy:client:tags:
+  stage: deploy
+  only:
+    - tags
+  script:
+    - sed -i "s#https://pic4review.pavie.info/devapi#https://api.pic4review.pavie.info#" src/app/constants.js
+    - sed -i "s#WofjNAUxebyuS40aRy5nxXQot1GEMDVy85-MfuP_wxk#${OAUTH_CONSUMER_KEY}#" src/app/constants.js
+    - sed -i "s#</head>#<script type='text/javascript'>var _paq = window._paq || []; _paq.push(['setDocumentTitle', document.domain + '/' + document.title]); _paq.push(['setCookieDomain', '*.pic4review.pavie.info']); _paq.push(['setDoNotTrack', true]); _paq.push(['disableCookies']); _paq.push(['trackPageView']); _paq.push(['enableLinkTracking']); (function() { var u='//stats.pavie.info/'; _paq.push(['setTrackerUrl', u+'matomo.php']); _paq.push(['setSiteId', '11']); var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s); })(); </script></head>#" src/www/index.html
+    - npm run build
+    - ncftpput -u $FTP_USER -p $FTP_PASS -R $FTP_HOST $FTP_FOLDER/ ./build/*
+    - ncftpput -u $FTP_USER -p $FTP_PASS -R $FTP_HOST $FTP_FOLDER/builds/ ./Pic4Review_latest.zip
+    - mv ./Pic4Review_latest.zip ./Pic4Review_$(git tag -l --points-at HEAD).zip
+    - ncftpput -u $FTP_USER -p $FTP_PASS -R $FTP_HOST $FTP_FOLDER/builds/ ./Pic4Review_$(git tag -l --points-at HEAD).zip
+    - npm run doc
+    - ncftpput -u $FTP_USER -p $FTP_PASS -R $FTP_HOST $FTP_FOLDER/doc/ ./doc/*

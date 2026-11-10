@@ -1,0 +1,256 @@
+{
+  "type": "FeatureCollection",
+  "generator": "overpass-ide",
+  "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+  "timestamp": "2017-12-20T08:53:02Z",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/78519200",
+        "access": "yes",
+        "amenity": "toilets",
+        "building": "civic",
+        "fee": "yes",
+        "operator": "Mairie d'Orange",
+        "source": "cadastre-dgi-fr source : Direction Générale des Impôts - Cadastre. Mise à jour : 2010",
+        "wheelchair": "no",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.7986989,
+          44.1349938
+        ]
+      },
+      "id": "way/78519200"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/518337436",
+        "access": "private",
+        "amenity": "toilets",
+        "building": "bungalow",
+        "female": "yes",
+        "male": "no",
+        "name": "Sanitaires",
+        "source": "CCPRO 2017",
+        "@geometry": "center"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.8010928,
+          44.1400677
+        ]
+      },
+      "id": "way/518337436"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/861724615",
+        "access": "yes",
+        "amenity": "toilets",
+        "fee": "yes",
+        "outdoor": "yes",
+        "source": "Mairie d'Orange 2014",
+        "wheelchair": "limited"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.8121347,
+          44.1352485
+        ]
+      },
+      "id": "node/861724615"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1272418761",
+        "access": "yes",
+        "amenity": "toilets",
+        "fee": "yes",
+        "needs_repair": "yes",
+        "operator": "Mairie d'Orange",
+        "outdoor": "yes",
+        "source": "survey 2014",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.803775,
+          44.1365507
+        ]
+      },
+      "id": "node/1272418761"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1272419358",
+        "access": "yes",
+        "amenity": "toilets",
+        "operator": "Ville d'Orange",
+        "outdoor": "yes",
+        "source": "Mairie d'Orange 2014",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.8108115,
+          44.1379288
+        ]
+      },
+      "id": "node/1272419358"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1290293030",
+        "access": "yes",
+        "amenity": "toilets",
+        "fee": "yes",
+        "operator": "Ville d'Orange",
+        "outdoor": "yes",
+        "source": "survey 2014",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.8059527,
+          44.1350351
+        ]
+      },
+      "id": "node/1290293030"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1435126008",
+        "amenity": "toilets"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.8108117,
+          44.1379298
+        ]
+      },
+      "id": "node/1435126008"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1482347378",
+        "access": "permissive",
+        "amenity": "toilets",
+        "fee": "no",
+        "operator": "Culturespaces",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.8093769,
+          44.1356648
+        ]
+      },
+      "id": "node/1482347378"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1742579522",
+        "access": "permissive",
+        "amenity": "toilets",
+        "created_by": "iLOE 1.9",
+        "wheelchair": "limited"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.798906,
+          44.1344
+        ]
+      },
+      "id": "node/1742579522"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1865516550",
+        "amenity": "toilets"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.800639,
+          44.1372846
+        ]
+      },
+      "id": "node/1865516550"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2281170418",
+        "amenity": "toilets",
+        "level": "0",
+        "operator": "SNCF",
+        "source": "survey 2013"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.8193118,
+          44.1374523
+        ]
+      },
+      "id": "node/2281170418"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2810804406",
+        "amenity": "toilets",
+        "source": "survey 2014"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.8043014,
+          44.1320384
+        ]
+      },
+      "id": "node/2810804406"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3048772411",
+        "access": "yes",
+        "amenity": "toilets",
+        "fee": "yes",
+        "operator": "Mairie d'Orange",
+        "source": "survey 2014",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          4.8057472,
+          44.1416856
+        ]
+      },
+      "id": "node/3048772411"
+    }
+  ]
+}
