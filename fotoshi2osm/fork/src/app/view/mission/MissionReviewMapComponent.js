@@ -14,16 +14,16 @@ Leaflet.Marker = LeafletMarker;
 
 const DEFAULT_ZOOM = 18;
 
-const picIcon = Leaflet.icon({
-	iconUrl: 'images/marker_directed_transparent.png',
-	iconSize: [22.6, 21.6],
-	iconAnchor: [11.3, 16.3]
+// Photos use visible Fotoshi-orange dots, not the missing Pic4Review PNGs.
+const picIcon = Leaflet.divIcon({
+  className: 'f2o-photo-pin',
+  html: '<span style="width:15px;height:15px;display:block;border:2px solid #fff;border-radius:50%;background:#f24e1e;box-shadow:0 0 0 2px #f24e1e,0 1px 6px #0008"></span>',
+  iconSize: [18,18], iconAnchor: [9,9]
 });
-
-const picSelectedIcon = Leaflet.icon({
-	iconUrl: 'images/marker_directed_opaque.png',
-	iconSize: [22.6, 21.6],
-	iconAnchor: [11.3, 16.3]
+const picSelectedIcon = Leaflet.divIcon({
+  className: 'f2o-photo-pin-selected',
+  html: '<span style="width:22px;height:22px;display:block;border:3px solid #fff;border-radius:50%;background:#f24e1e;box-shadow:0 0 0 3px #f24e1e,0 2px 7px #0009"></span>',
+  iconSize: [26,26], iconAnchor: [13,13]
 });
 
 /**
@@ -109,11 +109,11 @@ class MissionReviewMapComponent extends Component {
 				<GeoJSON
 					ref="data"
 					data={feature.geometry}
-					color="red"
-					fillColor="red"
+					color="#f24e1e"
+					fillColor="#f24e1e"
 					fillOpacity={0.7}
 					onClick={() => this.props.onFeatureClicked()}
-					pointToLayer={(geojsonPoint, latlng) => { return Leaflet.circleMarker(latlng, { radius: this.props.width === "xs" ? 10 : 8, color: "red", fillColor: "red", fillOpacity: 0.7 }); }}
+					pointToLayer={(geojsonPoint, latlng) => { return Leaflet.circleMarker(latlng, { radius: this.props.width === "xs" ? 10 : 8, color: "#f24e1e", fillColor: "#f24e1e", fillOpacity: 0.7 }); }}
 				/>
 			}
 
