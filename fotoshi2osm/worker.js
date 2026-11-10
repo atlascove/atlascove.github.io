@@ -68,7 +68,7 @@ export default {
         const type = upstream.headers.get("content-type") || "application/octet-stream";
         const headers = new Headers({
           "content-type": type,
-          "cache-control": type.includes("text/html") ? "no-store" : "public, max-age=300",
+          "cache-control": "no-store",
           "x-content-type-options": "nosniff",
           "x-robots-tag": "noindex, nofollow",
           "referrer-policy": "strict-origin-when-cross-origin"
