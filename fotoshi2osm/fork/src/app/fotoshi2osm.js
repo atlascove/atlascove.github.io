@@ -168,7 +168,10 @@ class App extends Component {
   }
   answer(a) {
     this.setState({answer:a});
-    this.event(this.current && this.current.osm ? 'candidate_update':'candidate_add');
+    // Only an affirmative, human-confirmed candidate is recorded.
+    if (a && a.label === 'Yes, review') {
+      this.event(this.current && this.current.osm ? 'candidate_update':'candidate_add');
+    }
   }
   edit() {
     const p=this.current;
