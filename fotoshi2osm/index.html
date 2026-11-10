@@ -12,9 +12,10 @@
 a{color:inherit}button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #f7b49d;outline-offset:2px}
 header{min-height:66px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 24px}
-.brand{display:flex;align-items:center;gap:13px;text-decoration:none;font-size:18px;font-weight:800;letter-spacing:-.035em}
-.mark{width:33px;height:33px;border-radius:10px;background:var(--orange);color:#fff;display:grid;place-items:center;font-size:18px}
-.brand span small{font-size:11px;color:var(--orange);font-weight:800;letter-spacing:0}
+.brand{display:flex;align-items:center;gap:5px;text-decoration:none;white-space:nowrap;min-width:0}
+.brand img{width:147px;height:auto;display:block;flex:none}
+.brand-suffix{font-family:"Sifonn Pro","Century Gothic","Arial Rounded MT Bold",system-ui,sans-serif;font-size:23px;font-weight:800;letter-spacing:-.045em;line-height:1;align-self:center;padding-top:1px}
+.brand-suffix .digit{color:#FECA57}.brand-suffix .osm{color:#548e36}
 .headlinks{display:flex;gap:18px;align-items:center;font-size:12px;color:var(--muted)}.headlinks a{text-decoration:none}.headlinks a:hover{text-decoration:underline}
 .top{padding:18px 24px 15px;display:flex;align-items:flex-end;justify-content:space-between;gap:16px}
 h1{font-size:27px;line-height:1.1;letter-spacing:-.055em;margin:0 0 7px}h2{font-size:17px;letter-spacing:-.03em;margin:0}
@@ -49,39 +50,36 @@ select,input{border:1px solid #dcded8;border-radius:8px;background:#fff;color:va
 .review h3{font-size:13px;margin:21px 0 8px}
 .field{display:block;margin:10px 0}.field label{display:block;font-size:11px;color:var(--muted);font-weight:650;margin-bottom:5px}.field input{padding:9px}
 .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:15px}.actions .wide{grid-column:1/-1}
-.notice{font-size:11px;color:var(--muted);margin:13px 0 0;line-height:1.5}
+.notice{font-size:11px;color:var(--muted);margin:13px 0 0;line-height:1.5}.tag-row{display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--line);font-size:12px;overflow-wrap:anywhere}.tag-row code{width:43%;flex:none;color:#435c4a}.tag-row span{flex:1;min-width:0}
 footer{padding:10px 24px;color:var(--muted);font-size:11px;display:flex;justify-content:space-between;gap:20px}
 footer a{text-decoration:underline}.maplibregl-popup-content{border-radius:9px}
 @media(max-width:1100px){.workspace{grid-template-columns:285px minmax(250px,1fr) 320px}.photo{height:200px}}
-@media(max-width:800px){header{padding:11px 15px}.headlinks{gap:9px}.top{padding:17px 15px}.workspace{height:auto;min-height:0;grid-template-columns:1fr}.left,.right{border:0}.queue{max-height:270px}.mapwrap{height:400px;order:2}.right{order:3}.left{order:1}.review{overflow:visible}.photo{height:260px}footer{padding:15px;flex-wrap:wrap}}
+@media(max-width:800px){.brand img{width:113px}.brand-suffix{font-size:20px}header{padding:11px 15px}.headlinks{gap:9px}.top{padding:17px 15px}.workspace{height:auto;min-height:0;grid-template-columns:1fr}.left,.right{border:0}.queue{max-height:270px}.mapwrap{height:400px;order:2}.right{order:3}.left{order:1}.review{overflow:visible}.photo{height:260px}footer{padding:15px;flex-wrap:wrap}}
 </style>
 </head>
 <body>
-<header><a class="brand" href="https://fotoshi.com"><div class="mark">✦</div><span>Fotoshi<small>2OSM</small></span></a>
+<header><a class="brand" href="https://fotoshi.com" aria-label="Fotoshi2OSM"><img src="/fotoshi2osm/logo.svg" alt="Fotoshi"><span class="brand-suffix"><span class="digit">2</span><span class="osm">OSM</span></span></a>
 <nav class="headlinks"><a href="https://labs.fotoshi.com/">Labs</a><a href="https://osm.fotoshi.com/">Fotoshi iD</a><a href="https://github.com/atlascove/atlascove.github.io/tree/feature/fotoshi2osm-labs/fotoshi2osm" target="_blank" rel="noopener">Source</a></nav></header>
-<div class="top"><div><h1>Turn photos into better map data.</h1><p class="sub">Explore Fotoshi places, inspect photographs and existing OSM tags, then finish a human-verified edit in OpenStreetMap.</p></div><span class="pill">Experimental preview</span></div>
+<div class="top"><div><h1>Review Fotoshi photos for OSM</h1><p class="sub">Select a photographed place, check the evidence and edit in OpenStreetMap.</p></div></div>
 <main class="workspace">
 <section class="panel left">
-<div class="panelhead"><div class="eyebrow">Review missions</div><h2>Find a task</h2><p class="description">Choose what to verify, move the map, and load photographed places in view.</p>
-<select id="mission" aria-label="Review mission">
-<option value="all">Review photographed places</option><option value="name">Verify the place name</option><option value="website">Check website and contact</option><option value="access">Check accessibility details</option><option value="hours">Check opening hours</option></select>
-<div class="controlrow" style="margin-top:10px"><select id="area" aria-label="Starting map area"><option value="goldau">Goldau, Switzerland</option><option value="lucerne">Lucerne, Switzerland</option><option value="seoul">Songdo, South Korea</option></select><button class="primary" id="load">Find places</button></div></div>
+<div class="panelhead"><h2>Photographed places</h2><p class="description">Move the map to an area, then load photos nearby. This is a simple review queue, not a saved Pic4Review mission.</p><button class="primary" id="load" style="width:100%">Find photos in map view</button></div>
 <div class="stats"><span id="count">No places loaded</span><span id="reviewed">0 reviewed</span></div>
-<div class="queue" id="queue"><div class="empty">Use <strong>Find places</strong> to load a review queue. The map is interactive, and you can move it to any location.</div></div>
+<div class="queue" id="queue"><div class="empty">Use <strong>Find photos in map view</strong> to load a simple review queue. The map is interactive, and you can move it to any location.</div></div>
 </section>
-<section class="mapwrap" aria-label="Photo review map"><div id="map"></div><div class="mapoverlay"><strong>Map-based review</strong><div>Photos are evidence, not ground truth. Always compare what you see against current OSM tags.</div></div><div class="mapbuttons"><button id="refresh">Refresh this area</button><button id="zoom">Zoom to selected</button></div></section>
-<section class="panel right"><div class="panelhead"><div class="eyebrow">Human-in-the-loop mapping</div><h2>Review evidence</h2></div><div class="review" id="review"><div class="no-selection">Select a photographed place from the queue or map to see its imagery and OSM tags. No edits are written automatically.</div></div></section>
+<section class="mapwrap" aria-label="Photo review map"><div id="map"></div><div class="mapoverlay">Photographs are evidence, not ground truth. Check the place before editing.</div><div class="mapbuttons"><button id="refresh">Refresh this area</button><button id="zoom">Zoom to selected</button></div></section>
+<section class="panel right"><div class="panelhead"><h2>Photo and OSM details</h2></div><div class="review" id="review"><div class="no-selection">Select a photographed place from the queue or map to see its imagery and OSM tags. No edits are written automatically.</div></div></section>
 </main>
 <footer><span>Images © their contributors, subject to individual licences. Map data © OpenStreetMap contributors. Based on the Pic4Review review workflow by Adrien Pavie.</span><span><a href="https://framagit.org/Pic4Carto/Pic4Review">Pic4Review</a> · <a href="https://www.openstreetmap.org/copyright">OSM attribution</a> · <a href="https://github.com/atlascove/atlascove.github.io/tree/feature/fotoshi2osm-labs/fotoshi2osm">AGPL-3.0 source</a></span></footer>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script>
 (function(){
 'use strict';
-var ROOT='/fotoshi2osm',state={places:[],selected:null,photo:0,osmTags:{},osmError:'',reviewed:new Set(),map:null,mission:'all'};
+var ROOT='/fotoshi2osm',state={places:[],selected:null,photo:0,osmTags:{},osmError:'',reviewed:new Set(),map:null};
 var $=function(id){return document.getElementById(id)};
 window.addEventListener('error',function(e){$('queue').innerHTML='<div class="empty">JavaScript error: '+esc(e.message)+'</div>'});
 window.addEventListener('unhandledrejection',function(e){$('queue').innerHTML='<div class="empty">Request or map error: '+esc(e.reason&&e.reason.message||e.reason)+'</div>'});
-var areas={goldau:[8.55,47.05,15],lucerne:[8.306,47.05,15],seoul:[126.724,37.494,15]};
+var areas={goldau:[8.55,47.05,15]};
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function coord(value){if(Array.isArray(value)&&value.length>=2)return [+value[0],+value[1]];if(value&&typeof value==='object'){if(value.type==='Point')return coord(value.coordinates);if(value.lon!==undefined&&value.lat!==undefined)return [+value.lon,+value.lat];if(value.longitude!==undefined&&value.latitude!==undefined)return [+value.longitude,+value.latitude]}return null}
 function normalise(row,i){
@@ -122,7 +120,7 @@ async function load(){
  state.places=rows.map(normalise).filter(Boolean).slice(0,70);state.selected=null;state.osmTags={};state.reviewed=new Set();showQueue();markers();
  $('review').innerHTML='<div class="no-selection">Select a place to review. Photos are loaded from Fotoshi. Existing map attributes are checked against OpenStreetMap separately.</div>';
  } catch(err){$('queue').innerHTML='<div class="empty"><strong>Could not load places.</strong><div>'+esc(err.message)+'</div><div>The Fotoshi public API may be temporarily unavailable.</div></div>'}
- finally{$('load').disabled=false;$('load').textContent='Find places'}
+ finally{$('load').disabled=false;$('load').textContent='Find photos in map view'}
 }
 function idParts(s){var m=/^([nwr])([1-9][0-9]*)$/.exec(s);return m?{type:{n:'node',w:'way',r:'relation'}[m[1]],id:m[2]}:null}
 function editUrl(p){var ident=idParts(p.osm);if(ident)return 'https://www.openstreetmap.org/edit?editor=id&'+ident.type+'='+ident.id;return 'https://www.openstreetmap.org/edit?editor=id#map=19/'+p.point[1]+'/'+p.point[0]}
@@ -133,12 +131,11 @@ function render(){
  var attribution=photo?('Photo '+(i+1)+' of '+photos.length+' by '+String(photo.username||photo.creator_name||photo.creator||'a Fotoshi contributor')+(photo.image_license?' · '+photo.image_license:(photo.license?' · '+photo.license:''))):'No public photo URLs found in this record.';
  var photoHtml=photo?('<div class="photo">'+(urls.length?'<img alt="Foto showing '+esc(p.name)+'" src="'+esc(urls[0])+'" data-index="0" data-urls="'+esc(JSON.stringify(urls))+'" onerror="f2oImageError(this)">':'<div class="placeholder">No display rendition supplied</div>')+'<div class="photo-nav"><button id="prevphoto" aria-label="Previous photo">‹</button>'+(i+1)+' / '+photos.length+'<button id="nextphoto" aria-label="Next photo">›</button></div></div>'):'<div class="photo"><div class="placeholder">This place has no available photo previews.</div></div>';
  var t=state.osmTags||{},link=p.osm?'<a target="_blank" rel="noopener" href="https://www.openstreetmap.org/'+(idParts(p.osm)?idParts(p.osm).type+'/'+idParts(p.osm).id:'')+'">'+esc(p.osm)+'</a>':'Not matched to an OSM element';
- var intro={all:'Check that the photo represents this feature and verify any useful map details.',name:'Check the visible signage against the current OSM name. Avoid assuming historic imagery is current.',website:'Only enter a website or contact detail that can be reliably verified.',access:'Look for accessible entrances and facilities, but do not infer accessibility from an ambiguous photograph.',hours:'Check photographed opening-hour signage and the capture date before proposing changes.'}[state.mission];
- var loading=state.osmError==='loading',status=loading?'Retrieving current OSM tags…':state.osmError?esc(state.osmError):p.osm?'Loaded OSM fields for comparison.':'No OSM object linked; verify the object before editing.';
- var fields=[['name','Name'],['website','Website'],['wheelchair','Wheelchair access'],['opening_hours','Opening hours']].map(function(f){return '<div class="field"><label for="tag-'+f[0]+'">'+f[1]+' <code>'+f[0]+'</code></label><input id="tag-'+f[0]+'" data-tag="'+f[0]+'" value="'+esc(t[f[0]]||'')+'" placeholder="Only enter verified values"></div>'}).join('');
- $('review').innerHTML=photoHtml+'<div class="attrib">'+esc(attribution)+'</div><div class="details"><h2>'+esc(p.name)+'</h2><div class="tiny">'+esc(p.category)+' · '+link+'</div><div class="status"><strong>Mission: '+esc($('mission').selectedOptions[0].text)+'</strong>'+esc(intro)+'</div><h3>Compare with OpenStreetMap</h3><div class="description">'+status+'</div>'+fields+'<div class="actions"><button class="secondary" id="copy">Copy suggested tag changes</button><button class="secondary" id="skip">Skip for now</button><a class="primary wide" id="edit" target="_blank" rel="noopener" href="'+esc(editUrl(p))+'" style="text-decoration:none;text-align:center">Continue editing in OSM iD ↗</a><button class="secondary wide" id="done">Mark reviewed in this session</button></div><p class="notice">This prototype never writes directly to OpenStreetMap. Copy your suggestions, inspect the feature in iD, and submit the final change using your own OSM account. A photo is supporting evidence, not automatic proof of a tag value.</p></div>';
+ var status=state.osmError==='loading'?'Retrieving current OSM tags…':state.osmError?state.osmError:p.osm?'Current OSM tags:':'No OSM feature is linked to this Fotoshi place.';
+ var tagNames=Object.keys(t).sort();
+ var rows=tagNames.length?tagNames.map(function(k){return '<div class="tag-row"><code>'+esc(k)+'</code><span>'+esc(t[k])+'</span></div>'}).join(''):'<div class="description">No OSM tags available for this place.</div>';
+ $('review').innerHTML=photoHtml+'<div class="attrib">'+esc(attribution)+'</div><div class="details"><h2>'+esc(p.name)+'</h2><div class="tiny">'+esc(p.category)+' | '+link+'</div><div class="status">Compare the photo to the place and its map tags. Do not assume old photographs still describe the current situation.</div><h3>'+esc(status)+'</h3>'+rows+'<div class="actions"><button class="secondary" id="skip">Skip</button><button class="secondary" id="done">Mark reviewed locally</button><a class="primary wide" id="edit" target="_blank" rel="noopener" href="'+esc(editUrl(p))+'" style="text-decoration:none;text-align:center">Edit in OpenStreetMap iD ↗</a></div><p class="notice">This page does not write to OSM. The final edit, if any, happens in iD under your OSM account. Local review progress disappears when this page is reloaded.</p></div>';
  if(photo){$('prevphoto').onclick=function(){state.photo=(i+photos.length-1)%photos.length;render()};$('nextphoto').onclick=function(){state.photo=(i+1)%photos.length;render()}}
- $('copy').onclick=async function(){var delta=[];document.querySelectorAll('[data-tag]').forEach(function(el){var v=el.value.trim();if(v&&v!==(t[el.dataset.tag]||''))delta.push(el.dataset.tag+'='+v)});if(!delta.length){alert('No proposed changes yet. Change a field after checking the photo.');return}try{await navigator.clipboard.writeText(delta.join('\n'));$('copy').textContent='Copied tag suggestions ✓'}catch(e){prompt('Copy proposed OSM tag changes:',delta.join('\n'))}};
  $('skip').onclick=function(){selectNext(false)};
  $('done').onclick=function(){state.reviewed.add(p.id);showQueue();selectNext(true)};
 }
@@ -151,8 +148,6 @@ async function select(id){
  catch(err){if(state.selected&&state.selected.id===id){state.osmError='OSM tags unavailable: '+err.message;render()}}
 }
 $('queue').addEventListener('click',function(e){var item=e.target.closest('[data-place]');if(item)select(item.dataset.place)});
-$('mission').addEventListener('change',function(){state.mission=this.value;if(state.selected)render()});
-$('area').addEventListener('change',function(){var c=areas[this.value];if(state.map)state.map.flyTo({center:[c[0],c[1]],zoom:c[2]})});
 $('load').onclick=load;$('refresh').onclick=load;
 $('zoom').onclick=function(){if(state.map&&state.selected)state.map.flyTo({center:state.selected.point,zoom:18})};
 if(!window.maplibregl){$('map').innerHTML='<div class="empty">Map library unavailable. Refresh to try again.</div>';return}
