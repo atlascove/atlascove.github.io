@@ -218,9 +218,8 @@ class App extends Component {
       <div className="f2o-root">
         <header className="f2o-head">
           <a href="https://fotoshi.com" className="f2o-brand" aria-label="fotoshi2OSM">
-            <img src="images/logo.svg" alt="Fotoshi mark"/>
-            <img className="f2o-brand-word" src="images/wordmark.svg" alt="fotoshi"/>
-            <span className="f2o-brand-name"><span className="two">2</span><span className="osm">OSM</span></span>
+            <img src="images/logo.svg" alt="" aria-hidden="true"/>
+            <img className="f2o-brand-word" src="images/wordmark.svg" alt="fotoshi2OSM"/>
           </a>
           <div className="f2o-head-center"><div className="f2o-title">{title}</div><div className="f2o-subtitle">{area.name}</div></div>
           <div className="f2o-head-right">
