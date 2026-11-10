@@ -107,7 +107,9 @@ class App extends Component {
     this.session = 'r' + Math.random().toString(36).slice(2) + Date.now().toString(36);
     this.load = this.load.bind(this);
   }
-  componentDidMount() { this.load(); }
+  componentDidMount() {
+    this.load().catch(error => this.setState({loading:false,message:'Cannot load review: '+String(error && error.message || error)}));
+  }
   get current() { return this.state.places[this.state.selected] || null; }
   async load() {
     const area = AREAS[this.state.area], d = area.delta;
@@ -115,7 +117,11 @@ class App extends Component {
     this.setState({ loading: true, message: '', osmTags: {}, osmError: '', answer:null,selected:0,photo:0 });
     try {
       const url = FOTOSHI_API + '?bbox=' + encodeURIComponent(bbox) + '&urls=true&limit=40';
-      const response = await fetch(url);
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 9000);
+      let response;
+      try { response = await fetch(url, { signal: controller.signal }); }
+      finally { clearTimeout(timeout); }
       if (!response.ok) throw Error('Fotoshi API: HTTP ' + response.status);
       const json = await response.json();
       const rows = Array.isArray(json) ? json : Array.isArray(json.data) ? json.data : [];
