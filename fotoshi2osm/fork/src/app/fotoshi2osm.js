@@ -108,26 +108,33 @@ class App extends Component {
     this.load = this.load.bind(this);
   }
   componentDidMount() {
+    document.body.setAttribute('data-f2o-stage','mounted');
     this.load().catch(error => this.setState({loading:false,message:'Cannot load review: '+String(error && error.message || error)}));
   }
   get current() { return this.state.places[this.state.selected] || null; }
   async load() {
+    document.body.setAttribute('data-f2o-stage','load-called');
     const area = AREAS[this.state.area], d = area.delta;
     const bbox = [area.lon-d,area.lat-d,area.lon+d,area.lat+d].map(n=>n.toFixed(6)).join(',');
     this.setState({ loading: true, message: '', osmTags: {}, osmError: '', answer:null,selected:0,photo:0 });
     try {
+      document.body.setAttribute('data-f2o-stage','fetch-start');
       const url = FOTOSHI_API + '?bbox=' + encodeURIComponent(bbox) + '&urls=true&limit=40';
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 9000);
       let response;
       try { response = await fetch(url, { signal: controller.signal }); }
       finally { clearTimeout(timeout); }
+      document.body.setAttribute('data-f2o-stage','fetch-response-'+response.status);
       if (!response.ok) throw Error('Fotoshi API: HTTP ' + response.status);
       const json = await response.json();
+      document.body.setAttribute('data-f2o-stage','parsed-json');
       const rows = Array.isArray(json) ? json : Array.isArray(json.data) ? json.data : [];
       const converted = rows.map(adapt).filter(Boolean).filter(p => included(p,this.state.mission));
+      document.body.setAttribute('data-f2o-stage','converted-'+converted.length);
       this.setState({places:converted,loading:false,message:converted.length?'':'No matching photographed places in this area.'},()=>this.loadOsm());
     } catch(e) {
+      document.body.setAttribute('data-f2o-stage','failed-'+String(e.message).slice(0,100));
       this.setState({loading:false,message:e.message,places:[]});
     }
   }
