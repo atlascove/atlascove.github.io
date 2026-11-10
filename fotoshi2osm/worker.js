@@ -24,7 +24,7 @@ export default {
         status: 200,
         headers: {
           "content-type": "text/html; charset=utf-8",
-          "cache-control": "public, max-age=90",
+          "cache-control": "no-store",
           "x-content-type-options": "nosniff",
           "x-frame-options": "DENY",
           "referrer-policy": "strict-origin-when-cross-origin",
