@@ -52,7 +52,7 @@ select,input{border:1px solid #dcded8;border-radius:8px;background:#fff;color:va
 .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:15px}.actions .wide{grid-column:1/-1}
 .notice{font-size:11px;color:var(--muted);margin:13px 0 0;line-height:1.5}.tag-row{display:flex;gap:8px;padding:7px 0;border-bottom:1px solid var(--line);font-size:12px;overflow-wrap:anywhere}.tag-row code{width:43%;flex:none;color:#435c4a}.tag-row span{flex:1;min-width:0}
 footer{padding:10px 24px;color:var(--muted);font-size:11px;display:flex;justify-content:space-between;gap:20px}
-footer a{text-decoration:underline}.maplibregl-popup-content{border-radius:9px}
+footer a{text-decoration:underline}.maplibregl-popup-content{border-radius:9px}.map-select{position:absolute;top:76px;left:14px;z-index:2;max-width:min(260px,calc(100% - 28px));background:rgba(255,255,255,.96);padding:9px 11px;border-radius:9px;box-shadow:0 2px 12px #0002;font-size:12px}.map-select label{display:block;font-weight:700;margin-bottom:5px}.map-select select{padding:6px;width:100%}.maplegend{padding-top:7px;color:#555;font-size:10px;display:flex;gap:5px;align-items:center;flex-wrap:wrap}.dot{display:inline-block;width:8px;height:8px;border-radius:100%;margin-left:5px}.dot.yellow{background:#feca57}.dot.orange{background:#f24e1e}.dot.green{background:#0e8345}.telemetry{display:flex;align-items:flex-start;gap:8px;margin-top:12px;color:var(--muted);font-size:11px;line-height:1.4}.telemetry input{margin-top:3px;width:auto;flex:none}
 @media(max-width:1100px){.workspace{grid-template-columns:285px minmax(250px,1fr) 320px}.photo{height:200px}}
 @media(max-width:800px){.brand img{width:113px}.brand-suffix{font-size:20px}header{padding:11px 15px}.headlinks{gap:9px}.top{padding:17px 15px}.workspace{height:auto;min-height:0;grid-template-columns:1fr}.left,.right{border:0}.queue{max-height:270px}.mapwrap{height:400px;order:2}.right{order:3}.left{order:1}.review{overflow:visible}.photo{height:260px}footer{padding:15px;flex-wrap:wrap}}
 </style>
@@ -63,11 +63,27 @@ footer a{text-decoration:underline}.maplibregl-popup-content{border-radius:9px}
 <div class="top"><div><h1>Review Fotoshi photos for OSM</h1><p class="sub">Select a photographed place, check the evidence and edit in OpenStreetMap.</p></div></div>
 <main class="workspace">
 <section class="panel left">
-<div class="panelhead"><h2>Photographed places</h2><p class="description">Move the map to an area, then load photos nearby. This is a simple review queue, not a saved Pic4Review mission.</p><button class="primary" id="load" style="width:100%">Find photos in map view</button></div>
+<div class="panelhead"><h2>Find opportunities</h2>
+<p class="description">These filters use real Fotoshi metadata. Not linked to OSM does not mean definitely missing.</p>
+<label class="field" for="reviewType"><span style="display:block;margin-bottom:5px;font-weight:650">Review queue</span></label>
+<select id="reviewType" aria-label="Review queue">
+<option value="unlinked">Not linked to OSM (check before adding)</option>
+<option value="fotoshi">Unlinked: created in Fotoshi</option>
+<option value="overture">Unlinked: sourced from Overture</option>
+<option value="linked">OSM-linked: check for tag updates</option>
+<option value="all">All photographed places</option>
+</select>
+<button class="primary" id="load" style="width:100%;margin-top:10px">Find photos in map view</button>
+<label class="telemetry"><input id="shareActivity" type="checkbox"> Share anonymous review choices (skip, reviewed, editor opened)</label>
+</div>
 <div class="stats"><span id="count">No places loaded</span><span id="reviewed">0 reviewed</span></div>
 <div class="queue" id="queue"><div class="empty">Use <strong>Find photos in map view</strong> to load a simple review queue. The map is interactive, and you can move it to any location.</div></div>
 </section>
-<section class="mapwrap" aria-label="Photo review map"><div id="map"></div><div class="mapoverlay">Photographs are evidence, not ground truth. Check the place before editing.</div><div class="mapbuttons"><button id="refresh">Refresh this area</button><button id="zoom">Zoom to selected</button></div></section>
+<section class="mapwrap" aria-label="Photo review map"><div id="map"></div><div class="mapoverlay">Photos show evidence, not necessarily a new OSM feature. Check for duplicates first.</div>
+<div class="map-select"><label for="basemap">Basemap</label><select id="basemap" aria-label="Basemap">
+<option value="osm">OSM map (OpenFreeMap)</option><option value="fotoshi">Fotoshi map</option></select>
+<div class="maplegend"><span class="dot yellow"></span>Unlinked Fotoshi <span class="dot orange"></span>Unlinked Overture <span class="dot green"></span>OSM linked</div></div>
+<div class="mapbuttons"><button id="refresh">Refresh this area</button><button id="zoom">Zoom to selected</button></div></section>
 <section class="panel right"><div class="panelhead"><h2>Photo and OSM details</h2></div><div class="review" id="review"><div class="no-selection">Select a photographed place from the queue or map to see its imagery and OSM tags. No edits are written automatically.</div></div></section>
 </main>
 <footer><span>Images © their contributors, subject to individual licences. Map data © OpenStreetMap contributors. Based on the Pic4Review review workflow by Adrien Pavie.</span><span><a href="https://framagit.org/Pic4Carto/Pic4Review">Pic4Review</a> · <a href="https://www.openstreetmap.org/copyright">OSM attribution</a> · <a href="https://github.com/atlascove/atlascove.github.io/tree/feature/fotoshi2osm-labs/fotoshi2osm">AGPL-3.0 source</a></span></footer>
@@ -75,7 +91,7 @@ footer a{text-decoration:underline}.maplibregl-popup-content{border-radius:9px}
 <script>
 (function(){
 'use strict';
-var ROOT='/fotoshi2osm',state={places:[],selected:null,photo:0,osmTags:{},osmError:'',reviewed:new Set(),map:null};
+var ROOT='/fotoshi2osm',state={places:[],selected:null,photo:0,osmTags:{},osmError:'',reviewed:new Set(),map:null,session:(crypto.randomUUID?crypto.randomUUID():String(Date.now()))};
 var $=function(id){return document.getElementById(id)};
 window.addEventListener('error',function(e){$('queue').innerHTML='<div class="empty">JavaScript error: '+esc(e.message)+'</div>'});
 window.addEventListener('unhandledrejection',function(e){$('queue').innerHTML='<div class="empty">Request or map error: '+esc(e.reason&&e.reason.message||e.reason)+'</div>'});
@@ -89,7 +105,11 @@ function normalise(row,i){
  var images=Array.isArray(p.images)?p.images:(Array.isArray(p.photos)?p.photos:[]);
  var rawOsm=p.osm_id||p.osmId||p.osm_ref||p.tags_primary&&p.tags_primary.osm_id||p.external_ids&&p.external_ids.osm||'';var osm=String(rawOsm||'');if(/^[1-9][0-9]*$/.test(osm)&&/^[nwr]$/.test(String(p.osm_type||'')))osm=String(p.osm_type)+osm;
  var id=String(p.fid||p.id||'row-'+i);
- return {id:id,name:String(p.name||p.title||p.label||p.tags_secondary&&p.tags_secondary.name||p.tags&&p.tags.name||p.category||'Unnamed place'),category:String(p.category||p.category_name||p.preset_name||p.type||'place'),osm:osm,point:point,photos:images,raw:p};
+ var category=String(p.category||p.category_name||p.preset_name||p.type||'place');
+ var name=String(p.name||p.title||p.label||p.tags_secondary&&p.tags_secondary.name||p.tags&&p.tags.name||'Unnamed '+category);
+ var createdSource=String(p.created_source||p.source||'').toLowerCase();
+ var origin=createdSource==='user'?'fotoshi':createdSource==='overture'?'overture':createdSource;
+ return {id:id,name:name,category:category,osm:osm,origin:origin,point:point,photos:images,raw:p};
 }
 function imageOptions(p){
  var urls=p.urls||p.assets||{};
@@ -100,12 +120,29 @@ function imageOptions(p){
 }
 function imgFallback(img){var candidates=JSON.parse(img.dataset.urls||'[]'),n=+(img.dataset.index||0)+1;if(n<candidates.length){img.dataset.index=n;img.src=candidates[n]}else{img.replaceWith(document.createTextNode('Photo preview unavailable. Open this place in Fotoshi to view its images.'))}}
 window.f2oImageError=imgFallback;
-function geo(){return {type:'FeatureCollection',features:state.places.map(function(p){return {type:'Feature',properties:{id:p.id,selected:state.selected&&state.selected.id===p.id},geometry:{type:'Point',coordinates:p.point}}})}}
+function inQueue(p){
+ var v=$('reviewType').value;
+ if(v==='unlinked')return !p.osm;
+ if(v==='fotoshi')return !p.osm&&p.origin==='fotoshi';
+ if(v==='overture')return !p.osm&&p.origin==='overture';
+ if(v==='linked')return !!p.osm;
+ return true;
+}
+function visiblePlaces(){return state.places.filter(inQueue)}
+function categoryDescription(p){if(p.osm)return 'OSM linked';if(p.origin==='fotoshi')return 'Fotoshi-created, unlinked';if(p.origin==='overture')return 'Overture-sourced, unlinked';return 'Unlinked, source '+(p.origin||'unknown')}
+function geo(){return {type:'FeatureCollection',features:visiblePlaces().map(function(p){return {type:'Feature',properties:{id:p.id,linked:!!p.osm,source:p.origin||'unknown',selected:state.selected&&state.selected.id===p.id},geometry:{type:'Point',coordinates:p.point}}})}}
 function markers(){if(state.map&&state.map.getSource('places'))state.map.getSource('places').setData(geo())}
 function showQueue(){
- $('count').textContent=state.places.length+' photographed places';$('reviewed').textContent=state.reviewed.size+' reviewed';
- if(!state.places.length){$('queue').innerHTML='<div class="empty">No photographed places returned for this area. Try zooming out a little, moving the map, or checking another area.</div>';return}
- $('queue').innerHTML=state.places.map(function(p,i){var done=state.reviewed.has(p.id),active=state.selected&&state.selected.id===p.id;return '<button class="task'+(done?' done':'')+(active?' active':'')+'" data-place="'+esc(p.id)+'"><span class="tasknum">'+(done?'✓':i+1)+'</span><span><span class="tasktitle">'+esc(p.name)+'</span><div class="taskmeta">'+esc(p.category)+' · '+p.photos.length+' photos'+(p.osm?' · OSM linked':' · check matching')+'</div></span></button>'}).join('');
+ var all=visiblePlaces();
+ $('count').textContent=all.length+' of '+state.places.length+' photographed places';
+ $('reviewed').textContent=state.reviewed.size+' reviewed locally';
+ if(!all.length){$('queue').innerHTML='<div class="empty">No matching places in this loaded area. Try All photographed places, move the map, or reload.</div>';return}
+ $('queue').innerHTML=all.map(function(p,i){var done=state.reviewed.has(p.id),active=state.selected&&state.selected.id===p.id;return '<button class="task'+(done?' done':'')+(active?' active':'')+'" data-place="'+esc(p.id)+'"><span class="tasknum">'+(done?'✓':i+1)+'</span><span><span class="tasktitle">'+esc(p.name)+'</span><div class="taskmeta">'+esc(p.category)+' | '+p.photos.length+' photos | '+esc(categoryDescription(p))+'</div></span></button>'}).join('');
+}
+async function event(action,p){
+ if(!$('shareActivity').checked||!p)return;
+ try{await fetch(ROOT+'/api/events',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({fid:p.id,osm:p.osm||null,origin:p.origin||'unknown',queue:$('reviewType').value,action:action,session:state.session}),keepalive:true})}
+ catch(error){console.warn('Review telemetry unavailable',error)}
 }
 async function load(){
  if(!state.map)return;
@@ -136,10 +173,11 @@ function render(){
  var rows=tagNames.length?tagNames.map(function(k){return '<div class="tag-row"><code>'+esc(k)+'</code><span>'+esc(t[k])+'</span></div>'}).join(''):'<div class="description">No OSM tags available for this place.</div>';
  $('review').innerHTML=photoHtml+'<div class="attrib">'+esc(attribution)+'</div><div class="details"><h2>'+esc(p.name)+'</h2><div class="tiny">'+esc(p.category)+' | '+link+'</div><div class="status">Compare the photo to the place and its map tags. Do not assume old photographs still describe the current situation.</div><h3>'+esc(status)+'</h3>'+rows+'<div class="actions"><button class="secondary" id="skip">Skip</button><button class="secondary" id="done">Mark reviewed locally</button><a class="primary wide" id="edit" target="_blank" rel="noopener" href="'+esc(editUrl(p))+'" style="text-decoration:none;text-align:center">Edit in OpenStreetMap iD ↗</a></div><p class="notice">This page does not write to OSM. The final edit, if any, happens in iD under your OSM account. Local review progress disappears when this page is reloaded.</p></div>';
  if(photo){$('prevphoto').onclick=function(){state.photo=(i+photos.length-1)%photos.length;render()};$('nextphoto').onclick=function(){state.photo=(i+1)%photos.length;render()}}
- $('skip').onclick=function(){selectNext(false)};
- $('done').onclick=function(){state.reviewed.add(p.id);showQueue();selectNext(true)};
+ $('skip').onclick=function(){event('skip',p);selectNext(false)};
+ $('done').onclick=function(){event('reviewed_locally',p);state.reviewed.add(p.id);showQueue();selectNext(true)};
+ $('edit').onclick=function(){event('open_editor',p)};
 }
-function selectNext(afterDone){if(!state.places.length)return;var i=state.places.findIndex(function(p){return state.selected&&p.id===state.selected.id});var next=state.places.slice(i+1).concat(state.places.slice(0,i+1)).find(function(p){return !state.reviewed.has(p.id)});if(next)select(next.id);else if(afterDone){$('review').innerHTML='<div class="no-selection"><strong>Review queue complete!</strong><p>All loaded places were marked reviewed locally. Actual OSM changes are tracked by your OSM account, not by this preview.</p></div>';state.selected=null;showQueue();markers()}}
+function selectNext(afterDone){var list=visiblePlaces();if(!list.length)return;var i=list.findIndex(function(p){return state.selected&&p.id===state.selected.id});var next=list.slice(i+1).concat(list.slice(0,i+1)).find(function(p){return !state.reviewed.has(p.id)});if(next)select(next.id);else if(afterDone){$('review').innerHTML='<div class="no-selection"><strong>Review queue complete!</strong><p>All loaded places were marked reviewed locally. Actual OSM changes are tracked by your OSM account, not by this preview.</p></div>';state.selected=null;showQueue();markers()}}
 async function select(id){
  var p=state.places.find(function(x){return x.id===id});if(!p)return;
  state.selected=p;state.photo=0;state.osmTags={};state.osmError='loading';showQueue();markers();render();
@@ -148,18 +186,25 @@ async function select(id){
  catch(err){if(state.selected&&state.selected.id===id){state.osmError='OSM tags unavailable: '+err.message;render()}}
 }
 $('queue').addEventListener('click',function(e){var item=e.target.closest('[data-place]');if(item)select(item.dataset.place)});
+$('reviewType').addEventListener('change',function(){if(state.selected&&!inQueue(state.selected)){state.selected=null;$('review').innerHTML='<div class="no-selection">Select a place in this review queue.</div>'}showQueue();markers()});
+$('basemap').addEventListener('change',function(){if(state.map)state.map.setStyle(this.value==='osm'?'https://tiles.openfreemap.org/styles/liberty':'https://tiles.fotoshi.com/styles/vector.json')});
 $('load').onclick=load;$('refresh').onclick=load;
 $('zoom').onclick=function(){if(state.map&&state.selected)state.map.flyTo({center:state.selected.point,zoom:18})};
 if(!window.maplibregl){$('map').innerHTML='<div class="empty">Map library unavailable. Refresh to try again.</div>';return}
-var map=new maplibregl.Map({container:'map',style:'https://tiles.fotoshi.com/styles/vector.json',center:[areas.goldau[0],areas.goldau[1]],zoom:areas.goldau[2],attributionControl:true});
+var map=new maplibregl.Map({container:'map',style:'https://tiles.openfreemap.org/styles/liberty',center:[areas.goldau[0],areas.goldau[1]],zoom:areas.goldau[2],attributionControl:true});
 state.map=map;map.addControl(new maplibregl.NavigationControl(),'top-right');
-map.on('load',function(){
+function installOverlay(){
+ if(map.getSource('places'))return;
  map.addSource('places',{type:'geojson',data:geo(),generateId:false});
- map.addLayer({id:'photo-places-outline',type:'circle',source:'places',paint:{'circle-radius':['case',['get','selected'],11,7],'circle-color':['case',['get','selected'],'#f45f36','#2f745f'],'circle-stroke-color':'#fff','circle-stroke-width':2,'circle-opacity':.92}});
- map.on('click','photo-places-outline',function(ev){if(ev.features&&ev.features[0])select(ev.features[0].properties.id)});
- map.on('mouseenter','photo-places-outline',function(){map.getCanvas().style.cursor='pointer'});map.on('mouseleave','photo-places-outline',function(){map.getCanvas().style.cursor=''});
- markers();
-});
+ map.addLayer({id:'photo-places-outline',type:'circle',source:'places',paint:{
+ 'circle-radius':['case',['get','selected'],11,7],
+ 'circle-color':['case',['get','linked'],'#0e8345',['match',['get','source'],'fotoshi','#feca57','overture','#f24e1e','#7c888b']],
+ 'circle-stroke-color':'#fff','circle-stroke-width':2,'circle-opacity':.95}});
+}
+map.on('style.load',function(){installOverlay();markers()});
+map.on('click','photo-places-outline',function(ev){if(ev.features&&ev.features[0])select(ev.features[0].properties.id)});
+map.on('mouseenter','photo-places-outline',function(){map.getCanvas().style.cursor='pointer'});
+map.on('mouseleave','photo-places-outline',function(){map.getCanvas().style.cursor=''});
 // Load the queue independently of style/tile downloads.
 // MapLibre's style load can be delayed by third-party tile requests.
 $('count').textContent='Starting review…';
