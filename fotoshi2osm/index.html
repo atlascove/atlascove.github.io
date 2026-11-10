@@ -79,6 +79,8 @@ footer a{text-decoration:underline}.maplibregl-popup-content{border-radius:9px}
 'use strict';
 var ROOT='/fotoshi2osm',state={places:[],selected:null,photo:0,osmTags:{},osmError:'',reviewed:new Set(),map:null,mission:'all'};
 var $=function(id){return document.getElementById(id)};
+window.addEventListener('error',function(e){$('queue').innerHTML='<div class="empty">JavaScript error: '+esc(e.message)+'</div>'});
+window.addEventListener('unhandledrejection',function(e){$('queue').innerHTML='<div class="empty">Request or map error: '+esc(e.reason&&e.reason.message||e.reason)+'</div>'});
 var areas={goldau:[8.55,47.05,15],lucerne:[8.306,47.05,15],seoul:[126.724,37.494,15]};
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function coord(value){if(Array.isArray(value)&&value.length>=2)return [+value[0],+value[1]];if(value&&typeof value==='object'){if(value.type==='Point')return coord(value.coordinates);if(value.lon!==undefined&&value.lat!==undefined)return [+value.lon,+value.lat];if(value.longitude!==undefined&&value.latitude!==undefined)return [+value.longitude,+value.latitude]}return null}
@@ -165,7 +167,8 @@ map.on('load',function(){
 });
 // Load the queue independently of style/tile downloads.
 // MapLibre's style load can be delayed by third-party tile requests.
-setTimeout(load,300);
+$('count').textContent='Starting review…';
+setTimeout(function(){load().catch(function(e){$('queue').innerHTML='<div class="empty">Could not initialize the queue: '+esc(e.message)+'</div>'})},300);
 })();
 </script>
 </body></html>
