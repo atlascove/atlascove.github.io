@@ -9,7 +9,7 @@ This is a working source fork of **Pic4Review** by **Adrien Pavie** (AGPL-3.0-or
 - Linked OSM elements can be inspected through the existing bounded read-only `/fotoshi2osm/api/osm/...` service.
 - Original compact gallery-first layout, orange Fotoshi map pins, OSM standard raster for low-volume OSM editing and Esri aerial from the OSM Editor Layer Index, with required attribution. Review OSM Tile Usage Policy and migrate to dedicated basemap tiles if traffic increases.
 - The review decision, photo evidence and manual iD editor link are intentionally separate. There is no automated OSM editing or bulk import.
-- English locale, Noto Sans body type, official Fotoshi logo mark. A single contiguous `fotoshi2OSM` wordmark uses the site's font fallback pending verified complete Sifonn Pro outlined lettering; no licensed font files are redistributed.
+- English locale and **Noto Sans** body type. Official orange Fotoshi logomark, a single contiguous **all-Sifonn Pro vector-outlined `fotoshi2OSM`** wordmark in orange/yellow/green, and an official orange-mark-on-white favicon. The licensed font file was used privately to generate the glyph outlines and is **not** included in any public build.
 
 ## Limitations
 
