@@ -187,7 +187,6 @@ class App extends Component {
   renderQuestion(p) {
     const question=p.osm ? 'Does this photo support an OSM update?' : 'Can you confirm this place exists here?';
     return <div>
-      <h2>{question}</h2>
       <Question key={p.fid} data={{
         type:'choice',question:question,
         answers:[
@@ -197,7 +196,7 @@ class App extends Component {
         ]
       }} feature={p.feature} onAnswerChange={a=>this.answer(a)} />
       <div className="f2o-tags">
-        <strong>{p.name}</strong> <span style={{color:'#8b9196'}}>({p.category})</span>
+        <strong>{p.name}</strong>{p.name !== p.category && <span style={{color:'#8b9196'}}> ({p.category})</span>}
         {p.osm && <div>OSM: {p.osm}</div>}
         {!p.osm && <div>No linked OSM ID. Check for duplicates before adding.</div>}
         {p.gers && <div>Overture: {p.gers.slice(0,12)}…</div>}
