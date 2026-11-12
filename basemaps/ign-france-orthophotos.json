@@ -1,0 +1,26 @@
+{
+  "version": 8,
+  "name": "IGN France - Aerial Orthophotos",
+  "sources": {
+    "ign-france-orthophotos": {
+      "type": "raster",
+      "tiles": [
+        "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&STYLE=normal&FORMAT=image/jpeg&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}"
+      ],
+      "tileSize": 256,
+      "minzoom": 0,
+      "maxzoom": 19,
+      "attribution": "© <a href=\"https://www.ign.fr/\">IGN</a> – BD ORTHO · <a href=\"https://www.etalab.gouv.fr/licence-ouverte-open-licence/\">Licence Ouverte 2.0</a>"
+    }
+  },
+  "layers": [
+    {
+      "id": "ign-france-orthophotos",
+      "type": "raster",
+      "source": "ign-france-orthophotos",
+      "paint": {
+        "raster-opacity": 1
+      }
+    }
+  ]
+}
